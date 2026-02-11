@@ -1,0 +1,593 @@
+sampleId	parsedLat	parsedLon	latFieldLabel	latFieldOriginalValue	lonFieldLabel	lonFieldOriginalValue
+SRS5981300	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS3976925	40.6784075	-74.02033	sample_lat_lon	40.6784075 N 74.02033 W	sample_lat_lon	40.6784075 N 74.02033 W
+SRS7301705	None	None	sample_lat_lon	missing	sample_lat_lon	missing
+SRS7301753	None	None	sample_lat_lon	missing	sample_lat_lon	missing
+SRS7301777	None	None	sample_lat_lon	missing	sample_lat_lon	missing
+ERS3341778	None	None	None	None	None	None
+ERS3341779	None	None	None	None	None	None
+ERS3341833	None	None	None	None	None	None
+ERS3341839	None	None	None	None	None	None
+ERS3341777	None	None	None	None	None	None
+SRS4074722	35.88155	104.011791	sample_lat_lon	35.88155 N 104.011791 E	sample_lat_lon	35.88155 N 104.011791 E
+SRS4074724	35.88155	104.011791	sample_lat_lon	35.88155 N 104.011791 E	sample_lat_lon	35.88155 N 104.011791 E
+SRS4074721	35.88155	104.011791	sample_lat_lon	35.88155 N 104.011791 E	sample_lat_lon	35.88155 N 104.011791 E
+ERS1216787	None	None	None	None	None	None
+SRS1210721	78.08	16.069999999999936	sample_lat_lon	78.08 N 16.069999999999936 E	sample_lat_lon	78.08 N 16.069999999999936 E
+SRS1210868	78.08	16.069999999999936	sample_lat_lon	78.08 N 16.069999999999936 E	sample_lat_lon	78.08 N 16.069999999999936 E
+SRS1591256	71.2999	-156.61	sample_lat_lon	71.2999 N 156.61 W	sample_lat_lon	71.2999 N 156.61 W
+SRS502865	-77.62545	163.2102	sample_lat_lon	77.62545 S 163.2102 E	sample_lat_lon	77.62545 S 163.2102 E
+SRS6935934	None	None	sample_lat_lon	Not available	sample_lat_lon	Not available
+SRS3418737	64.487	-17.5058	sample_lat_lon	64.4870 N 17.5058 W	sample_lat_lon	64.4870 N 17.5058 W
+SRS1310642	49.25	0.36	sample_lat_lon	49.25 N 0.36 E	sample_lat_lon	49.25 N 0.36 E
+SRS1310631	49.25	0.36	sample_lat_lon	49.25 N 0.36 E	sample_lat_lon	49.25 N 0.36 E
+SRS1310652	49.25	0.36	sample_lat_lon	49.25 N 0.36 E	sample_lat_lon	49.25 N 0.36 E
+SRS608818	29.556	101.969	sample_lat_lon	29.556 N 101.969 E	sample_lat_lon	29.556 N 101.969 E
+ERS4808746	58.83333333	17.51666667	sample_geographic location (latitude)	58.83333333	sample_geographic location (longitude)	17.51666667
+ERS4808747	58.83333333	17.51666667	sample_geographic location (latitude)	58.83333333	sample_geographic location (longitude)	17.51666667
+ERS4808761	58.83333333	17.51666667	sample_geographic location (latitude)	58.83333333	sample_geographic location (longitude)	17.51666667
+ERS4808750	58.83333333	17.51666667	sample_geographic location (latitude)	58.83333333	sample_geographic location (longitude)	17.51666667
+ERS4808766	58.83333333	17.51666667	sample_geographic location (latitude)	58.83333333	sample_geographic location (longitude)	17.51666667
+SRS5621160	46.965417	10.9448	sample_lat_lon	46.965417 N 10.9448 E	sample_lat_lon	46.965417 N 10.9448 E
+ERS956390	12.4746	79.0136	sample_geographic location (latitude)	12.4746	sample_geographic location (longitude)	79.0136
+SRS6529655	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+ERS4382101	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382103	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382107	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382108	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382113	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382114	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382118	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS2907731	None	None	sample_geographic location (latitude)	S 62°97'934''	sample_geographic location (longitude)	W 060°55'532''
+SRS7629575	-67.65466667	46.1072	sample_lat_lon	67.65466667 S 46.1072 E	sample_lat_lon	67.65466667 S 46.1072 E
+DRS088846	35.683714	139.4829	sample_lat_lon	35.683714 N 139.482900 E	sample_lat_lon	35.683714 N 139.482900 E
+ERS097018	49.96	11.59	sample_Geographic location (latitude)	49.96	sample_Geographic location (longitude)	11.59
+ERS097021	48.5	11.35	sample_Geographic location (latitude)	48.50	sample_Geographic location (longitude)	11.35
+ERS097027	48.5	11.35	sample_Geographic location (latitude)	48.50	sample_Geographic location (longitude)	11.35
+ERS227803	78.13	15.38	sample_geographic location (latitude)	78.13	sample_geographic location (longitude)	15.38
+ERS227806	78.13	15.38	sample_geographic location (latitude)	78.13	sample_geographic location (longitude)	15.38
+ERS227813	78.13	15.38	sample_geographic location (latitude)	78.13	sample_geographic location (longitude)	15.38
+ERS227816	78.13	15.38	sample_geographic location (latitude)	78.13	sample_geographic location (longitude)	15.38
+ERS382909	37.5	126.9	sample_geographic location (latitude)	37.5	sample_geographic location (longitude)	126.9
+ERS506101	46.64	8.46	sample_geographic location (latitude)	46.64	sample_geographic location (longitude)	8.46
+ERS548446	42.0831	86.351	sample_geographic location (latitude)	42.0831	sample_geographic location (longitude)	86.351
+ERS550802	45.464161	9.190336	sample_geographic location (latitude)	45.464161	sample_geographic location (longitude)	9.190336
+ERS4143450	78.86787247	12.19828317	sample_geographic location (latitude)	78.86787247	sample_geographic location (longitude)	12.19828317
+ERS4143454	67.89958568	18.59227923	sample_geographic location (latitude)	67.89958568	sample_geographic location (longitude)	18.59227923
+ERS1197929	51.20903	4.43729	sample_geographic location (latitude)	51.20903	sample_geographic location (longitude)	4.43729
+ERS1270516	None	None	None	None	None	None
+ERS1270628	51.209467	10.791968	sample_geographic location (latitude)	51.209467	sample_geographic location (longitude)	10.791968
+ERS1377248	None	None	None	None	None	None
+ERS1377255	None	None	None	None	None	None
+ERS1377256	None	None	None	None	None	None
+ERS1377350	None	None	None	None	None	None
+ERS1377362	None	None	None	None	None	None
+ERS1392529	51.119338	10.469198	sample_geographic location (latitude)	51.119338	sample_geographic location (longitude)	10.469198
+ERS1534920	52.11	106.66	sample_geographic location (latitude)	52.11	sample_geographic location (longitude)	106.66
+ERS1534922	52.11	106.66	sample_geographic location (latitude)	52.11	sample_geographic location (longitude)	106.66
+ERS1534923	52.11	106.66	sample_geographic location (latitude)	52.11	sample_geographic location (longitude)	106.66
+ERS1534926	52.11	106.66	sample_geographic location (latitude)	52.11	sample_geographic location (longitude)	106.66
+ERS1534927	52.11	106.66	sample_geographic location (latitude)	52.11	sample_geographic location (longitude)	106.66
+ERS1876071	59.8376	18.6203	sample_geographic location (latitude)	59.8376	sample_geographic location (longitude)	18.6203
+ERS1876129	59.8376	18.6203	sample_geographic location (latitude)	59.8376	sample_geographic location (longitude)	18.6203
+ERS1645497	51.196707	10.755501	sample_geographic location (latitude)	51,196707	sample_geographic location (longitude)	10,755501
+ERS1739486	-77.716667	162.366667	sample_latitude	-77.716667	sample_longitude	162.366667
+ERS1739502	-77.716667	162.366667	sample_latitude	-77.716667	sample_longitude	162.366667
+ERS1739507	-77.716667	162.366667	sample_latitude	-77.716667	sample_longitude	162.366667
+ERS1918498	33.0	102.0	sample_geographic location (latitude)	33	sample_geographic location (longitude)	102
+ERS1918499	33.0	102.0	sample_geographic location (latitude)	33	sample_geographic location (longitude)	102
+ERS1891324	43.291853	-73.596529	sample_geographic location (latitude)	43.291853	sample_geographic location (longitude)	-73.596529
+ERS1891326	43.291853	-73.596529	sample_geographic location (latitude)	43.291853	sample_geographic location (longitude)	-73.596529
+ERS4382395	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382396	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382397	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS4382398	50.132777777777775	None	sample_geographic location (latitude)	50�07'58N	sample_geographic location (longitude)	12�27'46?E
+ERS2550524	48.848566	14.485503	sample_geographic location (latitude)	48.848566	sample_geographic location (longitude)	14.485503
+ERS2550526	48.848566	14.485503	sample_geographic location (latitude)	48.848566	sample_geographic location (longitude)	14.485503
+ERS2550528	48.848566	14.485503	sample_geographic location (latitude)	48.848566	sample_geographic location (longitude)	14.485503
+ERS2169668	None	None	None	None	None	None
+ERS2169669	None	None	None	None	None	None
+ERS2169670	None	None	None	None	None	None
+ERS2169671	None	None	None	None	None	None
+ERS2221422	51.196707	10.755501	sample_geographic location (latitude)	51,196707	sample_geographic location (longitude)	10,755501
+ERS2411190	44.02	16.33	sample_lat_lon	44.02 N 16.33 E	sample_lat_lon	44.02 N 16.33 E
+ERS2472678	46.5744	6.439	sample_geographic location (latitude)	46.5744	sample_geographic location (longitude)	6.4390
+ERS2472681	47.5089	8.3403	sample_geographic location (latitude)	47.5089	sample_geographic location (longitude)	8.3403
+ERS2472689	47.1604	7.0238	sample_geographic location (latitude)	47.1604	sample_geographic location (longitude)	7.0238
+ERS2472690	47.1596	7.0225	sample_geographic location (latitude)	47.1596	sample_geographic location (longitude)	7.0225
+ERS2472774	46.5744	6.439	sample_geographic location (latitude)	46.5744	sample_geographic location (longitude)	6.4390
+ERS2472777	47.5089	8.3403	sample_geographic location (latitude)	47.5089	sample_geographic location (longitude)	8.3403
+ERS2472785	47.1604	7.0238	sample_geographic location (latitude)	47.1604	sample_geographic location (longitude)	7.0238
+ERS2472786	47.1596	7.0225	sample_geographic location (latitude)	47.1596	sample_geographic location (longitude)	7.0225
+ERS2597923	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597935	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597941	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597943	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597948	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597954	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597958	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597970	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597976	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597978	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2597983	63.33822222222222	12.681388888888888	sample_geographic location (latitude)	63��20'17.6N	sample_geographic location (longitude)	12��32'533E
+ERS2638593	37.229573	-80.413939	sample_geographic location (latitude)	37.229573	sample_geographic location (longitude)	-80.413939
+ERS2782401	None	None	None	None	None	None
+ERS2897700	51.74044397	-1.115078805	sample_geographic location (latitude)	51.74044397	sample_geographic location (longitude)	-1.115078805
+ERS2897813	51.47689746	-0.917285513	sample_geographic location (latitude)	51.47689746	sample_geographic location (longitude)	-0.917285513
+ERS2897846	51.60074567	-1.120106224	sample_geographic location (latitude)	51.60074567	sample_geographic location (longitude)	-1.120106224
+ERS3048897	None	None	None	None	None	None
+ERS3048926	None	None	None	None	None	None
+ERS3051117	None	None	None	None	None	None
+ERS3230824	None	None	None	None	None	None
+ERS3334626	59.219959	17.937439	sample_geographic location (latitude)	59.219959	sample_geographic location (longitude)	17.937439
+ERS3336412	63.88306	-149.22556	sample_geographic location (latitude)	63.88306	sample_geographic location (longitude)	-149.22556
+ERS3336415	63.88306	-149.22556	sample_geographic location (latitude)	63.88306	sample_geographic location (longitude)	-149.22556
+ERS3336416	63.88306	-149.22556	sample_geographic location (latitude)	63.88306	sample_geographic location (longitude)	-149.22556
+ERS3336406	63.88306	-149.22556	sample_geographic location (latitude)	63.88306	sample_geographic location (longitude)	-149.22556
+ERS3336407	63.88306	-149.22556	sample_geographic location (latitude)	63.88306	sample_geographic location (longitude)	-149.22556
+ERS3336411	63.88306	-149.22556	sample_geographic location (latitude)	63.88306	sample_geographic location (longitude)	-149.22556
+ERS3548301	51.209467	10.791968	sample_geographic location (latitude)	51,209467	sample_geographic location (longitude)	10,791968
+ERS3548393	51.196707	10.755501	sample_geographic location (latitude)	51,196707	sample_geographic location (longitude)	10,755501
+ERS3740594	None	None	None	None	None	None
+ERS3740606	None	None	None	None	None	None
+ERS3740610	None	None	None	None	None	None
+ERS3740613	None	None	None	None	None	None
+ERS3740625	None	None	None	None	None	None
+ERS3740662	None	None	None	None	None	None
+ERS3740672	None	None	None	None	None	None
+ERS3740673	None	None	None	None	None	None
+ERS3740674	None	None	None	None	None	None
+ERS3740682	None	None	None	None	None	None
+ERS3740683	None	None	None	None	None	None
+ERS3740692	None	None	None	None	None	None
+ERS3740696	None	None	None	None	None	None
+ERS3740710	None	None	None	None	None	None
+ERS3740712	None	None	None	None	None	None
+ERS3740715	None	None	None	None	None	None
+ERS3740716	None	None	None	None	None	None
+ERS3740717	None	None	None	None	None	None
+ERS3740718	None	None	None	None	None	None
+ERS3740723	None	None	None	None	None	None
+ERS4043181	51.11481462	10.44798036	sample_geographic location (latitude)	51,11481462	sample_geographic location (longitude)	10,44798036
+ERS4043206	51.11481462	10.44798036	sample_geographic location (latitude)	51,11481462	sample_geographic location (longitude)	10,44798036
+ERS4058763	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058773	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058786	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058789	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058797	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058805	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058813	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058818	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058821	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058828	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058832	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058840	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058846	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058851	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058853	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4058858	59.846636	18.568784	sample_geographic location (latitude)	59.846636	sample_geographic location (longitude)	18.568784
+ERS4179335	None	None	None	None	None	None
+ERS4556815	None	None	None	None	None	None
+ERS4556816	None	None	None	None	None	None
+ERS4415179	65.5337	24.4128	sample_geographic location (latitude)	65.5337	sample_geographic location (longitude)	24.4128
+ERS4556980	None	None	None	None	None	None
+ERS5065008	51.075192	12.205746	sample_geographic location (latitude)	51.075192	sample_geographic location (longitude)	12.205746
+ERS5073225	5896806.1982748	333326.3127063	sample_geographic location (latitude)	5896806.1982748	sample_geographic location (longitude)	333326.3127063
+ERS5073229	5896806.1982748	333326.3127063	sample_geographic location (latitude)	5896806.1982748	sample_geographic location (longitude)	333326.3127063
+ERS5073230	5896806.1982748	333326.3127063	sample_geographic location (latitude)	5896806.1982748	sample_geographic location (longitude)	333326.3127063
+ERS4990589	67.90073401	18.57993501	sample_geographic location (latitude)	67.90073401	sample_geographic location (longitude)	18.57993501
+ERS4990592	67.90076603	18.58029803	sample_geographic location (latitude)	67.90076603	sample_geographic location (longitude)	18.58029803
+ERS4990596	67.90076603	18.58029803	sample_geographic location (latitude)	67.90076603	sample_geographic location (longitude)	18.58029803
+ERS4990597	67.90076603	18.58029803	sample_geographic location (latitude)	67.90076603	sample_geographic location (longitude)	18.58029803
+ERS4990605	67.90084801	18.58039702	sample_geographic location (latitude)	67.90084801	sample_geographic location (longitude)	18.58039702
+ERS5087487	52.37	4.9	sample_geographic location (latitude)	52.37	sample_geographic location (longitude)	4.9
+SRS063908	None	None	None	None	None	None
+SRS016103	None	None	None	None	None	None
+SRS482967	None	None	None	None	None	None
+SRS063870	None	None	None	None	None	None
+SRS211680	None	None	None	None	None	None
+SRS211681	None	None	None	None	None	None
+SRS375846	None	None	None	None	None	None
+SRS559909	7.966667	46.716667	sample_lat_lon	7.966667 N 46.716667 E	sample_lat_lon	7.966667 N 46.716667 E
+SRS506802	None	None	None	None	None	None
+SRS538832	29.53143	-89.627417	sample_lat_lon	29.53143 N 89.627417 W	sample_lat_lon	29.53143 N 89.627417 W
+SRS542451	67.15167	-50.04171	sample_lat_lon	67.15167 N 50.04171 W	sample_lat_lon	67.15167 N 50.04171 W
+SRS542453	67.15167	-50.04173	sample_lat_lon	67.15167 N 50.04173 W	sample_lat_lon	67.15167 N 50.04173 W
+SRS559208	None	None	sample_geographic location (latitude and longitude)	missing	sample_geographic location (latitude and longitude)	missing
+SRS559209	None	None	sample_geographic location (latitude and longitude)	missing	sample_geographic location (latitude and longitude)	missing
+SRS559211	None	None	sample_geographic location (latitude and longitude)	missing	sample_geographic location (latitude and longitude)	missing
+SRS559212	None	None	sample_geographic location (latitude and longitude)	missing	sample_geographic location (latitude and longitude)	missing
+SRS559219	None	None	sample_geographic location (latitude and longitude)	missing	sample_geographic location (latitude and longitude)	missing
+SRS559221	None	None	sample_geographic location (latitude and longitude)	missing	sample_geographic location (latitude and longitude)	missing
+SRS627537	41.6147	-87.3252	sample_lat_lon	41.6147 N 87.3252 W	sample_lat_lon	41.6147 N 87.3252 W
+SRS627539	41.6147	-87.3252	sample_lat_lon	41.6147 N 87.3252 W	sample_lat_lon	41.6147 N 87.3252 W
+SRS723618	27.6747	91.85533	sample_lat_lon	27.67470 N 91.85533 E	sample_lat_lon	27.67470 N 91.85533 E
+SRS726054	None	None	None	None	None	None
+SRS879324	39.791	-86.148	sample_lat_lon	39.7910 N 86.1480 W	sample_lat_lon	39.7910 N 86.1480 W
+SRS929223	41.0336	-84.2275	sample_lat_lon	41.0336 N 84.2275 W	sample_lat_lon	41.0336 N 84.2275 W
+SRS969934	None	None	sample_lat_lon	not collected	sample_lat_lon	not collected
+SRS975805	None	None	sample_lat_lon	not collected	sample_lat_lon	not collected
+SRS995034	42.04	128.06	sample_lat_lon	42.04 N 128.06 E	sample_lat_lon	42.04 N 128.06 E
+SRS1022459	52.11	-1.36	sample_lat_lon	52.11 N 1.36 W	sample_lat_lon	52.11 N 1.36 W
+SRS1073480	59.78	17.64	sample_lat_lon	59.78 N 17.64 E	sample_lat_lon	59.78 N 17.64 E
+SRS1092843	32.0574	118.8451	sample_lat_lon	32.05740 N 118.84510 E	sample_lat_lon	32.05740 N 118.84510 E
+SRS1138124	31.48	-84.07	sample_lat_lon	31.48 N 84.07 W	sample_lat_lon	31.48 N 84.07 W
+SRS1414146	-66.28203	110.525578	sample_lat_lon	66.28203 S 110.525578 E	sample_lat_lon	66.28203 S 110.525578 E
+SRS1414148	-66.281861	110.525202	sample_lat_lon	66.281861 S 110.525202 E	sample_lat_lon	66.281861 S 110.525202 E
+SRS1414147	-66.281859	110.525197	sample_lat_lon	66.281859 S 110.525197 E	sample_lat_lon	66.281859 S 110.525197 E
+SRS1414149	-66.281855	110.525191	sample_lat_lon	66.281855 S 110.525191 E	sample_lat_lon	66.281855 S 110.525191 E
+SRS1414151	-66.281507	110.524507	sample_lat_lon	66.281507 S 110.524507 E	sample_lat_lon	66.281507 S 110.524507 E
+SRS1414150	-66.282257	110.526497	sample_lat_lon	66.282257 S 110.526497 E	sample_lat_lon	66.282257 S 110.526497 E
+SRS1414152	-66.282257	110.526495	sample_lat_lon	66.282257 S 110.526495 E	sample_lat_lon	66.282257 S 110.526495 E
+SRS1414153	-66.282254	110.526478	sample_lat_lon	66.282254 S 110.526478 E	sample_lat_lon	66.282254 S 110.526478 E
+SRS1414154	-66.282239	110.526398	sample_lat_lon	66.282239 S 110.526398 E	sample_lat_lon	66.282239 S 110.526398 E
+SRS1414155	-66.282216	110.526298	sample_lat_lon	66.282216 S 110.526298 E	sample_lat_lon	66.282216 S 110.526298 E
+SRS1414157	-66.282041	110.525541	sample_lat_lon	66.282041 S 110.525541 E	sample_lat_lon	66.282041 S 110.525541 E
+SRS1414158	-66.28187	110.525178	sample_lat_lon	66.28187 S 110.525178 E	sample_lat_lon	66.28187 S 110.525178 E
+SRS1414159	-66.28187	110.525176	sample_lat_lon	66.28187 S 110.525176 E	sample_lat_lon	66.28187 S 110.525176 E
+SRS1414160	-66.281868	110.525173	sample_lat_lon	66.281868 S 110.525173 E	sample_lat_lon	66.281868 S 110.525173 E
+SRS1414161	-66.281865	110.525168	sample_lat_lon	66.281865 S 110.525168 E	sample_lat_lon	66.281865 S 110.525168 E
+SRS1414162	-66.281519	110.524477	sample_lat_lon	66.281519 S 110.524477 E	sample_lat_lon	66.281519 S 110.524477 E
+SRS1414312	-66.28223	110.526542	sample_lat_lon	66.28223 S 110.526542 E	sample_lat_lon	66.28223 S 110.526542 E
+SRS1414314	-66.28223	110.526539	sample_lat_lon	66.28223 S 110.526539 E	sample_lat_lon	66.28223 S 110.526539 E
+SRS1414315	-66.282229	110.526531	sample_lat_lon	66.282229 S 110.526531 E	sample_lat_lon	66.282229 S 110.526531 E
+SRS1414316	-66.282228	110.526518	sample_lat_lon	66.282228 S 110.526518 E	sample_lat_lon	66.282228 S 110.526518 E
+SRS1414317	-66.282209	110.526443	sample_lat_lon	66.282209 S 110.526443 E	sample_lat_lon	66.282209 S 110.526443 E
+SRS1414319	-66.282186	110.526348	sample_lat_lon	66.282186 S 110.526348 E	sample_lat_lon	66.282186 S 110.526348 E
+SRS1414320	-66.281842	110.525239	sample_lat_lon	66.281842 S 110.525239 E	sample_lat_lon	66.281842 S 110.525239 E
+SRS1414322	-66.281841	110.525238	sample_lat_lon	66.281841 S 110.525238 E	sample_lat_lon	66.281841 S 110.525238 E
+SRS1414321	-66.28184	110.525234	sample_lat_lon	66.28184 S 110.525234 E	sample_lat_lon	66.28184 S 110.525234 E
+SRS1414323	-66.281836	110.525227	sample_lat_lon	66.281836 S 110.525227 E	sample_lat_lon	66.281836 S 110.525227 E
+SRS1414324	-66.281723	110.524913	sample_lat_lon	66.281723 S 110.524913 E	sample_lat_lon	66.281723 S 110.524913 E
+SRS1414325	-66.28149	110.52453	sample_lat_lon	66.28149 S 110.52453 E	sample_lat_lon	66.28149 S 110.52453 E
+SRS1414326	-66.282243	110.526521	sample_lat_lon	66.282243 S 110.526521 E	sample_lat_lon	66.282243 S 110.526521 E
+SRS1414327	-66.282242	110.526517	sample_lat_lon	66.282242 S 110.526517 E	sample_lat_lon	66.282242 S 110.526517 E
+SRS1414328	-66.28224	110.526511	sample_lat_lon	66.28224 S 110.526511 E	sample_lat_lon	66.28224 S 110.526511 E
+SRS1414329	-66.282225	110.52643	sample_lat_lon	66.282225 S 110.52643 E	sample_lat_lon	66.282225 S 110.52643 E
+SRS1414331	-66.282203	110.526334	sample_lat_lon	66.282203 S 110.526334 E	sample_lat_lon	66.282203 S 110.526334 E
+SRS1417844	None	None	sample_lat_lon	not collected	sample_lat_lon	not collected
+SRS1509795	82.54	-62.4	sample_lat_lon	82.54 N 62.40 W	sample_lat_lon	82.54 N 62.40 W
+SRS1568542	55.86274097979957	-3.152053359663114	sample_lat_lon	55.86274097979957 N 3.152053359663114 W	sample_lat_lon	55.86274097979957 N 3.152053359663114 W
+SRS1591662	71.2999	-156.61	sample_lat_lon	71.2999 N 156.61 W	sample_lat_lon	71.2999 N 156.61 W
+SRS1591672	71.2999	-156.61	sample_lat_lon	71.2999 N 156.61 W	sample_lat_lon	71.2999 N 156.61 W
+SRS2838358	42.011882	-87.710406	sample_lat_lon	42.011882 N 87.710406 W	sample_lat_lon	42.011882 N 87.710406 W
+SRS1684649	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684650	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684652	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684656	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684659	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684660	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684661	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684665	62.25	24.15	sample_lat_lon	62.25 N 24.15 E	sample_lat_lon	62.25 N 24.15 E
+SRS1684693	62.15	25.1	sample_lat_lon	62.15 N 25.1 E	sample_lat_lon	62.15 N 25.1 E
+SRS1691501	72.0069	129.1033	sample_lat_lon	72.0069 N 129.1033 E	sample_lat_lon	72.0069 N 129.1033 E
+SRS1755423	62.03	29.98	sample_lat_lon	62.03 N 29.98 E	sample_lat_lon	62.03 N 29.98 E
+SRS1755439	62.03	29.98	sample_lat_lon	62.03 N 29.98 E	sample_lat_lon	62.03 N 29.98 E
+SRS1755441	62.03	29.98	sample_lat_lon	62.03 N 29.98 E	sample_lat_lon	62.03 N 29.98 E
+SRS1755451	62.03	29.98	sample_lat_lon	62.03 N 29.98 E	sample_lat_lon	62.03 N 29.98 E
+SRS2102204	49.03479	-122.2464	sample_lat_lon	49.03479 N 122.2464 W	sample_lat_lon	49.03479 N 122.2464 W
+SRS2102277	49.03479	-122.2464	sample_lat_lon	49.03479 N 122.2464 W	sample_lat_lon	49.03479 N 122.2464 W
+SRS2102281	49.03479	-122.2464	sample_lat_lon	49.03479 N 122.2464 W	sample_lat_lon	49.03479 N 122.2464 W
+SRS2102286	49.03479	-122.2464	sample_lat_lon	49.03479 N 122.2464 W	sample_lat_lon	49.03479 N 122.2464 W
+SRS2158128	68.3534	19.0472	sample_lat_lon	68.3534 N 19.0472 E	sample_lat_lon	68.3534 N 19.0472 E
+SRS2276628	71.299	-156.61	sample_lat_lon	71.299 N 156.61 W	sample_lat_lon	71.299 N 156.61 W
+SRS2329200	None	None	sample_lat_lon	not collected	sample_lat_lon	not collected
+SRS2401163	48.14	11.36	sample_lat_lon	48.14 N 11.36 E	sample_lat_lon	48.14 N 11.36 E
+SRS2539109	45.425	3.525	sample_lat_lon	45.425 N 3.525 E	sample_lat_lon	45.425 N 3.525 E
+SRS2539110	45.425	3.525	sample_lat_lon	45.425 N 3.525 E	sample_lat_lon	45.425 N 3.525 E
+SRS2569909	45.85	18.29	sample_lat_lon	45.85 N 18.29 E	sample_lat_lon	45.85 N 18.29 E
+SRS2569910	45.85	18.29	sample_lat_lon	45.85 N 18.29 E	sample_lat_lon	45.85 N 18.29 E
+SRS2569913	45.85	18.29	sample_lat_lon	45.85 N 18.29 E	sample_lat_lon	45.85 N 18.29 E
+SRS2569916	45.85	18.29	sample_lat_lon	45.85 N 18.29 E	sample_lat_lon	45.85 N 18.29 E
+SRS2687706	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687709	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687711	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687712	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687715	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687716	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687717	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2687718	46.75	12.1	sample_lat_lon	46.75 N 12.10 E	sample_lat_lon	46.75 N 12.10 E
+SRS2814229	38.9776	-107.0029	sample_lat_lon	38.9776 N 107.0029 W	sample_lat_lon	38.9776 N 107.0029 W
+SRS2853729	61.7025833	-147.6231111	sample_lat_lon	61.7025833 N 147.6231111 W	sample_lat_lon	61.7025833 N 147.6231111 W
+SRS5771633	77.987185	14.145691	sample_lat_lon	77.987185 N 14.145691 E	sample_lat_lon	77.987185 N 14.145691 E
+SRS5771642	77.955638	14.211086	sample_lat_lon	77.955638 N 14.211086 E	sample_lat_lon	77.955638 N 14.211086 E
+SRS5771678	77.95396	14.187531	sample_lat_lon	77.95396 N 14.187531 E	sample_lat_lon	77.95396 N 14.187531 E
+SRS3037797	31.11	121.29	sample_lat_lon	31.11 N 121.29 E	sample_lat_lon	31.11 N 121.29 E
+SRS3143224	47.662778	13.7875	sample_lat_lon	47.662778 N 13.7875 E	sample_lat_lon	47.662778 N 13.7875 E
+SRS3209397	49.697	-93.722	sample_lat_lon	49.6970 N 93.7220 W	sample_lat_lon	49.6970 N 93.7220 W
+SRS3340344	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS3553023	39.76	-86.15	sample_lat_lon	39.76 N 86.15 W	sample_lat_lon	39.76 N 86.15 W
+SRS3663625	41.74518891415656	-111.80974960327148	sample_lat_lon	41.74518891415656 N 111.80974960327148 W	sample_lat_lon	41.74518891415656 N 111.80974960327148 W
+SRS3726937	47.13	19.08	sample_lat_lon	47.13 N 19.08 E	sample_lat_lon	47.13 N 19.08 E
+SRS4097962	47.13	19.08	sample_lat_lon	47.13 N 19.08 E	sample_lat_lon	47.13 N 19.08 E
+SRS7403397	47.13	19.08	sample_lat_lon	47.13 N 19.08 E	sample_lat_lon	47.13 N 19.08 E
+SRS3858216	76.430717	-68.3279	sample_lat_lon	76.430717 N 68.327900 W	sample_lat_lon	76.430717 N 68.327900 W
+SRS3858238	76.544317	-68.457633	sample_lat_lon	76.544317 N 68.457633 W	sample_lat_lon	76.544317 N 68.457633 W
+SRS3858248	76.544317	-68.457633	sample_lat_lon	76.544317 N 68.457633 W	sample_lat_lon	76.544317 N 68.457633 W
+SRS3858251	76.544317	-68.457633	sample_lat_lon	76.544317 N 68.457633 W	sample_lat_lon	76.544317 N 68.457633 W
+SRS3858252	76.544317	-68.457633	sample_lat_lon	76.544317 N 68.457633 W	sample_lat_lon	76.544317 N 68.457633 W
+SRS3858277	76.544317	-68.457633	sample_lat_lon	76.544317 N 68.457633 W	sample_lat_lon	76.544317 N 68.457633 W
+SRS3858294	76.544317	-68.457633	sample_lat_lon	76.544317 N 68.457633 W	sample_lat_lon	76.544317 N 68.457633 W
+SRS3890100	47.62	122.02	sample_lat_lon	47.62 N 122.02 E	sample_lat_lon	47.62 N 122.02 E
+SRS3890106	47.59	122.55	sample_lat_lon	47.59 N 122.55 E	sample_lat_lon	47.59 N 122.55 E
+SRS3994733	36.478419	127.684389	sample_lat_lon	36.478419 N 127.684389 E	sample_lat_lon	36.478419 N 127.684389 E
+SRS4081825	52.144	5.043	sample_lat_lon	52.144 N 5.043 E	sample_lat_lon	52.144 N 5.043 E
+SRS4081843	52.144	5.043	sample_lat_lon	52.144 N 5.043 E	sample_lat_lon	52.144 N 5.043 E
+SRS4081858	52.144	5.043	sample_lat_lon	52.144 N 5.043 E	sample_lat_lon	52.144 N 5.043 E
+SRS4081894	52.144	5.043	sample_lat_lon	52.144 N 5.043 E	sample_lat_lon	52.144 N 5.043 E
+SRS4124037	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4124050	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4186214	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186218	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186233	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186242	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186243	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186246	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186247	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186248	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186249	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186254	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186255	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186266	78.88794	12.30781	sample_lat_lon	78.88794 N 12.30781 E	sample_lat_lon	78.88794 N 12.30781 E
+SRS4186290	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186292	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186320	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186322	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186325	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186328	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186329	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186330	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186331	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186334	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186337	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186335	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186336	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186339	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186338	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186341	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186396	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186397	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186398	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186415	78.88794	12.30781	sample_lat_lon	78.88794 N 12.30781 E	sample_lat_lon	78.88794 N 12.30781 E
+SRS4186428	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186434	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186435	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186443	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186450	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186456	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4186462	78.87933	12.30528	sample_lat_lon	78.87933 N 12.30528 E	sample_lat_lon	78.87933 N 12.30528 E
+SRS4216015	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216025	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216027	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216028	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216044	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216045	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216046	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216047	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216083	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216088	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216090	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216091	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216092	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216093	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4216095	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS4233845	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4233909	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4233925	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4233928	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4233937	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4233940	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4234016	51.0811	-114.1294	sample_lat_lon	51.0811 N 114.1294 W	sample_lat_lon	51.0811 N 114.1294 W
+SRS4246520	46.51	-71.21	sample_lat_lon	46.51 N 71.21 W	sample_lat_lon	46.51 N 71.21 W
+SRS4246523	46.51	-71.21	sample_lat_lon	46.51 N 71.21 W	sample_lat_lon	46.51 N 71.21 W
+SRS4246560	46.51	-71.21	sample_lat_lon	46.51 N 71.21 W	sample_lat_lon	46.51 N 71.21 W
+SRS4246562	46.51	-71.21	sample_lat_lon	46.51 N 71.21 W	sample_lat_lon	46.51 N 71.21 W
+SRS4246563	46.51	-71.21	sample_lat_lon	46.51 N 71.21 W	sample_lat_lon	46.51 N 71.21 W
+SRS4246564	46.51	-71.21	sample_lat_lon	46.51 N 71.21 W	sample_lat_lon	46.51 N 71.21 W
+SRS4347041	68.3532	19.0469	sample_lat_lon	68.3532 N 19.0469 E	sample_lat_lon	68.3532 N 19.0469 E
+SRS4347517	68.3532	19.0469	sample_lat_lon	68.3532 N 19.0469 E	sample_lat_lon	68.3532 N 19.0469 E
+SRS4352690	57.42175	16.666967	sample_lat_lon	57.421750 N 16.666967 E	sample_lat_lon	57.421750 N 16.666967 E
+SRS4445500	35.939	104.156	sample_lat_lon	35.939 N 104.156 E	sample_lat_lon	35.939 N 104.156 E
+SRS4445501	35.939	104.156	sample_lat_lon	35.939 N 104.156 E	sample_lat_lon	35.939 N 104.156 E
+SRS4464227	37.478604	99.004927	sample_lat_lon	37.478604 N 99.004927 E	sample_lat_lon	37.478604 N 99.004927 E
+SRS4464228	37.464779	98.562608	sample_lat_lon	37.464779 N 98.562608 E	sample_lat_lon	37.464779 N 98.562608 E
+SRS4464241	37.491002	98.428407	sample_lat_lon	37.491002 N 98.428407 E	sample_lat_lon	37.491002 N 98.428407 E
+SRS4549264	-71.96589	23.33311	sample_lat_lon	71.96589 S 23.33311 E	sample_lat_lon	71.96589 S 23.33311 E
+SRS4578485	36.73	-3.55	sample_lat_lon	36.73 N 3.55 W	sample_lat_lon	36.73 N 3.55 W
+SRS4591169	51.14	10.38	sample_lat_lon	51.14 N 10.38 E	sample_lat_lon	51.14 N 10.38 E
+SRS4615155	60.206376371	24.656728549	sample_lat_lon	60.206376371 N 24.656728549 E	sample_lat_lon	60.206376371 N 24.656728549 E
+SRS4615182	60.206376371	24.656728549	sample_lat_lon	60.206376371 N 24.656728549 E	sample_lat_lon	60.206376371 N 24.656728549 E
+SRS4615266	61.0	25.65	sample_lat_lon	61.00 N 25.65 E	sample_lat_lon	61.00 N 25.65 E
+SRS4651462	36.32	74.4	sample_lat_lon	36.32 N 74.40 E	sample_lat_lon	36.32 N 74.40 E
+SRS4739292	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4739437	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4739605	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4739647	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4739752	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4739765	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4739888	59.5505	17.2049	sample_lat_lon	59.5505 N 17.2049 E	sample_lat_lon	59.5505 N 17.2049 E
+SRS4865775	37.18111111	-3.60805556	sample_lat_lon	37.18111111 N 3.60805556 W	sample_lat_lon	37.18111111 N 3.60805556 W
+SRS4980321	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4980358	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4980599	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4980603	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4980825	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS4989155	43.91924	-72.28637	sample_lat_lon	43.91924 N 72.28637 W	sample_lat_lon	43.91924 N 72.28637 W
+SRS5014807	43.34	-1.45	sample_latitude and longitude	43.34 N 1.45 W	sample_latitude and longitude	43.34 N 1.45 W
+SRS5014814	53.835497	10.703497	sample_latitude and longitude	53.835497 N 10.703497 E	sample_latitude and longitude	53.835497 N 10.703497 E
+SRS6297114	54.160572	10.434145	sample_latitude and longitude	54.160572 N 10.434145 E	sample_latitude and longitude	54.160572 N 10.434145 E
+SRS5040903	42.38	-71.06	sample_lat_lon	42.38 N 71.06 W	sample_lat_lon	42.38 N 71.06 W
+SRS5068020	31.31	110.49	sample_lat_lon	31.31 N 110.49 E	sample_lat_lon	31.31 N 110.49 E
+SRS5068021	31.31	110.49	sample_lat_lon	31.31 N 110.49 E	sample_lat_lon	31.31 N 110.49 E
+SRS5068022	31.31	110.49	sample_lat_lon	31.31 N 110.49 E	sample_lat_lon	31.31 N 110.49 E
+SRS5068023	31.31	110.49	sample_lat_lon	31.31 N 110.49 E	sample_lat_lon	31.31 N 110.49 E
+SRS5068024	39.98	115.43	sample_lat_lon	39.98 N 115.43 E	sample_lat_lon	39.98 N 115.43 E
+SRS5068025	31.31	110.49	sample_lat_lon	31.31 N 110.49 E	sample_lat_lon	31.31 N 110.49 E
+SRS5068026	31.31	110.49	sample_lat_lon	31.31 N 110.49 E	sample_lat_lon	31.31 N 110.49 E
+SRS5068027	39.98	115.43	sample_lat_lon	39.98 N 115.43 E	sample_lat_lon	39.98 N 115.43 E
+SRS5068028	39.98	115.43	sample_lat_lon	39.98 N 115.43 E	sample_lat_lon	39.98 N 115.43 E
+SRS5068029	39.98	115.43	sample_lat_lon	39.98 N 115.43 E	sample_lat_lon	39.98 N 115.43 E
+SRS5077425	44.8883	110.1353	sample_lat_lon	44.8883 N 110.1353 E	sample_lat_lon	44.8883 N 110.1353 E
+SRS5103758	52.96	122.56	sample_lat_lon	52.96 N 122.56 E	sample_lat_lon	52.96 N 122.56 E
+SRS5121647	47.4	8.6	sample_lat_lon	47.4 N 8.6 E	sample_lat_lon	47.4 N 8.6 E
+SRS5121782	47.4	8.6	sample_lat_lon	47.4 N 8.6 E	sample_lat_lon	47.4 N 8.6 E
+SRS5265783	39.5	96.52	sample_lat_lon	39.50 N 96.52 E	sample_lat_lon	39.50 N 96.52 E
+SRS5265784	39.5	96.52	sample_lat_lon	39.50 N 96.52 E	sample_lat_lon	39.50 N 96.52 E
+SRS5265787	39.5	96.52	sample_lat_lon	39.50 N 96.52 E	sample_lat_lon	39.50 N 96.52 E
+SRS5424510	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424511	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424512	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424513	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424514	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424515	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424516	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424517	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424518	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5424519	40.84	-73.86	sample_lat_lon	40.84 N 73.86 W	sample_lat_lon	40.84 N 73.86 W
+SRS5453789	60.76	11.07	sample_lat_lon	60.76 N 11.07 E	sample_lat_lon	60.76 N 11.07 E
+SRS5465110	52.21	4.57	sample_lat_lon	52.21 N 4.57 E	sample_lat_lon	52.21 N 4.57 E
+SRS5465112	52.21	4.57	sample_lat_lon	52.21 N 4.57 E	sample_lat_lon	52.21 N 4.57 E
+SRS6061843	68.35897	18.48364	sample_lat_lon	68.35897 N 18.48364 E	sample_lat_lon	68.35897 N 18.48364 E
+SRS5592210	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592211	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592212	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592213	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592214	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592215	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592216	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592217	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592218	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5592219	-33.882845	151.200763	sample_lat_lon	33.882845 S 151.200763 E	sample_lat_lon	33.882845 S 151.200763 E
+SRS5602933	51.3	-0.7	sample_lat_lon	51.30 N 0.7 W	sample_lat_lon	51.30 N 0.7 W
+SRS5602934	51.3	-0.7	sample_lat_lon	51.30 N 0.7 W	sample_lat_lon	51.30 N 0.7 W
+SRS5602939	51.3	-0.7	sample_lat_lon	51.30 N 0.7 W	sample_lat_lon	51.30 N 0.7 W
+SRS5602942	51.3	-0.7	sample_lat_lon	51.30 N 0.7 W	sample_lat_lon	51.30 N 0.7 W
+SRS5602943	51.3	-0.7	sample_lat_lon	51.30 N 0.7 W	sample_lat_lon	51.30 N 0.7 W
+SRS5649230	68.6125	161.35	sample_lat_lon	68.612500 N 161.350000 E	sample_lat_lon	68.612500 N 161.350000 E
+SRS5860912	54.37	78.13	sample_lat_lon	54.37 N 78.13 E	sample_lat_lon	54.37 N 78.13 E
+SRS5887964	37.4316	-78.6569	sample_lat_lon	37.4316 N 78.6569 W	sample_lat_lon	37.4316 N 78.6569 W
+SRS5966856	64.33113	-96.00263	sample_lat_lon	64.33113 N 96.00263 W	sample_lat_lon	64.33113 N 96.00263 W
+SRS5966859	64.336836	-96.016599	sample_lat_lon	64.336836 N 96.016599 W	sample_lat_lon	64.336836 N 96.016599 W
+SRS5966881	64.336836	-96.016599	sample_lat_lon	64.336836 N 96.016599 W	sample_lat_lon	64.336836 N 96.016599 W
+SRS5981292	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS5981293	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS6123598	-1.64	29.05	sample_lat_lon	1.64 S 29.05 E	sample_lat_lon	1.64 S 29.05 E
+SRS6199292	33.94	102.83	sample_lat_lon	33.94 N 102.83 E	sample_lat_lon	33.94 N 102.83 E
+SRS6529448	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS6529607	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS6529668	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS6529679	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS6529771	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS6688630	32.7619	77.3334	sample_lat_lon	32.7619 N 77.3334 E	sample_lat_lon	32.7619 N 77.3334 E
+SRS6688637	32.7589	77.3277	sample_lat_lon	32.7589 N 77.3277 E	sample_lat_lon	32.7589 N 77.3277 E
+SRS6700561	65.848363	22.290987	sample_lat_lon	65.848363 N 22.290987 E	sample_lat_lon	65.848363 N 22.290987 E
+SRS6700562	65.835245	22.343002	sample_lat_lon	65.835245 N 22.343002 E	sample_lat_lon	65.835245 N 22.343002 E
+SRS6700563	65.828455	22.421703	sample_lat_lon	65.828455 N 22.421703 E	sample_lat_lon	65.828455 N 22.421703 E
+SRS6700564	65.809137	22.370167	sample_lat_lon	65.809137 N 22.370167 E	sample_lat_lon	65.809137 N 22.370167 E
+SRS6700565	65.810675	22.386503	sample_lat_lon	65.810675 N 22.386503 E	sample_lat_lon	65.810675 N 22.386503 E
+SRS6700566	65.812562	22.405057	sample_lat_lon	65.812562 N 22.405057 E	sample_lat_lon	65.812562 N 22.405057 E
+SRS6700567	65.816017	22.43175	sample_lat_lon	65.816017 N 22.431750 E	sample_lat_lon	65.816017 N 22.431750 E
+SRS6700568	65.799025	22.378682	sample_lat_lon	65.799025 N 22.378682 E	sample_lat_lon	65.799025 N 22.378682 E
+SRS6700569	65.799587	22.409728	sample_lat_lon	65.799587 N 22.409728 E	sample_lat_lon	65.799587 N 22.409728 E
+SRS6700570	65.798873	22.43525	sample_lat_lon	65.798873 N 22.435250 E	sample_lat_lon	65.798873 N 22.435250 E
+SRS6700571	65.800187	22.454638	sample_lat_lon	65.800187 N 22.454638 E	sample_lat_lon	65.800187 N 22.454638 E
+SRS6700573	65.839367	22.36995	sample_lat_lon	65.839367 N 22.369950 E	sample_lat_lon	65.839367 N 22.369950 E
+SRS6700584	65.8249	22.365567	sample_lat_lon	65.824900 N 22.365567 E	sample_lat_lon	65.824900 N 22.365567 E
+SRS6700595	65.828402	22.37229	sample_lat_lon	65.828402 N 22.372290 E	sample_lat_lon	65.828402 N 22.372290 E
+SRS6700606	65.832213	22.386933	sample_lat_lon	65.832213 N 22.386933 E	sample_lat_lon	65.832213 N 22.386933 E
+SRS6700617	65.834887	22.402155	sample_lat_lon	65.834887 N 22.402155 E	sample_lat_lon	65.834887 N 22.402155 E
+SRS6700624	65.82004	22.360242	sample_lat_lon	65.820040 N 22.360242 E	sample_lat_lon	65.820040 N 22.360242 E
+SRS6700625	65.822378	22.376848	sample_lat_lon	65.822378 N 22.376848 E	sample_lat_lon	65.822378 N 22.376848 E
+SRS6700626	65.824832	22.394288	sample_lat_lon	65.824832 N 22.394288 E	sample_lat_lon	65.824832 N 22.394288 E
+SRS6920957	52.1751	0.1407	sample_lat_lon	52.1751 N 0.1407 E	sample_lat_lon	52.1751 N 0.1407 E
+SRS7086293	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086300	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086304	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086308	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086312	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086316	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086320	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086324	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086328	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086332	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086336	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086337	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086338	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086339	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086356	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086360	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086364	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086365	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086372	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086379	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086380	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086381	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7086387	59.5	23.15	sample_lat_lon	59.50000 N 23.15000 E	sample_lat_lon	59.50000 N 23.15000 E
+SRS7040533	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040535	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040544	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040545	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040546	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040557	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040560	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040565	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040566	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040567	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040568	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040570	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040571	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040572	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040573	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040574	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040575	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040594	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040595	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040596	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040676	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040675	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040678	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040730	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040735	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040764	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040767	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040769	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040768	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040770	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040771	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040785	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040790	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040791	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7040792	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7042815	None	None	sample_lat_lon	not collected	sample_lat_lon	not collected
+SRS7107047	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS7109252	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS7122945	None	None	sample_lat_lon	not applicable	sample_lat_lon	not applicable
+SRS7126470	-68.6063	78.1714	sample_lat_lon	68.6063 S 78.1714 E	sample_lat_lon	68.6063 S 78.1714 E
+SRS7159351	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159355	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159363	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159364	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159385	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159386	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159396	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159399	45.93	8.55	sample_lat_lon	45.93 N 8.55 E	sample_lat_lon	45.93 N 8.55 E
+SRS7159405	46.172	8.191	sample_lat_lon	46.172 N 8.191 E	sample_lat_lon	46.172 N 8.191 E
+SRS7159406	46.172	8.191	sample_lat_lon	46.172 N 8.191 E	sample_lat_lon	46.172 N 8.191 E
+SRS7159412	46.172	8.191	sample_lat_lon	46.172 N 8.191 E	sample_lat_lon	46.172 N 8.191 E
+SRS7210624	None	None	sample_lat_lon	missing	sample_lat_lon	missing
+SRS7210623	None	None	sample_lat_lon	missing	sample_lat_lon	missing
+SRS7342137	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS7342144	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS7351272	35.2833	81.4833	sample_lat_lon	35.2833 N 81.4833 E	sample_lat_lon	35.2833 N 81.4833 E
+SRS7405012	None	None	sample_lat_lon	Not Applicable	sample_lat_lon	Not Applicable
+SRS7405148	51.8238273	5.8679636	sample_lat_lon	51.8238273 N 5.8679636 E	sample_lat_lon	51.8238273 N 5.8679636 E
+SRS7405149	51.8238273	5.8679636	sample_lat_lon	51.8238273 N 5.8679636 E	sample_lat_lon	51.8238273 N 5.8679636 E
+SRS7411029	-68.5157	78.4429	sample_lat_lon	68.5157 S 78.4429 E	sample_lat_lon	68.5157 S 78.4429 E
+SRS7411037	-68.5244	78.4083	sample_lat_lon	68.5244 S 78.4083 E	sample_lat_lon	68.5244 S 78.4083 E
+SRS7436080	25.7	102.7	sample_lat_lon	25.70 N 102.70 E	sample_lat_lon	25.70 N 102.70 E
+SRS7597003	-68.606	78.2217	sample_lat_lon	68.606 S 78.2217 E	sample_lat_lon	68.606 S 78.2217 E
+SRS7670818	55.649	49.3083	sample_lat_lon	55.649 N 49.3083 E	sample_lat_lon	55.649 N 49.3083 E
+SRS7704733	50.91	5.42	sample_lat_lon	50.91 N 5.42 E	sample_lat_lon	50.91 N 5.42 E
+SRS7721699	None	None	sample_lat_lon	missing	sample_lat_lon	missing
+SRS7752820	0.55	-29.21	sample_lat_lon	0.55 N 29.21 W	sample_lat_lon	0.55 N 29.21 W
+SRS7854411	None	None	None	None	None	None

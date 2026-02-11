@@ -1,0 +1,6 @@
+name: veryfasttree
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - veryfasttree=4.0

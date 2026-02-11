@@ -1,0 +1,248 @@
+import os, re
+import glob
+import shutil
+import pandas as pd
+
+##############################
+# CONFIG
+# can be overwritten by using --configfile <path to config> when calling snakemake
+# configfile:"config/config.yaml"
+
+
+include: "init.smk"
+
+
+SAMPLES_NAMES = glob_wildcards(os.path.join(GENOMES_DIR, "{genomes}.fasta")).genomes
+
+
+rule pangenome:
+    input:
+        os.path.join(RESULTS_DIR, "tablePang.txt"),
+        os.path.join(RESULTS_DIR, "PPanggolin/pangenomeGraph_light.gexf"),
+        os.path.join(RESULTS_DIR, "PPanggolin_msa/persistent_genome_alignment.aln"),
+        os.path.join(RESULTS_DIR, "PPanggolin_msa_nt/persistent_genome_alignment.aln"),
+        os.path.join(RESULTS_DIR, "PPanggolin_tree/fasttree.tree"),
+        os.path.join(RESULTS_DIR, "mrBayes/mrBayes.done"),
+
+
+rule annotations_genomes:
+    input:
+        os.path.join(GENOMES_DIR, "{names}.fasta"),
+    output:
+        folder=directory(os.path.join(RESULTS_DIR, "Annotations/{names}")),
+        gbff=os.path.join(RESULTS_DIR, "Annotations/{names}/{names}.gbff"),
+        gbff_fix=os.path.join(
+            RESULTS_DIR, "Annotations_fix/{names}/{names}.gbff"
+        ),
+    threads: 8
+    resources:
+        time="02:00:00",
+        mem="50G",
+    conda:
+        os.path.join(ENV_DIR, "bakta.yaml")
+    log:
+        out=os.path.join(RESULTS_DIR, "logs/bakta/{names}.out.log"),
+        err=os.path.join(RESULTS_DIR, "logs/bakta/{names}.err.log"),
+    params:
+        db=config["bakta_db"],
+    shell:
+        """
+        (date
+        bakta --db {params.db} -o {output.folder} --keep-contig-headers --threads {threads} --force {input} &&
+        perl -pe 's/[^[:ascii:]]//g' {output.gbff} > {output.gbff_fix}
+        date) 2> {log.err} > {log.out}
+        """
+
+
+rule prepareTablePPan:
+    input:
+        genomes=expand(rules.annotations_genomes.output.gbff_fix, names=SAMPLES_NAMES),
+    output:
+        txt=os.path.join(RESULTS_DIR, "tablePang.txt"),
+    localrule: True
+    params:
+        genome_names=expand("{names}", names=SAMPLES_NAMES),
+    run:
+        import pandas as pd
+        names = params.genome_names
+        files = input.genomes
+        df = pd.DataFrame({"Column1": names, "Column2": files})
+        df.to_csv(output.txt, index=False, sep="\t", header=False)
+
+
+rule ppanggolin:
+    input:
+        rules.prepareTablePPan.output.txt,
+    output:
+        gefx=os.path.join(RESULTS_DIR, "PPanggolin/pangenomeGraph_light.gexf"),
+        pan=os.path.join(RESULTS_DIR, "PPanggolin/pangenome.h5"),
+    conda:
+        os.path.join(ENV_DIR, "ppanggolin.yaml")
+    log:
+        out=os.path.join(RESULTS_DIR, "logs/PPangolin.out.log"),
+        err=os.path.join(RESULTS_DIR, "logs/PPangolin.err.log"),
+    threads: 30
+    resources:
+        time="08:00:00",
+        mem="40G",
+    shell:
+        "(date && ppanggolin all --anno {input} --kingdom bacteria --cpu {threads} -o $(dirname {output.gefx}) -f --verbose 1 -K 3 && date) 2> {log.err} > {log.out}"
+
+
+rule ppangolin_msa:
+    input:
+        rules.ppanggolin.output.pan,
+    output:
+        os.path.join(RESULTS_DIR, "PPanggolin_msa/persistent_genome_alignment.aln"),
+    conda:
+        os.path.join(ENV_DIR, "ppanggolin.yaml")
+    threads: 30
+    resources:
+        time="01:00:00",
+        mem="10G",
+    shell:
+        "ppanggolin msa --partition persistent --source protein --cpu {threads} --phylo -p {input} -o $(dirname {output}) -f"
+
+
+checkpoint ppangolin_msa_nt:
+    input:
+        rules.ppanggolin.output.pan,
+    output:
+        folder = directory(os.path.join(RESULTS_DIR, "PPanggolin_msa_nt")),
+        file = os.path.join(RESULTS_DIR, "PPanggolin_msa_nt/persistent_genome_alignment.aln"),
+    conda:
+        os.path.join(ENV_DIR, "ppanggolin.yaml")
+    threads: 30
+    resources:
+        time="01:00:00",
+        mem="10G",
+    shell:
+        "ppanggolin msa --partition persistent --source dna --cpu {threads} --phylo -p {input} -o {output.folder} -f"
+
+
+def get_family_names(wildcards):
+    checkpoint_output = checkpoints.ppangolin_msa_nt.get(**wildcards).output[0]
+    return expand(
+        os.path.join(RESULTS_DIR, "mrBayes/mapping_files/{family}.txt"),
+        family=glob_wildcards(os.path.join(checkpoint_output, "msa_persistent_dna/{family}.aln")).family,
+    )
+
+rule fasttree:
+    input:
+        rules.ppangolin_msa.output,
+    output:
+        os.path.join(RESULTS_DIR, "PPanggolin_tree/fasttree.tree"),
+    conda:
+        os.path.join(ENV_DIR, "veryfasttree.yaml")
+    threads: 30
+    resources:
+        time="06:00:00",
+        mem="40G",
+    shell:
+        "VeryFastTree -threads {threads} -wag -gamma {input} > {output}"
+
+
+rule aln_to_nexus:
+    input:
+        aln=os.path.join(
+            RESULTS_DIR, "PPanggolin_msa_nt/msa_persistent_dna/{family}.aln"
+        ),
+    output:
+        nex=os.path.join(
+            RESULTS_DIR, "mrBayes/Aln/{family}.nex"
+        ),
+    localrule: True
+    conda:
+        os.path.join(ENV_DIR, "r_env.yaml")
+    script:
+        os.path.join(WORK_DIR, "scripts/convert_aln_to_nexus.R")
+
+
+rule programm_file_mrbayes:
+    input:
+        nex=os.path.join(
+            RESULTS_DIR, "mrBayes/Aln/{family}.nex"
+        ),
+    output:
+        txt=os.path.join(RESULTS_DIR, "mrBayes/program_files/{family}_mrbayes_input.txt"),
+    localrule: True
+    shell:
+        """
+        echo 'begin mrbayes;
+        set autoclose=yes nowarnings=yes;
+        execute {input};
+        lset nst=6 rates=gamma;
+        mcmc ngen=300000 samplefreq=300 diagnfreq=1000;
+        end;'  > {output.txt}
+        """
+
+
+rule mrbayes:
+    input:
+        txt=os.path.join(RESULTS_DIR, "mrBayes/program_files/{family}_mrbayes_input.txt"),
+    output:
+        log=os.path.join(RESULTS_DIR, "mrBayes/log_files/{family}.log"),
+        ckp=os.path.join(
+            RESULTS_DIR, "mrBayes/Aln/{family}.nex.ckp"
+        ),
+        nex=os.path.join(
+            RESULTS_DIR, "mrBayes/Aln/{family}.nex.run1.t"
+        ),
+    threads: 3
+    resources:
+        time="04:00:00",
+        mem="10G",
+    log:
+        out=os.path.join(RESULTS_DIR, "logs/mrBayes/{family}.out.log"),
+        err=os.path.join(RESULTS_DIR, "logs/mrBayes/{family}.err.log"),
+    conda:
+        os.path.join(ENV_DIR, "mrbayes.yaml")
+    shell:
+        "(date && mb {input} > {output.log} && date) 2> {log.err} > {log.out}"
+
+
+rule nexus_to_newick:
+    input:
+        nex=os.path.join(
+            RESULTS_DIR, "mrBayes/Aln/{family}.nex.run1.t"
+        ),
+    output:
+        newick=os.path.join(RESULTS_DIR, "mrBayes/gene_trees/{family}.newick"),
+        txt=os.path.join(RESULTS_DIR, "mrBayes/mapping_files/{family}.txt"),
+    threads: 1
+    localrule: True
+    conda:
+        os.path.join(ENV_DIR, "r_env.yaml")
+    script:
+        os.path.join(WORK_DIR, "scripts/convert_nexus_to_newick.R")
+
+
+rule mrbayes_all:
+    input:
+        get_family_names
+    output:
+        os.path.join(RESULTS_DIR, "mrBayes/mrBayes.done"),
+    localrule: True
+    shell:
+        "(date && cat {input} > {output} && date)"
+
+rule prepare_family_file:
+    input:
+        rules.mrbayes_all.output,
+    output:
+        os.path.join(RESULTS_DIR, "mrBayes/full_gene_families.txt"),
+    conda:
+        os.path.join(ENV_DIR, "r_env.yaml")
+    log:
+        out=os.path.join(RESULTS_DIR, "logs/mrBayes/full_gene_families.out.log"),
+        err=os.path.join(RESULTS_DIR, "logs/mrBayes/full_gene_families.err.log"),
+    localrule: True
+    params:
+        os.path.join(WORK_DIR, "scripts/convert_nexus_to_newick.R")
+    shell:
+        """
+        (date
+        Rscript {params} $(dirname {input})/gene_trees {output}
+        date) 2> {log.err} > {log.out}
+        """
+    

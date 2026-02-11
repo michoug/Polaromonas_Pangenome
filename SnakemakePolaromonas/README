@@ -1,0 +1,4 @@
+snakemake --dry-run -s workflow/Snakefile_pangenome --configfile config/config.yaml --use-conda --rerun-incomplete --profile profile/ -c 30
+
+
+snakemake --dry-run -s Snakefile_phylogenetics --configfile config/config_reduced.yaml --use-conda --rerun-incomplete --profile profile/ -c 30 --cluster-cancel scancel

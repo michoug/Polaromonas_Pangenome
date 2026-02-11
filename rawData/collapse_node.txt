@@ -1,0 +1,38 @@
+node	env_label_good
+290	Groundwater
+300	Groundwater
+303	Glacier
+305	Groundwater
+313	Groundwater
+318	Wetland
+333	Lake water
+341	Wetland
+343	Lake water
+361	Wetland
+364	Lake water
+370	Lake water
+377	Lake water
+383	GFS
+389	Glacier
+402	GFS
+414	GFS
+423	GFS
+425	GFS
+429	GFS
+434	Lake water
+441	GFS
+445	GFS
+451	GFS
+459	GFS
+470	Groundwater
+473	Soil
+478	Soil
+483	Glacier
+493	Glacier
+497	Glacier
+534	Soil
+540	Soil
+552	River
+555	GFS
+559	GFS
+561	GFS

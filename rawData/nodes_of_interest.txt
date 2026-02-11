@@ -1,0 +1,8 @@
+node	reason
+283	Root
+286	GroundWater
+316	LakeWater
+318	Wetland
+396	GFS
+465	Soil
+492	Glacier

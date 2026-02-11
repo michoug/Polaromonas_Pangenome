@@ -1,0 +1,1160 @@
+theme_all <- theme(
+  text = element_text(size = 12, colour = "black"),
+  strip.text = element_text(size = 14, colour = "black"),
+  strip.text.x.top = element_text(angle = 90),
+  axis.text = element_text(size = 12, colour = "black"),
+  strip.text.y.left = element_text(angle = 0),
+  strip.placement = "outside",
+  panel.background = element_blank(),
+  legend.title = element_text(
+    size = 12,
+    face = "bold",
+    colour = "black"
+  ),
+  legend.text = element_text(size = 12, colour = "black"),
+  legend.position = 'top',
+  legend.box = 'vertical',
+  legend.key = element_blank(),
+  legend.margin = margin(b = -5),
+)
+
+
+create_pie_image <- function(data, filename, colors_samples) {
+  pie <- ggplot(data, aes(x = "", y = value, fill = env_label_good)) +
+    geom_bar(stat = "identity", width = 1, show.legend = FALSE) +
+    coord_polar("y") +
+    theme_void() +
+    scale_fill_manual(values = colors_samples)
+
+  ggsave(
+    filename,
+    plot = pie,
+    width = 2,
+    height = 2,
+    dpi = 100,
+    bg = "transparent",
+    create.dir = T
+  )
+}
+
+plot_map_atlas <- function(atlas_map) {
+  world <- ne_countries(scale = "medium", returnclass = "sf")
+
+  colors_atlas <- c(brewer.pal(12, "Paired"), "black")
+  colors_atlas <- gsub("#FFFF99", "lightgoldenrod3", colors_atlas)
+  names(colors_atlas) <- levels(atlas_map$env_good)
+
+  atlas_map_no_eur <- atlas_map %>%
+    filter(
+      !(parsedLon >= -10.3 &
+        parsedLon <= 26.5 &
+        parsedLat >= 35.6 &
+        parsedLat <= 71.4)
+    )
+
+  atlas_map_eur <- atlas_map %>%
+    filter(
+      (parsedLon >= -10.3 &
+        parsedLon <= 26.5 &
+        parsedLat >= 35.6 &
+        parsedLat <= 71.4)
+    )
+
+  p1 <- ggplot() +
+    geom_sf(data = world, fill = "white") +
+    geom_point(
+      data = atlas_map_no_eur,
+      aes(
+        x = parsedLon,
+        y = parsedLat,
+        color = env_good,
+        size = percAbund
+      )
+    ) +
+    scale_color_manual(values = colors_atlas, guide = "none") +
+    scale_size(limits = c(0, 12), breaks = c(0.5, 1, 2, 5, 10)) +
+    coord_sf(
+      xlim = c(-160, 170),
+      ylim = c(-80, 85),
+      expand = F
+    ) +
+    geom_rect(
+      data = world,
+      xmin = -10.3,
+      xmax = 26.5,
+      ymin = 35.6,
+      ymax = 71.4,
+      fill = NA,
+      colour = "black",
+      linewidth = 1
+    ) +
+    labs(
+      color = "Environment",
+      x = NULL,
+      y = NULL,
+      size = "Relative\nAbundance\n(%)"
+    ) +
+    # guides(shape=guide_legend(override.aes=list(size=8)))+
+    theme_light() +
+    theme(
+      axis.text = element_text(color = "black"),
+      text = element_text(size = 12, colour = "black"),
+      legend.text = element_text(size = 12, colour = "black")
+    )
+
+  # legend.position = 'top',
+  # legend.box = 'vertical',
+  # legend.key = element_blank(),
+  # legend.margin = margin(b = -5),
+
+  p2 <- ggplot() +
+    geom_sf(data = world, fill = "white") +
+    geom_point(
+      data = atlas_map_eur,
+      aes(
+        x = parsedLon,
+        y = parsedLat,
+        color = env_good,
+        size = percAbund
+      )
+    ) +
+    scale_color_manual(values = colors_atlas) + #, guide = "none") +
+    scale_size(limits = c(0, 12), breaks = c(0.5, 1, 2, 5, 10)) +
+    # scale_size_area(max_size =  10, breaks=c(0.5,1,2,3,5, 10)) +
+    coord_sf(
+      xlim = c(-10.3, 26.5),
+      ylim = c(35.6, 71.4),
+      expand = F
+    ) +
+    labs(
+      color = "Environment",
+      x = NULL,
+      y = NULL,
+      size = "Relative\nAbundance\n(%)"
+    ) +
+    theme_light() +
+    theme(
+      axis.text = element_text(color = "black"),
+      text = element_text(size = 12, colour = "black"),
+      legend.text = element_text(size = 12, colour = "black")
+    )
+
+  p3 <- wrap_plots(p1, p2, nrow = 1, guides = "collect")
+  p3
+}
+
+prepare_map_data <- function(
+  genome_metadata_clean,
+  colors_samples,
+  region = c("world", "europe")
+) {
+  library(dplyr)
+  library(sf)
+
+  region <- match.arg(region)
+
+  # Count genomes per country
+  numbgenome <- genome_metadata_clean %>%
+    group_by(country) %>%
+    summarise(numb = n(), .groups = "drop")
+
+  # Load world shapefile
+  world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+
+  # Filter countries present in your dataset
+  world_select <- world %>%
+    filter(name %in% genome_metadata_clean$country) %>%
+    left_join(numbgenome, by = c("name" = "country")) %>%
+    mutate(name = factor(name, levels = sort(name)))
+
+  # Pie data
+  pie_data <- genome_metadata_clean %>%
+    group_by(country, env_label_good) %>%
+    summarise(value = n(), .groups = "drop")
+
+  # Centroids
+  centroids <- st_point_on_surface(world_select)
+  centroids_coords <- as.data.frame(st_coordinates(centroids))
+  centroids_coords$name <- centroids$name
+
+  # Selected countries
+  selected_countries <- sort(world_select$name)
+
+  # Create a proper mapping: country -> pie image file
+  image_df <- data.frame(
+    name = selected_countries,
+    image = paste0(
+      "Figures/temp/pie_",
+      gsub(" ", "_", selected_countries),
+      ".png"
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  # Create pie images
+  for (i in seq_along(selected_countries)) {
+    country_data <- pie_data %>% filter(country == selected_countries[i])
+    create_pie_image(country_data, image_df$image[i], colors_samples)
+  }
+
+  # Merge centroids with images and genome counts
+  centroids_df <- centroids_coords %>%
+    left_join(image_df, by = "name") %>% # Correct mapping of image -> country
+    left_join(numbgenome, by = c("name" = "country"))
+
+  # Filter for Europe if needed
+  european_countries <- c(
+    "Austria",
+    "Czechia",
+    "France",
+    "Germany",
+    "Switzerland",
+    "Norway",
+    "Sweden",
+    "Spain",
+    "Italy",
+    "United Kingdom"
+  )
+
+  if (region == "europe") {
+    centroids_df <- centroids_df %>% filter(name %in% european_countries)
+  } else if (region == "world") {
+    centroids_df <- centroids_df %>% filter(!name %in% european_countries)
+  }
+
+  # Return list for plotting
+  list(
+    world = world,
+    world_select = world_select,
+    centroids = centroids_df,
+    pie_data = pie_data
+  )
+}
+
+
+# Main plotting function
+plot_map <- function(map_data, colors_samples, region = c("world", "europe")) {
+  region <- match.arg(region)
+
+  # Fake pie for legend (all environments)
+  pie_fake <- data.frame(
+    name = factor(names(colors_samples), levels = names(colors_samples)),
+    X = 1,
+    Y = 1
+  )
+
+  centroids_df <- map_data$centroids %>%
+    mutate(
+      nudge_X = case_when(
+        name == "Norway" ~ 8.5 - X,
+        name == "New Zealand" ~ 170 - X,
+        name == "Austria" ~ 4,
+        TRUE ~ 0
+      ),
+      nudge_Y = case_when(
+        name == "Nepal" ~ -2,
+        name == "Norway" ~ -19,
+        TRUE ~ 0
+      ),
+      X_nudged = X + nudge_X,
+      Y_nudged = Y + nudge_Y
+    )
+
+  # Base map
+  p <- ggplot() +
+    geom_sf(data = map_data$world, fill = "white") +
+    geom_sf(data = map_data$world_select, aes(fill = numb), color = "black") +
+    scale_fill_gradient2() +
+    geom_image(
+      data = centroids_df,
+      aes(x = X_nudged, y = Y_nudged, image = image),
+      size = 0.075
+    ) +
+    geom_label_repel(
+      data = centroids_df,
+      aes(label = name, x = X_nudged, y = Y_nudged),
+      box.padding = 0.5,
+      point.padding = 0.3,
+      nudge_x = case_when(centroids_df$name == "Austria" ~ 4, .default = 2),
+      nudge_y = case_when(
+        centroids_df$name == "Italy" ~ -2,
+        .default = 2
+      ),
+      size = 3,
+      fontface = if_else(centroids_df$numb > 5, "bold", "plain")
+    ) +
+    labs(fill = "Number of\nGenomes", x = NULL, y = NULL) +
+    new_scale_fill() +
+    geom_col(data = pie_fake, aes(x = 0, y = 0, fill = name)) +
+    scale_fill_manual(values = colors_samples) +
+    labs(fill = if (region == "world") "Environment" else "Environment") +
+    theme_all +
+    theme_light() +
+    theme(axis.text = element_text(color = "black"))
+
+  # Optionally adjust coordinates
+  if (region == "world") {
+    p <- p + coord_sf(xlim = c(-130, 180), ylim = c(-90, 90), expand = FALSE)
+  } else {
+    p <- p +
+      coord_sf(xlim = c(-10.3, 26.5), ylim = c(35.6, 71.4), expand = TRUE)
+  }
+
+  p
+}
+
+draw_table <- function(genome_statToPlot) {
+  tab_all <- genome_statToPlot %>%
+    select(
+      env_label_good,
+      n,
+      relative_length,
+      GC,
+      Completeness,
+      Contamination
+    ) %>%
+    mutate(relative_length = relative_length / 1e6) %>%
+    summarise(
+      across(
+        relative_length:Contamination,
+        .fns = list(
+          mean = function(x) mean(x, na.rm = TRUE),
+          sd = function(x) sd(x, na.rm = TRUE)
+        ),
+        .names = "{.col}_{.fn}"
+      )
+    ) %>%
+    mutate(n = 283) %>%
+    mutate(env_label_good = "All")
+
+  tab <- genome_statToPlot %>%
+    group_by(env_label_good) %>%
+    mutate(n = n()) %>%
+    ungroup() %>%
+    select(
+      env_label_good,
+      n,
+      relative_length,
+      GC,
+      Completeness,
+      Contamination
+    ) %>%
+    mutate(relative_length = relative_length / 1e6) %>%
+    group_by(env_label_good, n) %>%
+    summarise(across(
+      where(is.numeric),
+      .fns = list(
+        mean = function(x) mean(x, na.rm = TRUE),
+        sd = function(x) sd(x, na.rm = TRUE)
+      ),
+      .names = "{.col}_{.fn}"
+    )) %>%
+    ungroup() %>%
+    as.data.frame() %>%
+    rbind(tab_all) %>%
+    gt() %>%
+    # tab_header(title = "Polaromonas Statistics", ) %>%
+    fmt_number(starts_with("relative")) %>%
+    fmt_number(
+      starts_with("GC") |
+        starts_with("Completeness") |
+        starts_with("Contamination"),
+      decimals = 1
+    ) %>%
+    cols_merge_uncert(
+      col_val = "relative_length_mean",
+      col_uncert = "relative_length_sd"
+    ) %>%
+    cols_merge_uncert(
+      col_val = "Completeness_mean",
+      col_uncert = "Completeness_sd"
+    ) %>%
+    cols_merge_uncert(
+      col_val = "Contamination_mean",
+      col_uncert = "Contamination_sd"
+    ) %>%
+    cols_merge_uncert(col_val = "GC_mean", col_uncert = "GC_sd") %>%
+    cols_label(
+      env_label_good = "Environment",
+      n = "Number of\ngenomes",
+      relative_length_mean = "Relative length\n(Mbp)",
+      GC_mean = "GC (%)",
+      Completeness_mean = "Completeness\n(%)",
+      Contamination_mean = "Contamination\n(%)"
+    ) |>
+    cols_align(align = "center", columns = everything())
+  tab
+}
+
+
+comparing_genomes_params <- function(genome_statToPlot, colors_samples) {
+  plot_labels <- c(
+    relative_length = "Normalized\nlength (Mbp)",
+    GC = "GC content (%)"
+    # optimumT = "Estimated optimum\n temperature (°C)"
+  )
+
+  p <- genome_statToPlot %>%
+    select("relative_length", "GC", env_label_good) %>% #"optimumT",
+    mutate(relative_length = relative_length / 1e6) %>%
+    pivot_longer(cols = !env_label_good) %>%
+    mutate(
+      name = factor(
+        name,
+        levels = (c(
+          "relative_length",
+          "GC"
+          # "optimumT"
+        ))
+      )
+    ) %>%
+    ggplot(aes(x = env_label_good, y = value, fill = env_label_good)) +
+    geom_violin() +
+    geom_boxplot(width = 0.1, fill = "white") +
+    facet_wrap(~name, scales = "free_y", labeller = as_labeller(plot_labels)) +
+    theme_classic() +
+    theme_all +
+    theme(
+      strip.text.x.top = element_text(angle = 0, size = 12),
+      axis.text.x = element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      ),
+      axis.title = element_blank()
+    ) +
+    labs(y = "", x = "") +
+    scale_fill_manual(values = colors_samples, guide = "none")
+
+  p
+}
+
+plot_nmds <- function(nmds, map, colors_samples) {
+  datfort <- as.data.frame(scores(nmds)$sites)
+
+  datfort_sites <- datfort %>%
+    rownames_to_column(var = "label")
+
+  nmds$stress <- ifelse(
+    nmds$stress < 1e-2,
+    scientific(nmds$stress, digits = 2),
+    round(nmds$stress, digits = 2)
+  )
+
+  stress_value <- paste("Stress = ", nmds$stress, sep = "")
+
+  yvalue = max(datfort_sites$NMDS2) -
+    0.05 *
+      (max(datfort_sites$NMDS2) - min(datfort_sites$NMDS2))
+  xvalue = min(datfort_sites$NMDS1) +
+    0.1 *
+      (max(datfort_sites$NMDS1) - min(datfort_sites$NMDS1))
+
+  NMDS_species1 <- nmds$species[, 1]
+  NMDS_species2 <- nmds$species[, 2]
+  NMDS_species <- data.frame(NMDS_species1, NMDS_species2) %>%
+    rownames_to_column("Modules")
+  NMDS1 = nmds$points[, 1]
+  NMDS2 = nmds$points[, 2]
+
+  NMDS_data <- data.frame(NMDS1, NMDS2) %>%
+    rownames_to_column("Genome") %>%
+    mutate(Genome = gsub("-", "_", Genome)) %>%
+    left_join(map, join_by(Genome)) %>%
+    filter(env_label_good != "Other")
+
+  cent <- aggregate(
+    cbind(NMDS1, NMDS2) ~ env_label_good,
+    data = NMDS_data,
+    FUN = mean
+  )
+
+  segs <- merge(
+    NMDS_data,
+    setNames(cent, c('env_label_good', 'oNMDS1', 'oNMDS2')),
+    by = 'env_label_good',
+    sort = FALSE
+  )
+
+  # title_labs <- paste(as.character(type), "gene presence absence", sep = " ")
+
+  p <- ggplot() +
+    # ggtitle(title_labs) +
+    geom_point(
+      data = NMDS_data,
+      mapping = aes(x = NMDS1, y = NMDS2, colour = env_label_good),
+      size = 2
+    ) +
+    geom_segment(
+      data = segs,
+      mapping = aes(
+        x = NMDS1,
+        y = NMDS2,
+        colour = env_label_good,
+        xend = oNMDS1,
+        yend = oNMDS2
+      )
+    ) + # spiders
+    geom_point(
+      data = cent,
+      mapping = aes(x = NMDS1, y = NMDS2, fill = env_label_good),
+      colour = "black",
+      shape = 21,
+      size = 5,
+      show.legend = FALSE
+    ) +
+    scale_fill_manual(values = colors_samples) +
+    scale_color_manual(values = colors_samples) +
+    annotate(
+      "text",
+      x = xvalue,
+      y = yvalue,
+      label = stress_value,
+      size = 5
+    ) +
+    coord_equal() +
+    labs(color = "Environment") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE)) +
+    theme_classic() +
+    theme_all
+
+  p
+}
+
+plot_heatmap_microtrait <- function(
+  microtrait_to_plot,
+  microtrait_enrich_sign
+) {
+  plot_data <- microtrait_to_plot %>%
+    filter(name %in% microtrait_enrich_sign$name) %>%
+    summarise(
+      .by = c(env_label_good, name),
+      per_genomes = sum(value) / n_distinct(Genome) * 100
+    ) %>%
+    separate(
+      name,
+      into = c("trait_category1", "trait_category2", "trait_category3"),
+      sep = ":",
+      extra = "merge",
+      remove = F
+    ) %>%
+    filter(env_label_good != "Other") %>%
+    mutate(
+      trait_category3 = gsub(
+        "(.*?):.*:(.*?)",
+        "\\1 - \\2",
+        trait_category3,
+        perl = T
+      )
+    ) %>%
+    mutate(
+      trait_category3 = gsub(
+        "(.*?):(.*?)",
+        "\\1 - \\2",
+        trait_category3,
+        perl = T
+      )
+    ) %>%
+    mutate(
+      trait_category3 = str_remove(
+        trait_category3,
+        " ?two.component systems ?,?"
+      )
+    ) %>%
+    mutate(
+      trait_category3 = str_replace(
+        trait_category3,
+        "desiccation/osmotic/salt stress",
+        "osmotic stress"
+      )
+    ) %>%
+    mutate(
+      trait_category3 = str_remove(
+        trait_category3,
+        "simple compound degradation - "
+      )
+    ) %>%
+    mutate(trait_category3 = str_remove(trait_category3, "C1 compounds - ")) %>%
+    mutate(trait_category3 = str_remove(trait_category3, "pigments - ")) %>%
+    mutate(
+      trait_category3 = str_remove(
+        trait_category3,
+        "scavenging of reactive oxygen species - "
+      )
+    ) %>%
+    mutate(trait_category3 = str_remove(trait_category3, ".*transport - ")) %>%
+    mutate(
+      trait_category3 = str_replace(
+        trait_category3,
+        "temperature - RNA",
+        "Low temperature - RNA"
+      )
+    ) %>%
+    mutate(
+      trait_category3 = str_remove(trait_category3, "chemo.*trophy - +")
+    ) %>%
+    mutate(
+      trait_category3 = if_else(
+        trait_category3 %in%
+          c(
+            "ED pathway",
+            "EMP pathway",
+            "ETC complex IV",
+            "Low temperature - RNA degradation",
+            "OH-spheroidenone",
+            "pH stress - redox sensing",
+            "pH stress - urease system",
+            "ROS scavenging enzymes",
+            "S compound transport",
+            "TCA cycle"
+          ),
+        trait_category3,
+        str_to_sentence(trait_category3)
+      )
+    ) %>%
+    mutate(
+      cat_facet = case_when(
+        trait_category1 == "Stress Tolerance" ~ trait_category1,
+        .default = trait_category2
+      )
+    ) %>%
+    mutate(cat_facet = str_to_sentence(cat_facet))
+
+  data_clust <- plot_data %>%
+    select(env_label_good, trait_category3, per_genomes) %>%
+    pivot_wider(values_from = per_genomes, names_from = trait_category3) %>%
+    column_to_rownames("env_label_good")
+
+  data.dist <- vegdist(t(data_clust), method = "euclidian", na.rm = T)
+  col.clus <- hclust(data.dist, "aver")
+  ord <- col.clus$order
+
+  order_cat <- colnames(data_clust)[ord]
+
+  plot_data$trait_category3 <- factor(
+    plot_data$trait_category3,
+    levels = order_cat
+  )
+
+  heatmap_enriched_traits_full <- ggplot(
+    plot_data,
+    aes(x = env_label_good, y = trait_category3, fill = per_genomes)
+  ) +
+    geom_tile() +
+    facet_grid(cat_facet ~ ., scales = "free", space = "free", switch = "y") +
+    scale_fill_gradient2(
+      midpoint = 50,
+      low = "yellow",
+      high = "red",
+      mid = "orange",
+      name = "Percentage of\ngenomes (%)"
+    ) +
+    theme_all +
+    theme(
+      axis.title = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.text.x = element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      )
+    )
+
+  heatmap_enriched_traits_full
+}
+
+
+collapse_node_color <- function(df, color) {
+  colors_df <- as.data.frame(color) %>%
+    rownames_to_column(var = "env_label_good")
+
+  df_out <- df %>%
+    left_join(colors_df, join_by(env_label_good))
+
+  df_out
+}
+
+
+phylogenetic_tree <- function(
+  rooted_tree,
+  nodes_interest,
+  colors_samples,
+  collapse_color
+) {
+  # tree_data <- data_env_stats %>%
+  #   mutate(Genome = gsub("-", "_", Genome)) %>%
+  #   select(-env_label_good) %>%
+  #   mutate(relative_length = relative_length / 1e6)
+
+  nodes_plot <- nodes_interest %>%
+    rename(nodes = node) %>%
+    mutate(reason = str_to_title(reason))
+
+  colors_mod <- colors_samples
+
+  names(colors_mod)[
+    names(colors_mod) == "Other"
+  ] <- "Uncertain"
+
+  colors_mod[colors_mod == "black"] <- "gray44"
+
+  rooted_tree@data <- rooted_tree@data %>%
+    mutate(
+      shape = if_else(node == 283, "Root", "Normal")
+    ) %>%
+    mutate(
+      env_label_good = if_else(
+        env_label_good == "Lakewater",
+        "Lake water",
+        env_label_good
+      )
+    ) %>%
+    mutate(
+      env_label_good = if_else(
+        env_label_good == "Other",
+        "Uncertain",
+        env_label_good
+      )
+    )
+
+  p1 <- ggtree(rooted_tree, size = 0.3, alpha = 0.7) +
+    geom_rootedge(rootedge = 10) +
+    geom_nodepoint(aes(color = env_label_good, shape = shape), size = 5) +
+    scale_shape_manual(values = c(16, 13), guide = "none") +
+    scale_color_manual(
+      values = colors_mod,
+      na.value = "gray44",
+      guide = "none"
+    ) +
+    geom_fruit(
+      geom = geom_tile,
+      aes(fill = env_label_good),
+      width = 20,
+      offset = 0.05
+    ) +
+    scale_fill_manual(values = colors_mod, name = "Environment") +
+    new_scale_fill() +
+    new_scale_color()
+
+  p2 <- p1 +
+    geom_point2(
+      mapping = aes(subset = (node %in% nodes_plot$nodes)),
+      shape = 21,
+      size = 5,
+      stroke = 1.5
+    ) +
+    scale_fill_manual(values = colors_mod, name = "Environment")
+  p2
+
+  p3 <- reduce2(
+    collapse_color$node,
+    collapse_color$color,
+    .init = p2,
+    .f = function(plot, node, color) {
+      collapse(plot, node, "mixed", fill = color, alpha = 0.8)
+    }
+  )
+  p3
+}
+
+
+plot_info_dtl <- function(DTL_nodes_int, colors_DTL) {
+  p1 <- DTL_nodes_int %>%
+    pivot_longer(cols = !c(reason, node)) %>%
+    arrange(node) %>%
+    filter(!(reason %in% c("max", "min"))) %>%
+    mutate(
+      reason = case_when(
+        reason == "mean" ~ "Average",
+        reason == "GFS" ~ "GFS",
+        reason == "Glacier" ~ "Soil -> Glacier",
+        reason == "GroundWater" ~ "Groundwater",
+        reason == "LakeWater" ~ "Lake water",
+        reason == "Root" ~ "LCA",
+        reason == "Soil" ~ "Soil",
+        reason == "Wetland" ~ "Lake water -> Wetland"
+        # reason == "GFS" ~ reason,
+        # reason == "LakeWater" ~ "Lake water",
+        # .default = str_to_title(reason)
+      )
+    ) %>%
+    mutate(
+      reason = factor(
+        reason,
+        levels = c(
+          "Average",
+          "LCA",
+          "GFS",
+          "Groundwater",
+          "Lake water",
+          "Lake water -> Wetland",
+          "Soil",
+          "Soil -> Glacier"
+        )
+      )
+    ) %>%
+    mutate(name = str_to_title(name)) %>%
+    mutate(
+      name = factor(
+        name,
+        levels = c("Duplications", "Transfers", "Origination", "Losses")
+      )
+    ) %>%
+    ggplot(aes(x = reason, y = value, fill = name)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    scale_fill_manual(values = colors_DTL) +
+    theme_classic() +
+    labs(x = "Nodes", y = "Number of Events", fill = "Type of Events") +
+    theme_all +
+    theme(
+      axis.title.x = element_blank(),
+      axis.text.x = element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      )
+    )
+
+  p1
+}
+
+plot_prevalence_ppan <- function(
+  gene_pres_abs,
+  partition_persistent,
+  partition_shell,
+  partition_cloud
+) {
+  partition_persistent <- partition_persistent %>%
+    mutate(type = "persistent")
+
+  partition_cloud <- partition_cloud %>%
+    mutate(type = "cloud")
+
+  partition_shell <- partition_shell %>%
+    mutate(type = "shell")
+
+  partitions <- rbind(partition_cloud, partition_persistent, partition_shell)
+
+  dat <- gene_pres_abs %>%
+    pivot_longer(cols = !"Gene") %>%
+    group_by(Gene) %>%
+    summarise(n = sum(value), perc = n * 100 / 282) %>%
+    ungroup() %>%
+    left_join(partitions, join_by(Gene == Family)) %>%
+    mutate(type = str_to_title(type))
+
+  ggplot(dat, aes(x = type, y = perc, fill = type)) +
+    geom_boxplot() +
+    labs(
+      y = "Prevalence in\nPolaromonas genones (%)",
+      x = "Type",
+      fill = "Type"
+    ) +
+    theme_classic() +
+    theme_all
+}
+
+
+heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
+  dat <- ev_micro_ancester_sel %>%
+    filter(presenceRemovingLosses > 0) %>%
+    select(
+      microtrait_rule_name,
+      "microtrait_trait_name3",
+      duplications:losses,
+      presenceRemovingLosses:reason
+    ) %>%
+    distinct() %>%
+    select(-c(microtrait_rule_name)) %>%
+    pivot_longer(cols = c(duplications:presenceRemovingLosses)) %>%
+    group_by(across(-value)) %>%
+    summarise(sum = sum(value)) %>%
+    ungroup() %>%
+    filter(
+      !(microtrait_trait_name3 ==
+        "Resource Acquisition:Substrate degradation:simple compound degradation:protein degradation")
+    ) %>%
+    separate_wider_delim(
+      microtrait_trait_name3,
+      delim = ":",
+      names = c("c1", "c2", "c3", "c4", "c5", "c6", "c7"),
+      too_few = "align_start",
+      cols_remove = F
+    ) %>%
+    mutate(
+      type = case_when(
+        # !is.na(microtrait_rule_substrate) ~ paste(c3, microtrait_rule_substrate, sep = " - "),
+        is.na(c4) ~ c3,
+        is.na(c5) ~ c4,
+        is.na(c6) ~ paste(c3, c5, sep = " - "),
+        c3 == "temperature" ~ paste(c4, " temperature - ", c6, sep = ""),
+        c3 == "pigments" ~ paste(c3, c6, sep = " - "),
+        .default = c4
+      )
+    ) %>%
+    mutate(
+      type = str_replace(
+        type,
+        "desiccation/osmotic/salt stress",
+        "Osmotic stress"
+      )
+    ) %>%
+    mutate(type = str_remove(type, "simple compound degradation - ")) %>%
+    mutate(type = str_remove(type, "C1 compounds - ")) %>%
+    mutate(type = str_remove(type, "pigments - ")) %>%
+    mutate(type = str_remove(type, ".*transport - ")) %>%
+    mutate(type = str_remove(type, "chemo.*trophy - +")) %>%
+    mutate(
+      category = case_when(
+        c1 == "Resource Acquisition" ~ c2,
+        c1 == "Resource Use" ~ c2,
+        c1 == "Stress Tolerance" ~ "Stress Tolerance"
+      )
+    ) %>%
+    complete(type, reason) %>%
+    filter(!is.na(c1)) %>%
+    group_by(category, type, reason) %>%
+    mutate(nb = sum(sum)) %>%
+    ungroup() %>%
+    filter(nb > 0) %>%
+    mutate(sum = if_else(sum > 0, sum, NA)) %>%
+    # filter(reason != "Root") %>%
+    mutate(
+      name = if_else(name == "presenceRemovingLosses", "Genes number", name)
+    ) %>%
+    mutate(name = str_to_sentence(name)) %>%
+    mutate(
+      name = factor(
+        name,
+        levels = c(
+          "Genes number",
+          "Duplications",
+          "Transfers",
+          "Origination",
+          "Losses"
+        )
+      )
+    ) %>%
+    mutate(
+      reason = case_when(
+        reason == "GFS" ~ "GFS",
+        reason == "Glacier" ~ "Soil -> Glacier",
+        reason == "GroundWater" ~ "Groundwater",
+        reason == "LakeWater" ~ "Lake water",
+        reason == "Root" ~ "LCA",
+        reason == "Soil" ~ "Soil",
+        reason == "Wetland" ~ "Lake water -> Wetland"
+      )
+    ) %>%
+    mutate(
+      reason = factor(
+        reason,
+        levels = c(
+          # "LUCA",
+          "LCA",
+          "GFS",
+          "Groundwater",
+          "Lake water",
+          "Lake water -> Wetland",
+          "Soil",
+          "Soil -> Glacier"
+        )
+      )
+    ) %>%
+    mutate(
+      type = case_when(
+        str_detect(type, "high temperature") ~
+          str_replace(type, "high", "High"),
+        str_detect(type, "low temperature") ~ str_replace(type, "low", "Low"),
+        str_detect(type, "Osmotic") ~ type,
+        str_detect(type, "pH") ~ type,
+        str_detect(type, "photosytem") ~ str_replace(type, "photo", "Photo"),
+        str_detect(type, "^oxidative") ~ str_replace(type, "oxi", "Oxi"),
+        str_detect(type, "vitam") ~ str_replace(type, "vita", "Vita"),
+        type %in%
+          c(
+            "ATP-dependent proteases",
+            "ED pathway",
+            "EPS biosynthesis/export",
+            "PHB cycle",
+            "ROS scavenging enzymes",
+            "S compound transport"
+          ) ~
+          type,
+        .default = str_to_sentence(type)
+      )
+    ) %>%
+    mutate(category = str_to_sentence(category)) %>%
+    mutate(sum = if_else(is.na(sum), 0, sum)) %>%
+    group_by(reason, category, type, name) %>%
+    summarise(temp = sum(sum)) %>%
+    ungroup() %>%
+    complete(reason, nesting(category, type), name, fill = list(temp = 0)) %>%
+    mutate(sum = if_else(temp == 0, NA, temp)) %>%
+    select(-temp) %>%
+    ungroup()
+
+  p1 <- ggplot(
+    dat,
+    aes(
+      x = reason,
+      y = fct_rev(type),
+      fill = sum
+    )
+  ) +
+    geom_tile(color = "black") +
+    facet_grid(
+      category ~ name,
+      scales = "free",
+      space = "free",
+      switch = "y"
+    ) +
+    scale_fill_gradient(
+      low = "#fed976",
+      high = "#7f0000",
+      na.value = "white",
+      name = "Number of Genes"
+    ) +
+    theme_all +
+    theme(
+      strip.text.x.top = element_text(angle = 0),
+      axis.text.x = element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      ),
+      axis.title = element_blank()
+    )
+
+  p1
+}
+
+plot_genomad_perc <- function(genomad_numb) {
+  genomad_numb <- genomad_numb %>%
+    mutate(
+      env_n = factor(
+        env_n,
+        levels = c(
+          "Glacier (73)",
+          "GFS (54)",
+          "River (17)",
+          "Wetland (26)",
+          "Lake water (55)",
+          "Groundwater (23)",
+          "Soil (31)",
+          "Other (3)"
+        )
+      )
+    )
+
+  ggplot(genomad_numb, aes(x = env_n, y = n, fill = type)) +
+    geom_bar(stat = "identity", position = position_dodge()) +
+    theme_classic() +
+    labs(y = "Percentage of\nGenomes (%)", fill = "Extrachromosomal DNA") +
+    theme_all +
+    theme(axis.title.x = element_blank())
+}
+
+plot_genomad_dtl <- function(dat, colors) {
+  dat_plot <- dat %>%
+    mutate(perc = perc * 100) %>%
+    mutate(type = str_to_title(type)) %>%
+    mutate(
+      name = case_when(
+        name == "dup_sum" ~ "Duplications",
+        name == "orig_sum" ~ "Origination",
+        name == "loss_sum" ~ "Losses",
+        name == "trans_sum" ~ "Transfers"
+      )
+    ) %>%
+    mutate(
+      name = factor(
+        name,
+        levels = c("Duplications", "Transfers", "Origination", "Losses")
+      )
+    ) %>%
+    mutate(
+      reason = case_when(
+        reason == "GFS" ~ "GFS",
+        reason == "Glacier" ~ "Soil -> Glacier",
+        reason == "GroundWater" ~ "Groundwater",
+        reason == "LakeWater" ~ "Lake water",
+        reason == "Root" ~ "LCA",
+        reason == "Soil" ~ "Soil",
+        reason == "Wetland" ~ "Lake water -> Wetland"
+        # reason == "GFS" ~ reason,
+        # reason == "LakeWater" ~ "Lake water",
+        # .default = str_to_title(reason)
+      )
+    ) %>%
+    mutate(reason_numb = paste(reason, "\n(", allnumb, ")", sep = "")) %>%
+    mutate(
+      reason_numb = factor(
+        reason_numb,
+        levels = c(
+          "LCA\n(23)",
+          "LCA\n(820)",
+          "GFS\n(2013)",
+          "GFS\n(59)",
+          "Groundwater\n(1891)",
+          "Groundwater\n(50)",
+          "Lake water\n(1842)",
+          "Lake water\n(52)",
+          "Lake water -> Wetland\n(1845)",
+          "Lake water -> Wetland\n(54)",
+          "Soil\n(2220)",
+          "Soil\n(63)",
+          "Soil -> Glacier\n(2334)",
+          "Soil -> Glacier\n(70)"
+        )
+      )
+    )
+
+  p1 <- ggplot(dat_plot, aes(x = reason_numb, y = perc, fill = name)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = colors) +
+    facet_wrap(~type, scales = "free_x") +
+    labs(y = "Frequence (%)", x = "", fill = "Type of Events") +
+    theme_classic() +
+    theme_all +
+    theme(
+      strip.text.x.top = element_text(angle = 0),
+      axis.text.x = element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      ),
+    )
+
+  p1
+}
+
+rarefaction_curve <- function(dat) {
+  rare_plot <- dat %>%
+    select(genomes_count:cloud) %>%
+    na.omit() %>%
+    pivot_longer(cols = !genomes_count) %>%
+    mutate(name = str_to_title(name)) %>%
+    filter(value > 0) %>%
+    ggplot(aes(x = genomes_count, y = value, color = name)) +
+    # geom_point()#+
+    stat_summary(fun = median, geom = "point", size = 1, shape = 18) +
+    scale_y_log10(labels = trans_format("log10", math_format(10^.x))) +
+    stat_summary(
+      fun.data = function(x) {
+        data.frame(ymin = median(x) - sd(x), ymax = median(x) + sd(x))
+      },
+      geom = "errorbar",
+      width = 0.2,
+      size = 0.5
+    ) +
+    labs(
+      x = "Number of Genomes",
+      y = "Number of Genes",
+      color = "Genes Category"
+    ) +
+    theme_classic() +
+    theme_all
+
+  rare_plot
+}

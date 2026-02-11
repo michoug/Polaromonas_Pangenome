@@ -1,0 +1,24 @@
+############################################################
+# STEPS
+
+# Steps to be done
+#steps: ["preprocessing"]
+
+
+
+############################################################
+# INPUT
+# Directory where the workflow exists
+work_dir: ""
+
+# Directory to save the output to
+results_dir: "Results_v4"
+
+# Directory for all the conda environments
+env_dir: "envs"
+
+
+
+##############################
+
+

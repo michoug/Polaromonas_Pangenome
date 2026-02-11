@@ -1,0 +1,30 @@
+############################################################
+# STEPS
+
+# Steps to be done
+#steps: ["preprocessing"]
+
+
+
+############################################################
+# INPUT
+# Directory where the workflow exists
+work_dir: "/scratch/gmichoud/SnakemakePolaromonas"
+
+# Directory to save the output to
+results_dir: "/scratch/gmichoud/SnakemakePolaromonas/Results"
+
+# Directory for all the conda environments
+env_dir: "/scratch/gmichoud/SnakemakePolaromonas/envs"
+
+# Number of cpus or threads to use
+threads: 28
+
+# Directory where the genomes are
+
+genomes_dir: "/scratch/gmichoud/SnakemakePolaromonas/Genomes_small"
+
+##############################
+
+
+bakta_db: "/work/river/Databases/bakta/db"

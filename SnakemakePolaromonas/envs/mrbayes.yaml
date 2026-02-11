@@ -1,0 +1,6 @@
+name: mrbayes
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - mrbayes=3.2.7

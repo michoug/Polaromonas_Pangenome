@@ -135,7 +135,7 @@ The pipeline expects input data in the `rawData/` directory:
 
 ## Upstream Workflow
 
-For genome preprocessing and pangenome construction, see the **`SnakemakePolaromonas/`** folder, which contains a Snakemake pipeline for genome annotation (Bakta), pangenome analysis (PPanGGOLiN), and phylogenetic tree construction. Refer to its README for details.
+For genome preprocessing and pangenome construction, see the **`SnakemakePolaromonas/`** folder. This folder contains a Snakemake pipeline for genome annotation (Bakta), pangenome analysis (PPanGGOLiN), and phylogenetic tree construction. Refer to its README for details.
 
 ## Citation
 

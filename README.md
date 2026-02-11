@@ -1,5 +1,7 @@
 # Polaromonas Pangenome Analysis
 
+[![DOI](https://zenodo.org/badge/1155438049.svg)](https://doi.org/10.5281/zenodo.18611200)
+
 This repository contains a comprehensive pangenome analysis pipeline for *Polaromonas* genomes using R and the `targets` package for reproducible workflow management.
 
 ## Overview
@@ -8,7 +10,7 @@ This project performs statistical analysis and visualization of *Polaromonas* pa
 - Genome metadata analysis and quality assessment
 - Pangenome structure analysis (core, shell, and cloud genes)
 - Phylogenetic tree visualization and ancestral state reconstruction
-- Gene family evolution analysis using duplication-transfer-loss (DTL) events
+- Gene family evolution analysis using duplication-transfer-loss-origination (DTLO) events
 - Microbial trait prediction and enrichment analysis
 - Geographic distribution mapping
 - Comparative genomics and NMDS ordination
@@ -54,12 +56,12 @@ R -e "renv::restore()"
 
 ### Key R Packages
 
-- **Workflow**: `targets`, `tarchetypes`, `crew`
-- **Data manipulation**: `tidyverse`, `vroom`, `janitor`
-- **Phylogenetics**: `ape`, `ggtree`, `treeio`, `tidytree`
-- **Visualization**: `ggplot2`, `patchwork`, `gt`, `gtExtras`
-- **Statistics**: `vegan` (for NMDS and ANOSIM)
-- **Geospatial**: `sf`, `rnaturalearth`
+- **Workflow**: [targets](https://docs.ropensci.org/targets/), [tarchetypes](https://docs.ropensci.org/tarchetypes/), [crew](https://docs.ropensci.org/crew/)
+- **Data manipulation**: [tidyverse](https://www.tidyverse.org/), [vroom](https://vroom.r-lib.org/), [janitor](https://sfirke.github.io/janitor/)
+- **Phylogenetics**: [ape](https://cran.r-project.org/web/packages/ape/index.html), [ggtree](https://bioconductor.org/packages/release/bioc/html/ggtree.html), [treeio](https://bioconductor.org/packages/release/bioc/html/treeio.html), [tidytree](https://bioconductor.org/packages/release/bioc/html/tidytree.html)
+- **Visualization**: [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html), [patchwork](https://cran.r-project.org/web/packages/patchwork/index.html), [gt](https://cran.r-project.org/web/packages/gt/index.html), [gtExtras](https://cran.r-project.org/web/packages/gtExtras/index.html)
+- **Statistics**: [vegan](https://cran.r-project.org/web/packages/vegan/index.html) (for NMDS and ANOSIM)
+- **Geospatial**: [sf](https://cran.r-project.org/web/packages/sf/index.html), [rnaturalearth](https://cran.r-project.org/web/packages/rnaturalearth/index.html)
 
 ## Usage
 
@@ -70,16 +72,8 @@ Execute the complete workflow using the `targets` package:
 ```r
 # Load targets library
 library(targets)
-
-# View the pipeline structure
-tar_manifest()
-
-# Visualize the dependency graph
-tar_visnetwork()
-
-# Run the entire pipeline
-tar_make()
-
+library(tarchetypes)
+library(crew)
 # Run with parallel processing (configured in _targets.R)
 tar_make(reporter = "balanced")
 ```
@@ -123,7 +117,7 @@ The pipeline generates outputs in the `Figures/` directory:
 
 ## Data Requirements
 
-The pipeline expects input data in the `rawData/` directory:
+All the data that the pipeline expects are found in the `rawData/` directory:
 
 - Genome statistics and quality metrics (CheckM2 results)
 - Pangenome data (PPanGGOLiN output)
@@ -143,9 +137,8 @@ If you use this pipeline or data, please cite the associated publication (detail
 
 ## License
 
-[Add license information]
+MIT License.
 
 ## Contact
 
-[Add contact information]
-
+Grégoire Michoud

@@ -1,18 +1,21 @@
 # Snakemake Polaromonas Pangenome Pipeline
 
 ## Overview
+
 This Snakemake pipeline performs comprehensive pangenome analysis and phylogenetic reconstruction for Polaromonas genomes. It automates the entire workflow from genome annotation to phylogenetic tree construction.
 
 ## Pipeline Workflow
 
 The pipeline consists of the following main steps:
 
-### 1. Genome Annotation (Bakta)
+### 1. Genome Annotation ([Bakta](https://github.com/oschwengers/bakta))
+
 - Annotates input genome assemblies (FASTA format) using Bakta
 - Generates GenBank format files (.gbff) for downstream analysis
 - Removes non-ASCII characters to ensure compatibility
 
-### 2. Pangenome Analysis (PPanggolin)
+### 2. Pangenome Analysis ([PPanggolin](https://github.com/labgem/PPanGGOLiN))
+
 - Creates a pangenome table from annotated genomes
 - Runs PPanggolin to build the pangenome graph
 - Identifies core, shell, and cloud genes
@@ -21,11 +24,13 @@ The pipeline consists of the following main steps:
   - Pangenome database (HDF5 format)
 
 ### 3. Multiple Sequence Alignment
+
 - Generates multiple sequence alignments (MSA) for persistent genes
 - Creates both protein and nucleotide alignments
 - Used for phylogenetic inference
 
 ### 4. Phylogenetic Tree Construction
+
 - **FastTree**: Rapid maximum-likelihood phylogenetic tree from protein alignment
 - **MrBayes**: Bayesian phylogenetic inference for individual gene families
   - Converts alignments to NEXUS format
@@ -36,23 +41,35 @@ The pipeline consists of the following main steps:
 ## Usage
 
 ### Run the pangenome pipeline:
+
+First, perform a dry run to check the workflow:
+
 ```bash
 snakemake --dry-run -s workflow/Snakefile --configfile config/config.yaml --use-conda --rerun-incomplete --profile profile/ -c 30
 ```
+Then, execute the full pipeline:
+
+```bash
+snakemake -s workflow/Snakefile --configfile config/config.yaml --use-conda --rerun-incomplete --profile profile/ -c 30
+```
 
 ### Configuration
+
 Edit `config/config.yaml` to specify:
+
 - Input genome directory
 - Output results directory
 - Bakta database path
 - Number of threads
 
 ## Requirements
+
 - Snakemake
 - Conda (for environment management)
 - Required conda environments defined in `envs/` directory
 
 ## Output Structure
+
 - `Annotations/`: Bakta genome annotations
 - `PPanggolin/`: Pangenome graph and database
 - `PPanggolin_msa/`: Protein alignments for persistent genes

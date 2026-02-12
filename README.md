@@ -36,6 +36,7 @@ The `_targets.R` file defines the entire analysis workflow using the [`targets`]
 - **Organized outputs**: Generates figures, tables, and intermediate data objects
 
 The pipeline includes:
+
 1. **Data loading**: Reads genome statistics, quality metrics, pangenome data, phylogenetic trees, and functional annotations
 2. **Data processing**: Cleans and combines metadata, performs statistical analyses
 3. **Ordination analysis**: NMDS ordination on persistent, shell, and cloud genes

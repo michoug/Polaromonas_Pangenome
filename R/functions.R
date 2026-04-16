@@ -52,7 +52,7 @@ combine_metadata <- function(meta, stats, check) {
         .default = str_to_title(env_label_manual_2)
       )
     ) |>
-    left_join(check, join_by("user_genome" == "Name")) %>%
+    left_join(check, join_by("user_genome" == "Name")) |>
     rename("Genome" = "user_genome") |>
     left_join(stats, join_by("Genome")) |>
     select(
@@ -138,27 +138,27 @@ combine_atlas_df <- function(zipfile, folder) {
     dir.create(folder)
   }
 
-  unzip(zipfile, exdir = folder, overwrite = T)
+  unzip(zipfile, exdir = folder, overwrite = TRUE)
 
   lst <- dir_ls(folder) |>
     set_names(basename) |>
-    map(read_tsv, show_col_types = F) |>
+    map(read_tsv, show_col_types = FALSE) |>
     list_rbind(names_to = "type")
 
-  unlink(folder, recursive = T, force = T)
+  unlink(folder, recursive = T, force = TRUE)
   lst
 }
 
 atlas_DF_map <- function(df, coord, samples) {
-  df_clean <- df %>%
-    clean_names() %>%
-    mutate(samples = paste(run_id, number_sample_id, sep = ".")) %>%
-    left_join(samples, join_by("samples")) %>%
+  df_clean <- df |>
+    clean_names() |>
+    mutate(samples = paste(run_id, number_sample_id, sep = ".")) |>
+    left_join(samples, join_by("samples")) |>
     mutate(
       nbRead = abundance_ppm * RNA_reads / 1e6,
       percAbund = nbRead * 100 / RNA_reads
-    ) %>%
-    filter(percAbund > 0.1) %>%
+    ) |>
+    filter(percAbund > 0.1) |>
     mutate(
       env_good = case_when(
         str_detect(environment, "animal") ~ "animal",
@@ -176,13 +176,13 @@ atlas_DF_map <- function(df, coord, samples) {
         is.na(environment) ~ "Unknown",
         .default = environment
       )
-    ) %>%
-    mutate(env_good = str_to_sentence(env_good)) %>%
-    group_by(number_sample_id, samples, env_good) %>%
-    summarise(percAbund = sum(percAbund)) %>%
-    ungroup() %>%
-    left_join(coord, join_by(number_sample_id == sampleId)) %>%
-    filter(!(parsedLon == "None")) %>%
+    ) |>
+    mutate(env_good = str_to_sentence(env_good)) |>
+    group_by(number_sample_id, samples, env_good) |>
+    summarise(percAbund = sum(percAbund)) |>
+    ungroup() |>
+    left_join(coord, join_by(number_sample_id == sampleId)) |>
+    filter(!(parsedLon == "None")) |>
     select(
       number_sample_id,
       samples,
@@ -190,13 +190,13 @@ atlas_DF_map <- function(df, coord, samples) {
       env_good,
       parsedLat,
       parsedLon
-    ) %>%
-    filter(!(number_sample_id == "SRS7752820")) %>%
-    mutate(parsedLon = as.numeric(parsedLon)) %>%
-    mutate(parsedLat = as.numeric(parsedLat)) %>%
-    filter(parsedLat < 90) %>%
-    mutate(env_good = as.factor(env_good)) %>%
-    mutate(env_good = factor(env_good, levels = sort(unique(env_good)))) %>%
+    ) |>
+    filter(!(number_sample_id == "SRS7752820")) |>
+    mutate(parsedLon = as.numeric(parsedLon)) |>
+    mutate(parsedLat = as.numeric(parsedLat)) |>
+    filter(parsedLat < 90) |>
+    mutate(env_good = as.factor(env_good)) |>
+    mutate(env_good = factor(env_good, levels = sort(unique(env_good)))) |>
     mutate(env_good = fct_relevel(env_good, "Unknown", after = Inf))
 
   df_clean
@@ -219,7 +219,7 @@ get_contig_prot <- function(zipfile, folder) {
     dir.create(folder)
   }
 
-  unzip(zipfile, exdir = folder, overwrite = T)
+  unzip(zipfile, exdir = folder, overwrite = TRUE)
 
   lst <- dir_ls(folder) |>
     set_names(basename) |>
@@ -237,41 +237,46 @@ get_contig_prot <- function(zipfile, folder) {
         str_replace_all(".tsv", "")
     )
 
-  unlink(folder, recursive = T, force = T)
+  unlink(folder, recursive = T, force = TRUE)
   lst
 }
 
 get_genomad_dtl <- function(prot, families, ev, virus, plasmid) {
-  vir <- virus %>%
-    mutate(type = "virus") %>%
+  vir <- virus |>
+    mutate(type = "virus") |>
     select(Genome, seq_name, type)
 
-  plas <- plasmid %>%
-    mutate(type = "plasmid") %>%
+  plas <- plasmid |>
+    mutate(type = "plasmid") |>
     select(Genome, seq_name, type)
 
-  dat <- vir %>%
-    rbind(plas) %>%
-    select(-Genome) %>%
+  dat <- vir |>
+    rbind(plas) |>
+    select(-Genome) |>
     left_join(
       prot,
       join_by("seq_name" == "Contig"),
       relationship = "many-to-many"
-    ) %>%
-    left_join(families, join_by("Protein" == "Gene")) %>%
-    select(-c("localGene", "Frag", "Protein")) %>%
-    distinct() %>%
-    na.omit() %>%
+    ) |>
+    left_join(families, join_by("Protein" == "Gene")) |>
+    select(-c("localGene", "Frag", "Protein")) |>
+    distinct() |>
+    na.omit() |>
     left_join(ev, join_by("Family"), relationship = "many-to-many")
 }
 
-prepare_genes_for_nmds <- function(genes, partition) {
+prepare_genes_for_nmds <- function(genes, partition, category) {
+  partition_select <- partition |>
+    filter(Category == category)
+
   dat <- genes |>
-    filter(Gene %in% partition$Family) |>
+    filter(Gene %in% partition_select$Family) |>
     column_to_rownames("Gene") |>
     select(where(function(x) sum(x) > 0)) |>
     as.matrix() |>
     t()
+
+  dat
 }
 
 create_nmds <- function(dat) {
@@ -290,10 +295,10 @@ create_nmds <- function(dat) {
 anosim_nmds <- function(dat, map) {
   rownames(dat) <- gsub("-", "_", rownames(dat))
 
-  map_clean <- map %>%
+  map_clean <- map |>
     arrange(match(Genome, rownames(dat)))
 
-  dat_dist <- (dat) %>%
+  dat_dist <- (dat) |>
     vegdist(method = "jaccard")
 
   dat.ano <- with(
@@ -390,26 +395,6 @@ get_families_Kos <- function(dat, egg) {
   dat_clean
 }
 
-# get_families_Kos <- function(dat, egg){
-#
-#   # Apply majority rule to determine which Kos are in which families
-#   dat_clean <- dat |>
-#     left_join(egg, join_by(Gene == query))|>
-#     filter(!is.na(KEGG_ko)) |>
-#     group_by(Family)|>
-#     mutate(nbGenes = n())|>
-#     ungroup() |>
-#     group_by(Family, KEGG_ko, nbGenes)|>
-#     summarise(nbGenesPerKo = n())|>
-#     mutate(perc = nbGenesPerKo * 100 / nbGenes)|>
-#     ungroup()|>
-#     group_by(Family) |>
-#     mutate(nbKoperFam = n())|>
-#     slice_max(perc, n = 1)|>
-#     select(Family, KEGG_ko)
-#
-#   dat_clean
-# }
 
 clean_events <- function(ev) {
   events_clean <- ev |>
@@ -436,7 +421,7 @@ get_node_tree <- function(tree) {
   p1 <- ggtree(tree)
 
   node_data <- p1$data |>
-    filter(isTip == F) |>
+    filter(isTip == FALSE) |>
     select(node, label) |>
     filter(str_detect(label, "Node"))
   node_data
@@ -488,55 +473,46 @@ events_kos <- function(ev, fam_kos, node) {
   ev_kos
 }
 
-# process_rds <- function(path) {
-#   df <- readRDS(path)
-#
-#   df_clean <- df$genes_detected_table |>
-#     mutate(name = gsub(".*/(.*).microtrait.rds", "\\1", path)) |>
-#     select(name, gene_name, hmm_name) |>
-#     as.data.frame()
-# }
-
 process_rds <- function(path) {
   df <- readRDS(path)
 
   df_clean <- df$rules_asserted |>
-    clean_names() %>%
+    clean_names() |>
     mutate(name = gsub(".*/(.*).microtrait.rds", "\\1", path)) |>
-    filter(microtrait_rule_asserted == T) %>%
-    select(name, microtrait_rule_name, microtrait_rule_boolean) %>%
+    filter(microtrait_rule_asserted == TRUE) |>
+    select(name, microtrait_rule_name, microtrait_rule_boolean) |>
     mutate(
       parsed_components = map(microtrait_rule_boolean, parse_boolean_expression)
-    ) %>%
+    ) |>
     unnest(parsed_components) |>
-    select(-microtrait_rule_boolean) %>%
-    distinct() %>%
+    select(-microtrait_rule_boolean) |>
+    distinct() |>
     as.data.frame()
 
-  df_genes <- df$genes_detected_table %>%
+  df_genes <- df$genes_detected_table |>
     select(gene_name, hmm_name)
 
-  df_dup <- df_clean %>%
+  df_dup <- df_clean |>
     filter(microtrait_rule_name != parsed_components)
 
   list_dup <- intersect(df_dup$microtrait_rule_name, df_dup$parsed_components)
 
-  df_clean_sel <- df_clean %>%
+  df_clean_sel <- df_clean |>
     select(-name)
 
-  df_non_dup <- df_clean %>%
+  df_non_dup <- df_clean |>
     full_join(
       df_clean_sel,
       join_by(parsed_components == microtrait_rule_name)
-    ) %>%
+    ) |>
     mutate(
       parsed_components = if_else(
         is.na(parsed_components.y),
         parsed_components,
         parsed_components.y
       )
-    ) %>%
-    select(-parsed_components.y) %>%
+    ) |>
+    select(-parsed_components.y) |>
     right_join(df_genes, join_by(parsed_components == hmm_name))
 
   df_non_dup
@@ -554,13 +530,13 @@ combine_rds_df <- function(zipfile, folder) {
     dir.create(folder)
   }
 
-  unzip(zipfile, exdir = folder, overwrite = T)
+  unzip(zipfile, exdir = folder, overwrite = TRUE)
 
   lst <- dir_ls(folder) |>
     map(process_rds) |>
     list_rbind()
 
-  unlink(folder, recursive = T, force = T)
+  unlink(folder, recursive = T, force = TRUE)
   lst
 }
 
@@ -593,27 +569,27 @@ clean_rules <- function(rule2, rule) {
         `microtrait_rule-boolean`,
         hmm_name
       )
-    ) %>%
-    distinct() %>%
+    ) |>
+    distinct() |>
     clean_names()
 }
 
 subset_nodes <- function(ev, node, node_int) {
-  dat <- ev %>%
-    left_join(node, join_by(species_label == label)) %>%
+  dat <- ev |>
+    left_join(node, join_by(species_label == label)) |>
     right_join(node_int, join_by(node))
 }
 
 get_micro_events <- function(ev, rds, rules, node) {
-  rds_clean <- rules %>%
-    mutate(microtrait_rule_name = as.character(microtrait_rule_name)) %>%
+  rds_clean <- rules |>
+    mutate(microtrait_rule_name = as.character(microtrait_rule_name)) |>
     right_join(
       rds,
       join_by(microtrait_rule_name),
       relationship = "many-to-many"
-    ) %>%
-    filter(!is.na(microtrait_trait_name3)) %>%
-    select(-name) %>%
+    ) |>
+    filter(!is.na(microtrait_trait_name3)) |>
+    select(-name) |>
     distinct()
 
   dat_clean <- ev |>
@@ -631,7 +607,7 @@ get_micro_events <- function(ev, rds, rules, node) {
       across(duplications:losses, ~ sum(.x)),
       presenceWithLosses = n(),
       .groups = "drop_last"
-    ) %>%
+    ) |>
     left_join(node, join_by(species_label == label))
 
   dat_clean
@@ -711,7 +687,7 @@ get_genomad_dat <- function(zipfile, folder, type) {
     dir.create(folder)
   }
 
-  unzip(zipfile, exdir = folder, overwrite = T)
+  unzip(zipfile, exdir = folder, overwrite = TRUE)
 
   lst <- dir_ls(folder) |>
     set_names(basename) |>
@@ -728,76 +704,324 @@ get_genomad_dat <- function(zipfile, folder, type) {
         str_remove("_(virus|plasmid)_summary\\.tsv$")
     )
 
-  unlink(folder, recursive = T, force = T)
+  unlink(folder, recursive = T, force = TRUE)
   lst
 }
 
 genomad_bar <- function(meta, virus, plasmid) {
-  dat_virus <- virus %>%
-    select(Genome) %>%
-    mutate(type = "Virus") %>%
+  dat_virus <- virus |>
+    select(Genome) |>
+    mutate(type = "Virus") |>
     distinct()
 
-  dat_plasmid <- plasmid %>%
-    select(Genome) %>%
-    mutate(type = "Plasmid") %>%
+  dat_plasmid <- plasmid |>
+    select(Genome) |>
+    mutate(type = "Plasmid") |>
     distinct()
 
-  meta <- meta %>%
-    group_by(env_label_good) %>%
-    mutate(n_env = n()) %>%
-    ungroup() %>%
+  meta <- meta |>
+    group_by(env_label_good) |>
+    mutate(n_env = n()) |>
+    ungroup() |>
     select(Genome, env_label_good, n_env)
 
-  dat_all <- dat_virus %>%
-    rbind(dat_plasmid) %>%
-    left_join(meta, join_by("Genome")) %>%
-    mutate(env_n = glue("{env_label_good} ({n_env})")) %>%
-    group_by(type, env_label_good, env_n) %>%
-    reframe(n = n() * 100 / n_env) %>%
+  dat_all <- dat_virus |>
+    rbind(dat_plasmid) |>
+    left_join(meta, join_by("Genome")) |>
+    mutate(env_n = glue("{env_label_good} ({n_env})")) |>
+    group_by(type, env_label_good, env_n) |>
+    reframe(n = n() * 100 / n_env) |>
     distinct()
 
   dat_all
 }
 
 genomad_dtl_filter <- function(genomad, tree, nodes) {
-  genomad_dtl_filter <- genomad %>%
-    left_join(tree, join_by("species_label" == "label")) %>%
-    right_join(nodes, join_by("node")) %>%
-    mutate(Genome = gsub("-", "_", Genome)) %>%
-    group_by(type, reason) %>%
-    mutate(seq_genome = paste(Genome, seq_name, sep = "_")) %>%
-    mutate(allnumb = n_distinct(seq_genome)) %>%
-    ungroup() %>%
+  genomad_dtl_filter <- genomad |>
+    left_join(tree, join_by("species_label" == "label")) |>
+    right_join(nodes, join_by("node")) |>
+    mutate(Genome = gsub("-", "_", Genome)) |>
+    group_by(type, reason) |>
+    mutate(seq_genome = paste(Genome, seq_name, sep = "_")) |>
+    mutate(allnumb = n_distinct(seq_genome)) |>
+    ungroup() |>
     select(
       seq_genome,
       type,
       Family,
       duplications:reason,
       allnumb
-    ) %>%
-    distinct() %>%
-    group_by(seq_genome, reason) %>%
+    ) |>
+    distinct() |>
+    group_by(seq_genome, reason) |>
     mutate(
       n = n(),
       dup_sum = sum(duplications) / n,
       trans_sum = sum(transfers) / n,
       orig_sum = sum(origination) / n,
       loss_sum = sum(losses) / n
-    ) %>%
-    ungroup() %>%
-    select(seq_genome, type, reason, allnumb, n:loss_sum) %>%
-    distinct() %>%
-    rowwise() %>%
-    mutate(max_row = max(c_across(dup_sum:loss_sum))) %>%
-    filter(max_row > 0.2) %>%
-    select(-c(max_row, n)) %>%
-    pivot_longer(cols = !c(seq_genome, type, reason, allnumb)) %>%
-    filter(value > 0) %>%
-    group_by(seq_genome, type, reason, allnumb) %>%
-    slice_max(order_by = value, n = 1, with_ties = F) %>%
-    ungroup() %>%
-    group_by(type, reason, allnumb, name) %>%
-    reframe(perc = n() / allnumb) %>%
+    ) |>
+    ungroup() |>
+    select(seq_genome, type, reason, allnumb, n:loss_sum) |>
+    distinct() |>
+    rowwise() |>
+    mutate(max_row = max(c_across(dup_sum:loss_sum))) |>
+    filter(max_row > 0.2) |>
+    select(-c(max_row, n)) |>
+    pivot_longer(cols = !c(seq_genome, type, reason, allnumb)) |>
+    filter(value > 0) |>
+    group_by(seq_genome, type, reason, allnumb) |>
+    slice_max(order_by = value, n = 1, with_ties = FALSE) |>
+    ungroup() |>
+    group_by(type, reason, allnumb, name) |>
+    reframe(perc = n() / allnumb) |>
     distinct()
+}
+
+
+monophyletic <- function(tree, tax) {
+  tax_clean <- tax |>
+    as.data.frame()
+
+  solution1 <- AssessMonophyly(tree, tax_clean)
+
+  tips_mono <- solution1$genus$TipStates
+  tips_mono
+}
+
+gene_jaccard <- function(matrix, partition, cat) {
+  if (cat == "All") {
+    part_clean <- partition
+  } else {
+    part_clean <- partition |>
+      filter(Category == cat)
+  }
+
+  gene_matrix <- matrix |>
+    filter(Gene %in% part_clean$Family) |>
+    pivot_longer(cols = !Gene) |>
+    mutate(name = gsub("-", "_", name)) |>
+    pivot_wider(names_from = "Gene") |>
+    as.data.frame() |>
+    column_to_rownames("name")
+
+  gene_dist <- vegdist(gene_matrix, method = "jaccard", binary = TRUE)
+}
+
+# adonis_gene_phylogeny <- function(jaccard, tree, meta, cat) {
+#   genome_ids <- rownames(jaccard)
+#
+#   phylo_dist <- cophenetic.phylo(tree@phylo)
+#   phylo_dist <- as.dist(phylo_dist[genome_ids, genome_ids])
+#
+#   phylo_pcoa <- cmdscale(phylo_dist, k = 10, eig = TRUE)
+#
+#   phylo_axes <- as.data.frame(phylo_pcoa$points[, 1:5])
+#   colnames(phylo_axes) <- paste0("PCoA", 1:5)
+#
+#   env_df <- meta |>
+#     select(Genome, env_label_good) |>
+#     as.data.frame() |>
+#     arrange(match(Genome, genome_ids)) |>
+#     column_to_rownames("Genome")
+#
+#   covariates <- cbind(phylo_axes, env_df)
+#
+#   permanova_partial <- vegan::adonis2(
+#     jaccard ~ env_label_good + PCoA1 + PCoA2 + PCoA3 + PCoA4 + PCoA5,
+#     data = covariates,
+#     permutations = 999,
+#     by = "margin" # tests each term after all others — use for partial tests
+#   ) |>
+#     rownames_to_column("variable") |>
+#     as.data.frame() |>
+#     mutate(type = cat)
+#
+#   permanova_partial
+# }
+
+varpart_gene_phylogeny <- function(jaccard, tree, meta, cat) {
+  genome_ids <- rownames(jaccard)
+
+  phylo_dist <- cophenetic.phylo(tree@phylo)
+  phylo_dist <- as.dist(phylo_dist[genome_ids, genome_ids])
+
+  phylo_pcoa <- cmdscale(phylo_dist, k = 10, eig = TRUE)
+
+  phylo_axes <- as.data.frame(phylo_pcoa$points[, 1:5])
+  colnames(phylo_axes) <- paste0("PCoA", 1:5)
+
+  env_df <- meta |>
+    select(Genome, env_label_good) |>
+    as.data.frame() |>
+    arrange(match(Genome, genome_ids)) |>
+    column_to_rownames("Genome")
+
+  covariates <- cbind(phylo_axes, env_df)
+
+  jaccard_mat <- as.matrix(jaccard)
+
+  vp <- varpart(jaccard_mat, env_df["env_label_good"], phylo_axes)
+
+  df <- vp$part$indfract |>
+    as.data.frame() |>
+    rownames_to_column("variables") |>
+    mutate(
+      variables = case_when(
+        variables == "[a] = X1|X2" ~ "Environment",
+        variables == "[b] = X2|X1" ~ "Phylogeny",
+        variables == "[c]" ~ "Shared fraction",
+        variables == "[d] = Residuals" ~ "Residuals"
+      )
+    ) |>
+    select(-c("R.squared", "Testable")) |>
+    mutate(type = cat)
+
+  rda_env <- dbrda(
+    jaccard ~ env_label_good +
+      Condition(PCoA1 + PCoA2 + PCoA3 + PCoA4 + PCoA5),
+    data = covariates
+  )
+
+  anova_rda_env <- as.data.frame(anova(rda_env)$`Pr(>F)`[1])
+
+  rda_phy <- dbrda(
+    jaccard ~ Condition(env_label_good) +
+      PCoA1 +
+      PCoA2 +
+      PCoA3 +
+      PCoA4 +
+      PCoA5,
+    data = covariates
+  )
+
+  anova_rda_phy <- as.data.frame(anova(rda_phy)$`Pr(>F)`[1])
+
+  anova_rda_env_df <- anova_rda_env |>
+    mutate(variables = "Environment") |>
+    rename(p_value = "anova(rda_env)$`Pr(>F)`[1]")
+
+  anova_rda_phy_df <- anova_rda_phy |>
+    mutate(variables = "Phylogeny") |>
+    rename(p_value = "anova(rda_phy)$`Pr(>F)`[1]")
+
+  anova_rda_df <- rbind(anova_rda_env_df, anova_rda_phy_df)
+
+  df_varpart <- df |>
+    left_join(anova_rda_df, join_by(variables))
+
+  df_varpart
+}
+
+adonis_gene_completeness <- function(jaccard, quality, meta, cat) {
+  genome_ids <- rownames(jaccard)
+
+  env_df <- meta |>
+    select(Genome, Environment, Completeness) |>
+    as.data.frame() |>
+    arrange(match(Genome, genome_ids)) |>
+    column_to_rownames("Genome")
+
+  permanova <- adonis2(
+    jaccard ~ Environment +
+      Completeness,
+    data = env_df,
+    permutations = 999,
+    by = "margin"
+  ) |>
+    rownames_to_column("variable") |>
+    as.data.frame() |>
+    mutate(type = cat)
+
+  permanova
+}
+
+perturb_states <- function(states, p = 0.1) {
+  new_states <- states
+  idx <- sample(seq_along(states), size = round(p * length(states)))
+
+  new_states[idx] <- sample(unique(states), length(idx), replace = TRUE)
+
+  return(new_states)
+}
+
+run_ASR_tip <- function(tree, states) {
+  fit <- ace(states, tree, type = "discrete", model = "ER")
+  apply(fit$lik.anc, 1, which.max)
+}
+
+run_ace_tree <- function(tree, meta) {
+  tree_real <- tree@phylo
+
+  habitat <- meta |>
+    select(Genome, env_label_good) |>
+    arrange(match(Genome, tree_real$tip.label))
+
+  ace <- ace(habitat$env_label_good, tree_real, type = "discrete", model = "ER")
+
+  ace
+}
+
+sensitivity_tips <- function(ace, tree, meta, rate) {
+  tree_real <- tree@phylo
+
+  habitat <- meta |>
+    select(Genome, env_label_good) |>
+    arrange(match(Genome, tree_real$tip.label))
+
+  original <- apply(ace[["lik.anc"]], 1, which.max)
+
+  perturb_results <- replicate(100, {
+    perturbed <- perturb_states(habitat$env_label_good, rate)
+    run_ASR_tip(tree_real, perturbed)
+  })
+
+  agreement <- rowMeans(perturb_results == original)
+
+  df <- data.frame(
+    Rate = rate,
+    Mean_agreement = round(mean(agreement, na.rm = TRUE), 3),
+    SD_agreement = round(sd(agreement, na.rm = TRUE), 3),
+    Min_agreement = round(min(agreement, na.rm = TRUE), 3)
+  )
+
+  df
+}
+
+get_ace_node_prob <- function(ace, meta, nodes, nodes_imp) {
+  node_probs <- ace[["lik.anc"]]
+  colnames(node_probs) <- colnames(ace[["lik.anc"]])
+  max_prob <- apply(node_probs, 1, max)
+  dominant <- colnames(node_probs)[apply(node_probs, 1, which.max)]
+
+  conf_summary <- data.frame(
+    Top_state = dominant,
+    Max_prob = round(max_prob, 3),
+    Entropy = round(
+      apply(node_probs, 1, function(p) {
+        p <- p[p > 0]
+        -sum(p * log(p))
+      }),
+      3
+    )
+  ) |>
+    rownames_to_column("label") |>
+    left_join(nodes, join_by("label")) |>
+    left_join(nodes_imp, join_by("node")) |>
+    mutate(reason = if_else(is.na(reason), "Other", reason))
+
+  conf_summary
+}
+
+get_max_prob <- function(prob, node_tree, nodes_imp) {
+  df <- prob |>
+    pivot_longer(cols = !node) |>
+    group_by(node) |>
+    slice(which.max(value)) |>
+    rename(label = node) |>
+    inner_join(node_tree, join_by("label")) |>
+    left_join(nodes_imp, join_by("node")) |>
+    mutate(reason = if_else(is.na(reason), "Other", reason))
+
+  df
 }

@@ -6,10 +6,10 @@ library(here)
 set.seed(123)
 
 tar_option_set(
-  controller = crew_controller_local(
-    workers = 4,
-    seconds_idle = 5
-  ),
+  # controller = crew_controller_local(
+  #   workers = 4,
+  #   seconds_idle = 5
+  # ),
   memory = "transient",
   garbage_collection = TRUE,
   # error = "continue",
@@ -56,20 +56,8 @@ tar_plan(
   ),
 
   tar_file_read(
-    partition_persistent,
-    "rawData/ppanggolin_persistent.txt.gz",
-    read_tsv(!!.x, show_col_types = FALSE)
-  ),
-
-  tar_file_read(
-    partition_shell,
-    "rawData/ppanggolin_shell.txt.gz",
-    read_tsv(!!.x, show_col_types = FALSE)
-  ),
-
-  tar_file_read(
-    partition_cloud,
-    "rawData/ppanggolin_cloud.txt.gz",
+    partition_ppangolin,
+    "rawData/ppanggolin_gene_categories.txt.gz",
     read_tsv(!!.x, show_col_types = FALSE)
   ),
 
@@ -135,6 +123,24 @@ tar_plan(
     rarefaction,
     "rawData/ppanggolin_rarefaction.csv.gz",
     read_csv(!!.x, show_col_types = FALSE)
+  ),
+
+  tar_file_read(
+    neigh_tree,
+    "rawData/gtdbtk_close_neighbors.tree",
+    read.tree(!!.x)
+  ),
+
+  tar_file_read(
+    neigh_tax,
+    "rawData/genome_neighbors_genus.txt",
+    read_tsv(!!.x, show_col_types = FALSE)
+  ),
+
+  tar_file_read(
+    marg_prob,
+    "rawData/pastML_marginalProbabilites.tsv",
+    read_tsv(!!.x, show_col_types = FALSE)
   ),
 
   tar_target(
@@ -212,7 +218,7 @@ tar_plan(
 
   tar_target(
     nmds_persistent_dat,
-    prepare_genes_for_nmds(gene_pres_abs, partition_persistent)
+    prepare_genes_for_nmds(gene_pres_abs, partition_ppangolin, "Persistent")
   ),
 
   tar_target(nmds_persistent, create_nmds(nmds_persistent_dat)),
@@ -224,7 +230,7 @@ tar_plan(
 
   tar_target(
     nmds_shell_dat,
-    prepare_genes_for_nmds(gene_pres_abs, partition_shell)
+    prepare_genes_for_nmds(gene_pres_abs, partition_ppangolin, "Shell")
   ),
 
   tar_target(nmds_shell, create_nmds(nmds_shell_dat)),
@@ -233,7 +239,7 @@ tar_plan(
 
   tar_target(
     nmds_cloud_dat,
-    prepare_genes_for_nmds(gene_pres_abs, partition_cloud)
+    prepare_genes_for_nmds(gene_pres_abs, partition_ppangolin, "Cloud")
   ),
 
   tar_target(nmds_cloud, create_nmds(nmds_cloud_dat)),
@@ -312,7 +318,7 @@ tar_plan(
       figure_map_atlas,
       width = 12,
       height = 7.5,
-      create.dir = T
+      create.dir = TRUE
     ),
     format = "file"
   ),
@@ -325,7 +331,7 @@ tar_plan(
       width = 12,
       height = 7.5,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     ),
     format = "file"
   ),
@@ -367,7 +373,6 @@ tar_plan(
     table_stats_pdf,
     gtsave(table_stats, "Figures/Table_S2_stats.pdf"),
     format = "file",
-    packages = c("gt", "webshot2")
   ),
 
   tar_target(
@@ -382,7 +387,7 @@ tar_plan(
       figure_genome_comparison,
       width = 12,
       height = 8,
-      create.dir = T
+      create.dir = TRUE
     ),
   ),
 
@@ -394,7 +399,7 @@ tar_plan(
       width = 12,
       height = 8,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     ),
     format = "file"
   ),
@@ -414,7 +419,7 @@ tar_plan(
       figure_1_map_comp,
       width = 12,
       height = 8,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -425,7 +430,7 @@ tar_plan(
       figure_1_map_comp,
       width = 12,
       height = 8,
-      create.dir = T,
+      create.dir = TRUE,
       dpi = 300
     ),
   ),
@@ -442,7 +447,7 @@ tar_plan(
       figure_rarefaction,
       width = 10,
       height = 6,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -454,7 +459,7 @@ tar_plan(
       width = 10,
       height = 6,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -462,9 +467,7 @@ tar_plan(
     figure_S3_prevalence_ppan,
     plot_prevalence_ppan(
       gene_pres_abs,
-      partition_persistent,
-      partition_shell,
-      partition_cloud
+      partition_ppangolin
     )
   ),
 
@@ -475,7 +478,7 @@ tar_plan(
       figure_S3_prevalence_ppan,
       width = 8,
       height = 6,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -486,7 +489,7 @@ tar_plan(
       figure_S3_prevalence_ppan,
       width = 8,
       height = 6,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -502,7 +505,7 @@ tar_plan(
       figure_nmds_persistent,
       width = 8,
       height = 8,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -514,7 +517,7 @@ tar_plan(
       width = 8,
       height = 8,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -547,7 +550,7 @@ tar_plan(
       figure_nmds_cloud_shell,
       width = 15,
       height = 10,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -559,7 +562,7 @@ tar_plan(
       width = 15,
       height = 10,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -575,7 +578,7 @@ tar_plan(
   #     figure_heatmap_microtrait,
   #     width = 12,
   #     height = 8,
-  #     create.dir = T
+  #     create.dir = TRUE
   #   )
   # ),
 
@@ -585,10 +588,16 @@ tar_plan(
   ),
 
   tar_target(
+    max_prob,
+    get_max_prob(marg_prob, node_tree, nodes_interest)
+  ),
+
+  tar_target(
     figure_phylogenetic_tree,
     phylogenetic_tree(
       rooted_tree,
       nodes_interest,
+      max_prob,
       colors_samples,
       collapse_color
     )
@@ -601,7 +610,7 @@ tar_plan(
       figure_phylogenetic_tree,
       width = 15,
       height = 10,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -613,7 +622,7 @@ tar_plan(
       width = 15,
       height = 10,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -629,7 +638,7 @@ tar_plan(
       figure_DTL_nodes,
       width = 12,
       height = 8,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -641,7 +650,7 @@ tar_plan(
       width = 12,
       height = 8,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -657,7 +666,7 @@ tar_plan(
       figure_heatmap_DTL,
       width = 15,
       height = 12,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -669,7 +678,7 @@ tar_plan(
       width = 15,
       height = 12,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -701,7 +710,7 @@ tar_plan(
   #     figure_genomad_numb,
   #     width = 12,
   #     height = 8,
-  #     create.dir = T
+  #     create.dir = TRUE
   #   )
   # ),
   #
@@ -713,7 +722,7 @@ tar_plan(
   #     width = 12,
   #     height = 8,
   #     dpi = 300,
-  #     create.dir = T
+  #     create.dir = TRUE
   #   )
   # ),
 
@@ -726,29 +735,6 @@ tar_plan(
     figure_genomad_dtl,
     plot_genomad_dtl(genomad_dtl_reason, colors_DTL)
   ),
-
-  # tar_target(
-  #   figure_genomad_dtl_pdf,
-  #   ggsave(
-  #     "Figures/Figure_S6b_Virus_Plasmid_DTL.pdf",
-  #     figure_genomad_dtl,
-  #     width = 12,
-  #     height = 8,
-  #     create.dir = T
-  #   )
-  # ),
-  #
-  # tar_target(
-  #   figure_genomad_dtl_png,
-  #   ggsave(
-  #     "Figures/Figure_S6b_Virus_Plasmid_DTL.png",
-  #     figure_genomad_dtl,
-  #     width = 12,
-  #     height = 8,
-  #     dpi = 300,
-  #     create.dir = T
-  #   )
-  # ),
 
   tar_target(
     figure_genomad,
@@ -768,7 +754,7 @@ tar_plan(
       figure_genomad,
       width = 15,
       height = 11,
-      create.dir = T
+      create.dir = TRUE
     )
   ),
 
@@ -780,8 +766,136 @@ tar_plan(
       width = 15,
       height = 11,
       dpi = 300,
-      create.dir = T
+      create.dir = TRUE
     )
+  ),
+
+  tar_target(
+    df_monophy,
+    monophyletic(neigh_tree, neigh_tax)
+  ),
+
+  tar_target(
+    figure_monophy,
+    plot_neigh_monophy(neigh_tree, df_monophy)
+  ),
+
+  tar_target(
+    figure_mono_fig_pdf,
+    ggsave(
+      "Figures/Figure_SX_tree_monos.pdf",
+      figure_monophy,
+      width = 12,
+      height = 8,
+      create.dir = TRUE
+    )
+  ),
+
+  tar_target(
+    figure_mono_fig_png,
+    ggsave(
+      "Figures/Figure_SX_tree_mono.png",
+      figure_monophy,
+      width = 12,
+      height = 8,
+      dpi = 300,
+      create.dir = TRUE
+    )
+  ),
+
+  tar_target(
+    categories,
+    c("Persistent", "Shell", "Cloud", "All"),
+    iteration = "vector"
+  ),
+
+  tar_target(
+    jaccard_dist,
+    gene_jaccard(gene_pres_abs, partition_ppangolin, categories),
+    pattern = map(categories)
+  ),
+
+  tar_target(
+    stats_gene_phylo,
+    varpart_gene_phylogeny(
+      jaccard_dist,
+      rooted_tree,
+      genome_metadata_clean,
+      categories
+    ),
+    pattern = map(jaccard_dist, categories)
+  ),
+
+  tar_target(
+    stats_gene_phylo_table,
+    format_gene_phylo(stats_gene_phylo)
+  ),
+
+  tar_target(
+    stats_gene_phylo_docx,
+    gtsave(stats_gene_phylo_table, "Figures/Table_SX_stats_gene_phylo.docx"),
+    format = "file"
+  ),
+
+  tar_target(
+    stats_gene_phylo_pdf,
+    gtsave(stats_gene_phylo_table, "Figures/Table_SX_stats_gene_phylo.pdf"),
+    format = "file",
+  ),
+
+  tar_target(
+    stats_gene_complete,
+    adonis_gene_completeness(
+      jaccard_dist,
+      rooted_tree,
+      genome_metadata_comb,
+      categories
+    ),
+    pattern = map(jaccard_dist, categories)
+  ),
+
+  tar_target(
+    stats_gene_complete_table,
+    format_gene_complete(stats_gene_complete)
+  ),
+
+  tar_target(
+    stats_gene_complete_docx,
+    gtsave(
+      stats_gene_complete_table,
+      "Figures/Table_SX_stats_gene_complete.docx"
+    ),
+    format = "file"
+  ),
+
+  tar_target(
+    stats_gene_complete_pdf,
+    gtsave(
+      stats_gene_complete_table,
+      "Figures/Table_SX_stats_gene_complete.pdf"
+    ),
+    format = "file",
+  ),
+
+  tar_target(
+    rates,
+    c(0.01, 0.05, 0.1, 0.15, 0.2)
+  ),
+
+  tar_target(
+    ace_tre,
+    run_ace_tree(rooted_tree, genome_metadata_clean)
+  ),
+
+  tar_target(
+    tips_sensitivity,
+    sensitivity_tips(ace_tre, rooted_tree, genome_metadata_clean, rates),
+    pattern = map(rates)
+  ),
+
+  tar_target(
+    ace_prob,
+    get_ace_node_prob(ace_tre, genome_metadata_clean, node_tree, nodes_interest)
   ),
 )
 

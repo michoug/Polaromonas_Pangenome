@@ -188,7 +188,7 @@ glm_pres_abs <- function(
     )
   }
 
-  if (summary == TRUE) {
+  if (summary) {
     print(summary(Model))
     res1 <- resid(Model)
     fit1 <- fitted(Model)

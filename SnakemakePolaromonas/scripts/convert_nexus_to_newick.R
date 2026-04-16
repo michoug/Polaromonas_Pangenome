@@ -18,7 +18,7 @@ mapping$new <- paste0(mapping$tip.label, sep = ":", mapping$tip.label.1)
 write.table(
   mapping[, "new"],
   file = snakemake@output[['txt']],
-  col.names = F,
-  row.names = F,
-  quote = F
+  col.names = FALSE,
+  row.names = FALSE,
+  quote = FALSE
 )

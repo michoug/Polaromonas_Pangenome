@@ -33,7 +33,7 @@ create_pie_image <- function(data, filename, colors_samples) {
     height = 2,
     dpi = 100,
     bg = "transparent",
-    create.dir = T
+    create.dir = TRUE
   )
 }
 
@@ -76,7 +76,7 @@ plot_map_atlas <- function(atlas_map) {
     coord_sf(
       xlim = c(-160, 170),
       ylim = c(-80, 85),
-      expand = F
+      expand = FALSE
     ) +
     geom_rect(
       data = world,
@@ -124,7 +124,7 @@ plot_map_atlas <- function(atlas_map) {
     coord_sf(
       xlim = c(-10.3, 26.5),
       ylim = c(35.6, 71.4),
-      expand = F
+      expand = FALSE
     ) +
     labs(
       color = "Environment",
@@ -533,7 +533,7 @@ plot_heatmap_microtrait <- function(
       into = c("trait_category1", "trait_category2", "trait_category3"),
       sep = ":",
       extra = "merge",
-      remove = F
+      remove = FALSE
     ) |>
     filter(env_label_good != "Other") |>
     mutate(
@@ -541,7 +541,7 @@ plot_heatmap_microtrait <- function(
         "(.*?):.*:(.*?)",
         "\\1 - \\2",
         trait_category3,
-        perl = T
+        perl = TRUE
       )
     ) |>
     mutate(
@@ -549,7 +549,7 @@ plot_heatmap_microtrait <- function(
         "(.*?):(.*?)",
         "\\1 - \\2",
         trait_category3,
-        perl = T
+        perl = TRUE
       )
     ) |>
     mutate(
@@ -873,15 +873,14 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
     summarise(sum = sum(value)) |>
     ungroup() |>
     filter(
-      !(microtrait_trait_name3 ==
-        "Resource Acquisition:Substrate degradation:simple compound degradation:protein degradation")
+      microtrait_trait_name3 != "Resource Acquisition:Substrate degradation:simple compound degradation:protein degradation"
     ) |>
     separate_wider_delim(
       microtrait_trait_name3,
       delim = ":",
       names = c("c1", "c2", "c3", "c4", "c5", "c6", "c7"),
       too_few = "align_start",
-      cols_remove = F
+      cols_remove = FALSE
     ) |>
     mutate(
       type = case_when(

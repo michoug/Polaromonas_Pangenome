@@ -6,5 +6,5 @@ write.nexus.data(
   data,
   file = snakemake@output[['nex']],
   format = "dna",
-  interleaved = F
+  interleaved = FALSE
 )

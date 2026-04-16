@@ -145,7 +145,7 @@ combine_atlas_df <- function(zipfile, folder) {
     map(read_tsv, show_col_types = FALSE) |>
     list_rbind(names_to = "type")
 
-  unlink(folder, recursive = T, force = TRUE)
+  unlink(folder, recursive = TRUE, force = TRUE)
   lst
 }
 
@@ -182,7 +182,7 @@ atlas_DF_map <- function(df, coord, samples) {
     summarise(percAbund = sum(percAbund)) |>
     ungroup() |>
     left_join(coord, join_by(number_sample_id == sampleId)) |>
-    filter(!(parsedLon == "None")) |>
+    filter(parsedLon != "None") |>
     select(
       number_sample_id,
       samples,
@@ -191,7 +191,7 @@ atlas_DF_map <- function(df, coord, samples) {
       parsedLat,
       parsedLon
     ) |>
-    filter(!(number_sample_id == "SRS7752820")) |>
+    filter(number_sample_id != "SRS7752820") |>
     mutate(parsedLon = as.numeric(parsedLon)) |>
     mutate(parsedLat = as.numeric(parsedLat)) |>
     filter(parsedLat < 90) |>
@@ -225,8 +225,8 @@ get_contig_prot <- function(zipfile, folder) {
     set_names(basename) |>
     map(
       read_tsv,
-      show_col_types = F,
-      progress = F,
+      show_col_types = FALSE,
+      progress = FALSE,
       col_types = "cc",
       comment = "#",
       col_names = c("Contig", "Protein")
@@ -237,7 +237,7 @@ get_contig_prot <- function(zipfile, folder) {
         str_replace_all(".tsv", "")
     )
 
-  unlink(folder, recursive = T, force = TRUE)
+  unlink(folder, recursive = TRUE, force = TRUE)
   lst
 }
 
@@ -284,7 +284,7 @@ create_nmds <- function(dat) {
     dat,
     k = 2,
     trace = 1,
-    autotransform = F,
+    autotransform = FALSE,
     distance = "jaccard",
     trymax = 100
   )
@@ -421,7 +421,7 @@ get_node_tree <- function(tree) {
   p1 <- ggtree(tree)
 
   node_data <- p1$data |>
-    filter(isTip == FALSE) |>
+    filter(!isTip) |>
     select(node, label) |>
     filter(str_detect(label, "Node"))
   node_data
@@ -479,7 +479,7 @@ process_rds <- function(path) {
   df_clean <- df$rules_asserted |>
     clean_names() |>
     mutate(name = gsub(".*/(.*).microtrait.rds", "\\1", path)) |>
-    filter(microtrait_rule_asserted == TRUE) |>
+    filter(microtrait_rule_asserted) |>
     select(name, microtrait_rule_name, microtrait_rule_boolean) |>
     mutate(
       parsed_components = map(microtrait_rule_boolean, parse_boolean_expression)
@@ -536,7 +536,7 @@ combine_rds_df <- function(zipfile, folder) {
     map(process_rds) |>
     list_rbind()
 
-  unlink(folder, recursive = T, force = TRUE)
+  unlink(folder, recursive = TRUE, force = TRUE)
   lst
 }
 
@@ -693,8 +693,8 @@ get_genomad_dat <- function(zipfile, folder, type) {
     set_names(basename) |>
     map(
       read_tsv,
-      show_col_types = F,
-      progress = F,
+      show_col_types = FALSE,
+      progress = FALSE,
       col_types = type
     ) |>
     list_rbind(names_to = "Genome") |>
@@ -704,7 +704,7 @@ get_genomad_dat <- function(zipfile, folder, type) {
         str_remove("_(virus|plasmid)_summary\\.tsv$")
     )
 
-  unlink(folder, recursive = T, force = TRUE)
+  unlink(folder, recursive = TRUE, force = TRUE)
   lst
 }
 

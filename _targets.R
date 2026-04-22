@@ -6,23 +6,53 @@ library(here)
 set.seed(123)
 
 tar_option_set(
-  # controller = crew_controller_local(
-  #   workers = 4,
-  #   seconds_idle = 5
-  # ),
+  controller = crew_controller_local(
+    workers = 4,
+    seconds_idle = 5
+  ),
   memory = "transient",
   garbage_collection = TRUE,
   # error = "continue",
   # cue = tar_cue(mode = "never")
 )
 
-source("R/packages.R")
+# source("R/packages.R")
 source("R/functions.R")
 source("R/plots.R")
 
 # source("R/diverse.R")
 
+tar_option_set(
+  packages = c(
+    "ape",
+    "effectsize",
+    "fs",
+    "ggimage",
+    "ggnewscale",
+    "ggrepel",
+    "ggtree",
+    "ggtreeExtra",
+    "glue",
+    "gt",
+    "gtExtras",
+    "janitor",
+    "patchwork",
+    "RColorBrewer",
+    "rnaturalearth",
+    "rnaturalearthdata",
+    "scales",
+    "sf",
+    "tidytree",
+    "treeio",
+    "vegan",
+    "vroom",
+    "webshot2",
+    "tidyverse"
+  )
+)
+
 set.seed(123)
+
 
 tar_plan(
   tar_file_read(
@@ -138,7 +168,7 @@ tar_plan(
   ),
 
   tar_file_read(
-    marg_prob,
+    pastML_prob,
     "rawData/pastML_marginalProbabilites.tsv",
     read_tsv(!!.x, show_col_types = FALSE)
   ),
@@ -267,20 +297,20 @@ tar_plan(
 
   tar_target(events_clean, clean_events(events_all)),
 
-  tar_target(node_tree, get_node_tree(rooted_tree)),
+  tar_target(nodes_tree, get_nodes_tree(rooted_tree)),
 
-  tar_target(events_ko, events_kos(events_clean, families_kos, node_tree)),
+  tar_target(events_ko, events_kos(events_clean, families_kos, nodes_tree)),
 
   tar_target(
     DTL_nodes_int,
-    getDTLNodes(events_clean, node_tree, nodes_interest)
+    getDTLNodes(events_clean, nodes_tree, nodes_interest)
   ),
 
   tar_target(rule2trait_clean, clean_rules(rule2trait, allrules)),
 
   tar_target(
     events_micro,
-    get_micro_events(events_clean, rds_families, rule2trait_clean, node_tree)
+    get_micro_events(events_clean, rds_families, rule2trait_clean, nodes_tree)
   ),
 
   tar_target(kegg_mod_clean, clean_kegg_mod(kegg_mod, kegg_mod_prok)),
@@ -588,8 +618,8 @@ tar_plan(
   ),
 
   tar_target(
-    max_prob,
-    get_max_prob(marg_prob, node_tree, nodes_interest)
+    pastML_prob_max,
+    get_max_prob(pastML_prob, nodes_tree, nodes_interest)
   ),
 
   tar_target(
@@ -597,7 +627,7 @@ tar_plan(
     phylogenetic_tree(
       rooted_tree,
       nodes_interest,
-      max_prob,
+      pastML_prob_max,
       colors_samples,
       collapse_color
     )
@@ -728,7 +758,7 @@ tar_plan(
 
   tar_target(
     genomad_dtl_reason,
-    genomad_dtl_filter(genomad_dtl, node_tree, nodes_interest)
+    genomad_dtl_filter(genomad_dtl, nodes_tree, nodes_interest)
   ),
 
   tar_target(
@@ -772,7 +802,8 @@ tar_plan(
 
   tar_target(
     df_monophy,
-    monophyletic(neigh_tree, neigh_tax)
+    monophyletic(neigh_tree, neigh_tax),
+    packages = "MonoPhy"
   ),
 
   tar_target(
@@ -895,8 +926,75 @@ tar_plan(
 
   tar_target(
     ace_prob,
-    get_ace_node_prob(ace_tre, genome_metadata_clean, node_tree, nodes_interest)
+    get_ace_node_prob(
+      ace_tre,
+      genome_metadata_clean,
+      nodes_tree,
+      nodes_interest
+    )
   ),
+
+  tar_target(
+    figure_node_confidence,
+    plot_node_confidence(ace_prob, pastML_prob_max)
+  ),
+
+  tar_target(
+    figure_node_confidence_pdf,
+    ggsave(
+      "Figures/Figure_SX_nodes_confidence.pdf",
+      figure_node_confidence,
+      width = 12,
+      height = 8,
+      create.dir = TRUE
+    )
+  ),
+
+  tar_target(
+    figure_node_confidence_png,
+    ggsave(
+      "Figures/Figure_SX_nodes_confidence.png",
+      figure_node_confidence,
+      width = 12,
+      height = 8,
+      dpi = 300,
+      create.dir = TRUE
+    )
+  ),
+
+  tar_target(
+    df_stochastic_mapping,
+    stochastic_mapping_acr(rooted_tree, genome_metadata_clean, pastML_prob_max),
+    packages = c("phytools")
+  ),
+
+  tar_target(
+    list_cat,
+    get_micro_cat(microtrait_to_plot)
+  ),
+
+  tar_target(
+    get_caper,
+    run_caper_comp(microtrait_to_plot, genome_metadata_comb, rooted_tree),
+    packages = "caper"
+  ),
+
+  tar_target(
+    caper_run,
+    fit_one_caper(get_caper, list_cat),
+    pattern = map(list_cat),
+    packages = c("caper", "nlme")
+  ),
+
+  tar_target(
+    caper_run_clean,
+    clean_caper(caper_run)
+  ),
+
+  tar_target(
+    stats_nodes_transfers,
+    compare_nodes_transfers(dtl_all, nodes_interest, nodes_tree, genomad_dtl)
+  )
 )
 
 # targets::tar_make(reporter = "balanced")

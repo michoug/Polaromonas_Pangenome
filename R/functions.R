@@ -142,7 +142,7 @@ combine_atlas_df <- function(zipfile, folder) {
 
   lst <- dir_ls(folder) |>
     set_names(basename) |>
-    map(read_tsv, show_col_types = FALSE) |>
+    purrr::map(read_tsv, show_col_types = FALSE) |>
     list_rbind(names_to = "type")
 
   unlink(folder, recursive = TRUE, force = TRUE)
@@ -223,7 +223,7 @@ get_contig_prot <- function(zipfile, folder) {
 
   lst <- dir_ls(folder) |>
     set_names(basename) |>
-    map(
+    purrr::map(
       read_tsv,
       show_col_types = FALSE,
       progress = FALSE,
@@ -326,7 +326,10 @@ prepare_microtrait_data <- function(micro, stats) {
     pivot_longer(
       cols = "Resource Acquisition:Substrate uptake:aromatic acid transport":"Stress Tolerance:Specific:envelope stress:phage resistance:phage-shock system"
     ) |>
-    mutate(value = if_else(value >= 1, 1, 0))
+    mutate(value = if_else(value >= 1, 1, 0)) |>
+    mutate(name = gsub(" ", "_", name)) |>
+    mutate(name = gsub(":", "__", name)) |>
+    mutate(name = gsub("\\(|\\)|,", "", name))
 
   microtrait_clean
 }
@@ -417,7 +420,7 @@ clean_events <- function(ev) {
 }
 
 
-get_node_tree <- function(tree) {
+get_nodes_tree <- function(tree) {
   p1 <- ggtree(tree)
 
   node_data <- p1$data |>
@@ -533,7 +536,7 @@ combine_rds_df <- function(zipfile, folder) {
   unzip(zipfile, exdir = folder, overwrite = TRUE)
 
   lst <- dir_ls(folder) |>
-    map(process_rds) |>
+    purrr::map(process_rds) |>
     list_rbind()
 
   unlink(folder, recursive = TRUE, force = TRUE)
@@ -691,7 +694,7 @@ get_genomad_dat <- function(zipfile, folder, type) {
 
   lst <- dir_ls(folder) |>
     set_names(basename) |>
-    map(
+    purrr::map(
       read_tsv,
       show_col_types = FALSE,
       progress = FALSE,
@@ -820,7 +823,7 @@ gene_jaccard <- function(matrix, partition, cat) {
 #   colnames(phylo_axes) <- paste0("PCoA", 1:5)
 #
 #   env_df <- meta |>
-#     select(Genome, env_label_good) |>
+#   select(Genome, env_label_good) |>
 #     as.data.frame() |>
 #     arrange(match(Genome, genome_ids)) |>
 #     column_to_rownames("Genome")
@@ -1024,4 +1027,263 @@ get_max_prob <- function(prob, node_tree, nodes_imp) {
     mutate(reason = if_else(is.na(reason), "Other", reason))
 
   df
+}
+
+stochastic_mapping_acr <- function(tree, meta, past) {
+  tree_real <- tree@phylo
+
+  habitat <- meta |>
+    select(Genome, env_label_good) |>
+    arrange(match(Genome, tree_real$tip.label))
+
+  tips <- habitat$env_label_good
+  names(tips) <- tree_real$tip.label
+
+  nsim <- 200
+  smap <- make.simmap(
+    tree_real,
+    tips,
+    model = "ER",
+    nsim = nsim,
+    message = FALSE
+  )
+
+  sm_sum <- summary(smap, plot = FALSE)
+
+  ## Posterior probability of each state at each node
+  simmap_pp <- sm_sum$ace
+  colnames(simmap_pp) <- colnames(sm_sum$ace)
+
+  simmap_pp_clean <- simmap_pp |>
+    as.data.frame() |>
+    rownames_to_column("type") |>
+    filter(!str_detect(type, "_")) |>
+    column_to_rownames("type")
+
+  simmap_dominant <- colnames(simmap_pp_clean)[
+    apply(simmap_pp_clean, 1, which.max)
+  ]
+  simmap_max_prob <- apply(simmap_pp_clean, 1, max)
+
+  past_node <- past |>
+    ungroup() |>
+    select(node, name) |>
+    arrange(node)
+
+  agree <- mean(past_node$name == simmap_dominant)
+  # cat(sprintf("ML vs SIMMAP state agreement: %.1f%%\n", 100 * agree))
+
+  simmap_df <- data.frame(
+    ML_state = past_node$name,
+    SIMMAP_state = simmap_dominant,
+    SIMMAP_pp = round(simmap_max_prob, 3)
+  )
+}
+
+get_micro_cat <- function(micro) {
+  list <- unique(micro$name)
+}
+
+run_caper_comp <- function(micro, meta, tree) {
+  tree_clean <- tree@phylo
+
+  meta_sel <- meta |>
+    select(Genome, Completeness, Size)
+
+  dat <- micro |>
+    select(Genome, env_label_good, name, value) |>
+    left_join(meta_sel, join_by(Genome)) |>
+    mutate(log_genome_size = log(Size)) |>
+    mutate(compl_z = as.numeric(scale(Completeness)))
+
+  dat_wide <- dat |>
+    pivot_wider(
+      names_from = name,
+      values_from = value,
+      values_fill = 0
+    ) |>
+    as.data.frame()
+
+  contrasts(dat_wide$env_label_good) <- contr.sum(nlevels(
+    dat_wide$env_label_good
+  ))
+
+  comp_dat <- comparative.data(
+    phy = tree_clean,
+    data = dat_wide,
+    names.col = "Genome",
+    vcv = TRUE,
+    warn.dropped = TRUE
+  )
+
+  comp_dat
+}
+
+fit_one_caper <- function(comp_dat, pw) {
+  contrasts(comp_dat$data$env_label_good) <- contr.sum(nlevels(
+    comp_dat$data$env_label_good
+  ))
+
+  fmla_full <- as.formula(
+    paste(pw, "~ env_label_good + log_genome_size + compl_z")
+  )
+  fmla_null <- as.formula(
+    paste(pw, "~ log_genome_size + compl_z")
+  )
+
+  full <- tryCatch(
+    pgls(fmla_full, data = comp_dat, lambda = "ML"),
+    error = function(e) NULL
+  )
+  null <- tryCatch(
+    pgls(fmla_null, data = comp_dat, lambda = "ML"),
+    error = function(e) NULL
+  )
+
+  if (is.null(full) || is.null(null)) {
+    return(data.frame(
+      pathway = pw,
+      converged = FALSE,
+      lambda = NA,
+      LRT_stat = NA,
+      df = NA,
+      p_value = NA,
+      stringsAsFactors = FALSE
+    ))
+  }
+
+  ll_full <- logLik(full)
+  ll_null <- logLik(null)
+  lrt_stat <- 2 * (as.numeric(ll_full) - as.numeric(ll_null))
+  lrt_df <- attr(ll_full, "df") - attr(ll_null, "df")
+  p <- pchisq(lrt_stat, df = lrt_df, lower.tail = FALSE)
+
+  data.frame(
+    pathway = pw,
+    converged = TRUE,
+    lambda = round(full$param["lambda"], 4),
+    LRT_stat = round(lrt_stat, 4),
+    df = lrt_df,
+    p_value = p,
+    stringsAsFactors = FALSE
+  )
+}
+
+clean_caper <- function(caper) {
+  caper$signal_class <- with(
+    caper,
+    case_when(
+      !converged ~ "failed",
+      is.na(p_value) ~ "failed",
+      p_value < 0.05 & lambda < 0.3 ~ "habitat_driven",
+      p_value < 0.05 & lambda >= 0.7 ~ "confounded",
+      p_value < 0.05 ~ "habitat_moderate_signal",
+      p_value >= 0.05 & lambda >= 0.7 ~ "phylogenetically_conserved",
+      p_value >= 0.05 & lambda < 0.3 ~ "neither",
+      TRUE ~ "intermediate"
+    )
+  )
+
+  caper <- caper[order(caper$p_value), ]
+  caper
+}
+
+run_enrichment <- function(dat, count_col, label, n_boot = 5000) {
+  dat$is_transition <- as.logical(dat$is_transition)
+
+  x1 <- dat[[count_col]][dat$is_transition]
+  x0 <- dat[[count_col]][!dat$is_transition]
+
+  n_trans <- length(x1)
+  n_back <- length(x0)
+
+  ranks <- rank(dat[[count_col]], ties.method = "average")
+  obs_stat <- mean(ranks[dat$is_transition])
+
+  perm_p <- wilcox.test(
+    x1,
+    x0,
+    alternative = "greater"
+  )$p.value
+
+  effect <- rank_biserial(x1, x0)$r_rank_biserial
+
+  boot_eff <- replicate(n_boot, {
+    s1 <- sample(x1, replace = TRUE)
+    s0 <- sample(x0, replace = TRUE)
+    rank_biserial(s1, s0)$r_rank_biserial
+  })
+
+  ci <- quantile(boot_eff, c(0.025, 0.975), na.rm = TRUE)
+
+  list(
+    label = label,
+    perm_p = perm_p,
+    effect = effect,
+    ci_low = ci[1],
+    ci_high = ci[2],
+    obs_stat = obs_stat,
+    n_trans = n_trans,
+    n_back = n_back
+  )
+}
+
+compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
+  events_count <- dtl |>
+    select(species_label, duplications, losses, transfers, origination) |>
+    right_join(node_t, join_by(species_label == label)) |>
+    mutate(
+      is_transition = node %in% nodes$node
+    ) |>
+    filter(!(node == 283))
+
+  mge_type <- genomad |>
+    filter(!is.na(species_label), !is.na(transfers), transfers > 0) |>
+    group_by(type, species_label) |>
+    summarise(
+      mge_count = n(),
+      mge_transfer_sum = sum(transfers, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    na.omit()
+
+  results_list <- list()
+
+  results_list[["HGT"]] <- run_enrichment(
+    events_count,
+    "transfers",
+    "HGT - Alerax"
+  )
+
+  for (elem in c("plasmid", "virus", "all")) {
+    if (elem == "all") {
+      dat_mge <- events_count |>
+        left_join(mge_type, join_by(species_label)) |>
+        select(-type) |>
+        group_by(species_label) |>
+        summarise(
+          across(where(is.numeric), sum, na.rm = TRUE),
+          is_transition = any(is_transition),
+          .groups = "drop"
+        )
+    } else {
+      dat_mge <- events_count |>
+        left_join(mge_type, join_by(species_label)) |>
+        filter(type == elem)
+    }
+
+    label <- paste0("MGE — ", elem)
+    results_list[[label]] <- run_enrichment(dat_mge, "mge_count", label)
+  }
+
+  summary_table <- map_dfr(results_list, function(res) {
+    tibble(
+      Test = res$label,
+      `Permutation p` = signif(res$perm_p, 3),
+      `Effect size (r)` = round(res$effect, 3),
+      `CI low` = round(res$ci_low, 3),
+      `CI high` = round(res$ci_high, 3),
+      `Nodes trans/bg` = paste0(res$n_trans, " / ", res$n_back)
+    )
+  })
 }

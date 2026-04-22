@@ -302,7 +302,7 @@ plot_map <- function(map_data, colors_samples, region = c("world", "europe")) {
 
 draw_table <- function(genome_statToPlot) {
   tab_all <- genome_statToPlot |>
-    select(
+    dplyr::select(
       env_label_good,
       n,
       relative_length,
@@ -328,7 +328,7 @@ draw_table <- function(genome_statToPlot) {
     group_by(env_label_good) |>
     mutate(n = n()) |>
     ungroup() |>
-    select(
+    dplyr::select(
       env_label_good,
       n,
       relative_length,
@@ -339,7 +339,7 @@ draw_table <- function(genome_statToPlot) {
     mutate(relative_length = relative_length / 1e6) |>
     group_by(env_label_good, n) |>
     summarise(across(
-      where(is.numeric),
+      dplyr::where(is.numeric),
       .fns = list(
         mean = function(x) mean(x, na.rm = TRUE),
         sd = function(x) sd(x, na.rm = TRUE)
@@ -392,7 +392,7 @@ comparing_genomes_params <- function(genome_statToPlot, colors_samples) {
   )
 
   p <- genome_statToPlot |>
-    select("relative_length", "GC", env_label_good) |> #"optimumT",
+    dplyr::select("relative_length", "GC", env_label_good) |> #"optimumT",
     mutate(relative_length = relative_length / 1e6) |>
     pivot_longer(cols = !env_label_good) |>
     mutate(
@@ -531,7 +531,7 @@ plot_heatmap_microtrait <- function(
     separate(
       name,
       into = c("trait_category1", "trait_category2", "trait_category3"),
-      sep = ":",
+      sep = "__",
       extra = "merge",
       remove = FALSE
     ) |>
@@ -618,7 +618,7 @@ plot_heatmap_microtrait <- function(
     mutate(cat_facet = str_to_sentence(cat_facet))
 
   data_clust <- plot_data |>
-    select(env_label_good, trait_category3, per_genomes) |>
+    dplyr::select(env_label_good, trait_category3, per_genomes) |>
     pivot_wider(values_from = per_genomes, names_from = trait_category3) |>
     column_to_rownames("env_label_good")
 
@@ -700,7 +700,7 @@ phylogenetic_tree <- function(
         .default = "70-90%"
       )
     ) |>
-    select(node, cat)
+    dplyr::select(node, cat)
 
   rooted_tree@data <- rooted_tree@data |>
     mutate(
@@ -860,20 +860,21 @@ plot_prevalence_ppan <- function(
 heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
   dat <- ev_micro_ancester_sel |>
     filter(presenceRemovingLosses > 0) |>
-    select(
+    dplyr::select(
       microtrait_rule_name,
       "microtrait_trait_name3",
       duplications:losses,
       presenceRemovingLosses:reason
     ) |>
     distinct() |>
-    select(-c(microtrait_rule_name)) |>
+    dplyr::select(-c(microtrait_rule_name)) |>
     pivot_longer(cols = c(duplications:presenceRemovingLosses)) |>
     group_by(across(-value)) |>
     summarise(sum = sum(value)) |>
     ungroup() |>
     filter(
-      microtrait_trait_name3 != "Resource Acquisition:Substrate degradation:simple compound degradation:protein degradation"
+      microtrait_trait_name3 !=
+        "Resource Acquisition:Substrate degradation:simple compound degradation:protein degradation"
     ) |>
     separate_wider_delim(
       microtrait_trait_name3,
@@ -992,7 +993,7 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
     ungroup() |>
     complete(reason, nesting(category, type), name, fill = list(temp = 0)) |>
     mutate(sum = if_else(temp == 0, NA, temp)) |>
-    select(-temp) |>
+    dplyr::select(-temp) |>
     ungroup()
 
   p1 <- ggplot(
@@ -1132,7 +1133,7 @@ plot_genomad_dtl <- function(dat, colors) {
 
 rarefaction_curve <- function(dat) {
   rare_plot <- dat |>
-    select(genomes_count:cloud) |>
+    dplyr::select(genomes_count:cloud) |>
     na.omit() |>
     pivot_longer(cols = !genomes_count) |>
     mutate(name = str_to_title(name)) |>
@@ -1216,7 +1217,7 @@ format_gene_phylo <- function(df) {
 
 format_gene_complete <- function(df) {
   df_gt <- df |>
-    select(-SumOfSqs) |>
+    dplyr::select(-SumOfSqs) |>
     group_by(type) |>
     gt(rowname_col = "variable") |>
     fmt_percent(R2, decimals = 1) |>
@@ -1228,4 +1229,66 @@ format_gene_complete <- function(df) {
     )
 
   df_gt
+}
+
+plot_node_confidence <- function(ace, pastml) {
+  df_ace <- ace |>
+    dplyr::select(label, Max_prob, Top_state) |>
+    rename(value = Max_prob) |>
+    mutate(type = "ace")
+
+  df_past <- pastml |>
+    dplyr::select(label, name, value) |>
+    rename(Top_state = name) |>
+    mutate(type = "pastML")
+
+  df <- rbind(df_ace, df_past) |>
+    mutate(value = value * 100)
+
+  df_summary <- df |>
+    group_by(type) |>
+    summarize(
+      less_7 = sum(value < 70),
+      above_90 = sum(value >= 90),
+      other = 281 - less_7 - above_90
+    ) |>
+    ungroup() |>
+    pivot_longer(cols = !type) |>
+    mutate(
+      x_value = case_when(
+        name == "less_7" ~ 55,
+        name == "above_90" ~ 95,
+        .default = 80
+      )
+    )
+
+  p <- ggplot() +
+    geom_histogram(data = df, aes(value, fill = type)) +
+    geom_text(
+      data = df_summary,
+      aes(label = value, x = x_value),
+      y = 150,
+      size = 4.5
+    ) +
+    geom_vline(xintercept = 70, linetype = 3, col = "red", linewidth = 0.7) +
+    geom_vline(
+      xintercept = 90,
+      linetype = 3,
+      col = "darkgreen",
+      linewidth = 0.7
+    ) +
+    facet_wrap(~type) +
+    guides(fill = "none") +
+    labs(
+      x = "Maximum marginal probability (%)",
+      y = "Number of nodes",
+      title = "Ancestral node confidence (ML marginal posteriors)",
+    ) +
+    theme_classic() +
+    theme_all +
+    theme(
+      strip.text.x.top = element_text(angle = 0)
+    )
+
+  p
 }

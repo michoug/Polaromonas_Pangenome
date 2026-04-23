@@ -1,5 +1,5 @@
-# Cleans and processes environmental metadata
-
+# Cleans and standardizes environmental metadata labels.
+# Collapses rare environments into "Other".
 clean_env_metadata <- function(dat) {
   dat_clean <- dat |>
     mutate(.by = env_label_manual_2, n = n_distinct(user_genome)) |>
@@ -38,6 +38,8 @@ clean_env_metadata <- function(dat) {
     mutate(country_good = if_else(n > 5, country, "Other"))
 }
 
+# Merges metadata with CheckM quality and assembly statistics.
+# Renames key fields and removes technical columns for downstream analyses.
 combine_metadata <- function(meta, stats, check) {
   dat_clean <- meta |>
     mutate(
@@ -66,7 +68,8 @@ combine_metadata <- function(meta, stats, check) {
     ))
 }
 
-# Always use the same colors for the environment!
+# Returns a fixed color palette for environment categories.
+# Ensures consistent colors across all figures.
 getColors <- function() {
   colors <- c(brewer.pal(7, "Accent"), "black")
   names(colors) <- c(
@@ -79,22 +82,12 @@ getColors <- function() {
     "Soil",
     "Other"
   )
-  # colors <-
-  #   c(
-  #     "Glacier" = "#1F78B4",
-  #     "GFS" = "#CAB2D6",
-  #     "River" = "#6A3D9A",
-  #     "Wetland" = "#B2DF8A",
-  #     "Lake water" = "#33A02C",
-  #     "Groundwater" = "#FF7F00",
-  #     "Soil" = "#B15928",
-  #     "Other" = "darkgrey"
-  #   )
-
   colors[4] <- "#ffee99"
   colors
 }
 
+# Builds a country color palette from available country labels.
+# Sorts country names and forces "Other" to be placed last.
 getColorsCountry <- function(dat) {
   colors_country <- c(
     rgb(235, 172, 35, maxColorValue = 255),
@@ -120,6 +113,8 @@ getColorsCountry <- function(dat) {
   colors_country
 }
 
+# Returns the color mapping used for DTL event types.
+# Keeps DTL plot styling consistent across analyses.
 getcolorsDTL <- function() {
   colors_dtl <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")
 
@@ -132,7 +127,8 @@ getcolorsDTL <- function() {
   colors_dtl
 }
 
-
+# Unzips MicrobeAtlas files, reads all tables, and row-binds them.
+# Removes the temporary extraction folder after import.
 combine_atlas_df <- function(zipfile, folder) {
   if (!dir.exists(folder)) {
     dir.create(folder)
@@ -149,6 +145,8 @@ combine_atlas_df <- function(zipfile, folder) {
   lst
 }
 
+# Prepares MicrobeAtlas abundance data for map visualization.
+# Cleans environment labels, computes percentages, and joins coordinates.
 atlas_DF_map <- function(df, coord, samples) {
   df_clean <- df |>
     clean_names() |>
@@ -202,6 +200,8 @@ atlas_DF_map <- function(df, coord, samples) {
   df_clean
 }
 
+# Combines assembly stats, CheckM output, and temperature data.
+# Adds a completeness-corrected relative genome length metric.
 combine_stats_checkm_temp <- function(stats, check, temp) {
   dat <- stats |>
     left_join(check, join_by(Genome == Name)) |>
@@ -209,11 +209,15 @@ combine_stats_checkm_temp <- function(stats, check, temp) {
     mutate(relative_length = Size * (100 / Completeness))
 }
 
+# Adds grouping/category information to the main genome table.
+# Performs a left join on Genome identifiers.
 combine_with_groups <- function(dat, cat) {
   dat_g <- dat |>
     left_join(cat, join_by("Genome"))
 }
 
+# Reads contig-to-protein maps from zipped TSV files.
+# Extracts genome names from file names and combines all records.
 get_contig_prot <- function(zipfile, folder) {
   if (!dir.exists(folder)) {
     dir.create(folder)
@@ -241,6 +245,8 @@ get_contig_prot <- function(zipfile, folder) {
   lst
 }
 
+# Links genomad contigs (virus/plasmid) to families and DTL events.
+# Produces an event-ready table for mobile element analyses.
 get_genomad_dtl <- function(prot, families, ev, virus, plasmid) {
   vir <- virus |>
     mutate(type = "virus") |>
@@ -265,6 +271,8 @@ get_genomad_dtl <- function(prot, families, ev, virus, plasmid) {
     left_join(ev, join_by("Family"), relationship = "many-to-many")
 }
 
+# Filters genes by partition category for NMDS input.
+# Returns a transposed presence/absence matrix by genome.
 prepare_genes_for_nmds <- function(genes, partition, category) {
   partition_select <- partition |>
     filter(Category == category)
@@ -279,6 +287,8 @@ prepare_genes_for_nmds <- function(genes, partition, category) {
   dat
 }
 
+# Runs a 2D NMDS ordination using Jaccard distance.
+# Returns the metaMDS object for plotting and diagnostics.
 create_nmds <- function(dat) {
   nmds <- metaMDS(
     dat,
@@ -292,6 +302,8 @@ create_nmds <- function(dat) {
   nmds
 }
 
+# Runs ANOSIM on Jaccard distances from gene data.
+# Tests whether environments differ in community composition.
 anosim_nmds <- function(dat, map) {
   rownames(dat) <- gsub("-", "_", rownames(dat))
 
@@ -309,7 +321,8 @@ anosim_nmds <- function(dat, map) {
   dat.ano
 }
 
-
+# Combines environment labels with genome statistics.
+# Returns a compact table of key variables for modeling.
 clean_env_stats <- function(env, stats) {
   dat <- env |>
     left_join(stats, join_by("Genome")) |>
@@ -317,6 +330,8 @@ clean_env_stats <- function(env, stats) {
     select(Genome, env_label_good, relative_length, GC, CDS)
 }
 
+# Formats microtrait matrix into long binary format.
+# Joins genome stats and sanitizes trait names for analysis.
 prepare_microtrait_data <- function(micro, stats) {
   microtrait_clean <- micro$trait_matrixatgranularity3 |>
     mutate(user_genome = gsub("_new", "", id), .keep = "unused") |>
@@ -334,31 +349,8 @@ prepare_microtrait_data <- function(micro, stats) {
   microtrait_clean
 }
 
-stats_microtrait_enrich <- function(micro) {
-  env_gradient_df <- data.frame(
-    env_label_good = c("Glacier", "GFS", "River", "Wetland", "Lake water"),
-    env_gradient_num = c(1, 2, 3, 4, 5)
-  )
-
-  microtrait_stats <- micro |>
-    left_join(env_gradient_df, join_by(env_label_good)) |>
-    drop_na(env_gradient_num) |>
-    group_by(name) |>
-    filter(sum(value) > 0) |>
-    summarise(
-      p.val = summary(glm(
-        value ~ CDS + env_gradient_num,
-        family = binomial(link = "logit")
-      ))$coefficients["env_gradient_num", 4] # test if environments has significant effect
-      #,CDS_p.val = summary(glm(value~ CDS + env_gradient_num,family = "binomial"))$coefficients["CDS",4] # test if the number of CDSs has significant effect
-    ) |>
-    ungroup() |>
-    mutate(p.adj = round(p.adjust(p.val, "BH"), 3)) |>
-    filter(p.adj <= 0.05)
-
-  microtrait_stats
-}
-
+# Extracts and combines per-family event count files from a zip archive.
+# Returns one consolidated event table.
 combine_events_df <- function(zipfile, directory = tempfile()) {
   if (!dir.exists(directory)) {
     dir.create(directory)
@@ -380,6 +372,8 @@ combine_events_df <- function(zipfile, directory = tempfile()) {
   return(indivEvent)
 }
 
+# Cleans eggNOG annotations and extracts KEGG KO entries.
+# Expands comma-separated KO lists into one row per KO.
 clean_egg <- function(dat) {
   eggnog_ko <- dat |>
     filter(KEGG_ko != "-") |>
@@ -389,6 +383,8 @@ clean_egg <- function(dat) {
   eggnog_ko
 }
 
+# Keeps only families present in the data and linked to KO terms.
+# Returns a family-to-KO mapping table.
 get_families_Kos <- function(dat, egg) {
   dat_clean <- dat |>
     select(Family) |>
@@ -398,7 +394,8 @@ get_families_Kos <- function(dat, egg) {
   dat_clean
 }
 
-
+# Cleans event tables and keeps internal nodes only.
+# Converts D/T/O/L counts into binary event indicators.
 clean_events <- function(ev) {
   events_clean <- ev |>
     filter(str_detect(species_label, "Node")) |>
@@ -419,7 +416,8 @@ clean_events <- function(ev) {
   events_clean
 }
 
-
+# Extracts internal node IDs and labels from a phylogenetic tree.
+# Keeps node labels matching the "Node" pattern.
 get_nodes_tree <- function(tree) {
   p1 <- ggtree(tree)
 
@@ -430,6 +428,8 @@ get_nodes_tree <- function(tree) {
   node_data
 }
 
+# Summarizes DTL events for selected important nodes.
+# Also computes global mean/min/max background statistics.
 getDTLNodes <- function(dat, nodes, nodes_imp) {
   dat_info <- dat |>
     left_join(nodes, join_by(species_label == label)) |>
@@ -457,6 +457,8 @@ getDTLNodes <- function(dat, nodes, nodes_imp) {
   dat_full
 }
 
+# Aggregates event counts at the KO level per species node.
+# Adds family and KO richness metrics for each node.
 events_kos <- function(ev, fam_kos, node) {
   ev_kos <- ev |>
     left_join(fam_kos, join_by(Family), relationship = "many-to-many") |>
@@ -476,6 +478,8 @@ events_kos <- function(ev, fam_kos, node) {
   ev_kos
 }
 
+# Reads a microtrait RDS file and resolves rule components to genes.
+# Returns non-duplicated rule-component/gene associations.
 process_rds <- function(path) {
   df <- readRDS(path)
 
@@ -521,6 +525,8 @@ process_rds <- function(path) {
   df_non_dup
 }
 
+# Parses a boolean expression into atomic components.
+# Splits on OR/AND operators after removing punctuation.
 parse_boolean_expression <- function(expression) {
   cleaned_expression <- gsub("[()']", "", expression)
   components <- unlist(strsplit(cleaned_expression, "\\s*\\|\\s*|\\s*&\\s*"))
@@ -528,6 +534,8 @@ parse_boolean_expression <- function(expression) {
   return(components)
 }
 
+# Unzips multiple RDS files and combines processed outputs.
+# Uses process_rds() on each file and row-binds results.
 combine_rds_df <- function(zipfile, folder) {
   if (!dir.exists(folder)) {
     dir.create(folder)
@@ -543,6 +551,8 @@ combine_rds_df <- function(zipfile, folder) {
   lst
 }
 
+# Expands microtrait boolean rules into individual HMM names.
+# Cleans symbols and spacing from parsed components.
 cleanmicro <- function(dat) {
   dat_clean <- dat |>
     mutate(hmm_name = `microtrait_rule-boolean`) |>
@@ -551,6 +561,8 @@ cleanmicro <- function(dat) {
     mutate(hmm_name = str_remove_all(hmm_name, "['()' ]"))
 }
 
+# Cleans and merges two rule tables into one normalized format.
+# Removes duplicated rows and standardizes column names.
 clean_rules <- function(rule2, rule) {
   rule2clean <- rule2 |>
     cleanmicro()
@@ -577,12 +589,16 @@ clean_rules <- function(rule2, rule) {
     clean_names()
 }
 
+# Restricts event data to a selected set of nodes.
+# Joins node labels and keeps only nodes of interest.
 subset_nodes <- function(ev, node, node_int) {
   dat <- ev |>
     left_join(node, join_by(species_label == label)) |>
     right_join(node_int, join_by(node))
 }
 
+# Links events to microtrait rules and aggregates by trait context.
+# Computes per-node DTL summaries for each trait/rule combination.
 get_micro_events <- function(ev, rds, rules, node) {
   rds_clean <- rules |>
     mutate(microtrait_rule_name = as.character(microtrait_rule_name)) |>
@@ -616,6 +632,8 @@ get_micro_events <- function(ev, rds, rules, node) {
   dat_clean
 }
 
+# Cleans KEGG module annotations and keeps prokaryote modules only.
+# Selects the minimal set of columns needed downstream.
 clean_kegg_mod <- function(dat, prok) {
   dat_clean <- dat |>
     select(KEGG_ko, Subcategory, Module, ModuleDescription) |>
@@ -623,6 +641,8 @@ clean_kegg_mod <- function(dat, prok) {
   dat_clean
 }
 
+# Cleans KEGG pathway annotations and removes irrelevant categories.
+# Normalizes KO column naming for joins.
 clean_kegg_path <- function(dat) {
   dat_clean <- dat |>
     filter(
@@ -646,6 +666,8 @@ clean_kegg_path <- function(dat) {
   dat_clean
 }
 
+# Maps ancestral events to KEGG pathways/modules through KO terms.
+# Computes presence corrected by losses.
 getFunctionAncesterKO <- function(ev, path, mod) {
   kegg_path_mod <- path |>
     full_join(mod, join_by(Subcategory, KEGG_ko), relationship = "many-to-many")
@@ -667,6 +689,8 @@ getFunctionAncesterKO <- function(ev, path, mod) {
   ev_ancest_ko
 }
 
+# Aggregates ancestral microtrait events at node level.
+# Adds corrected presence metric after subtracting losses.
 getFunctionAncesterMicro <- function(dat) {
   dat_clean <- dat |>
     group_by(node, microtrait_trait_name3) |>
@@ -678,13 +702,16 @@ getFunctionAncesterMicro <- function(dat) {
   dat_clean
 }
 
+# Filters ancestral function results to selected nodes.
+# Returns node-restricted functional summaries.
 selectFunctionAncester <- function(dat, node) {
   dat_sel <- dat |>
     right_join(node, join_by(node))
   dat_sel
 }
 
-
+# Reads genomad summary tables from zipped files.
+# Normalizes genome IDs and combines all per-genome records.
 get_genomad_dat <- function(zipfile, folder, type) {
   if (!dir.exists(folder)) {
     dir.create(folder)
@@ -711,6 +738,8 @@ get_genomad_dat <- function(zipfile, folder, type) {
   lst
 }
 
+# Builds environment-level percentages of genomes with virus/plasmid signals.
+# Returns a tidy table for barplot visualization.
 genomad_bar <- function(meta, virus, plasmid) {
   dat_virus <- virus |>
     select(Genome) |>
@@ -739,6 +768,8 @@ genomad_bar <- function(meta, virus, plasmid) {
   dat_all
 }
 
+# Filters genomad-linked DTL events on selected nodes/reasons.
+# Assigns dominant event type per sequence and computes proportions.
 genomad_dtl_filter <- function(genomad, tree, nodes) {
   genomad_dtl_filter <- genomad |>
     left_join(tree, join_by("species_label" == "label")) |>
@@ -781,7 +812,8 @@ genomad_dtl_filter <- function(genomad, tree, nodes) {
     distinct()
 }
 
-
+# Assesses monophyly states for a taxonomic grouping on a tree.
+# Returns per-tip monophyly assignments.
 monophyletic <- function(tree, tax) {
   tax_clean <- tax |>
     as.data.frame()
@@ -792,6 +824,8 @@ monophyletic <- function(tree, tax) {
   tips_mono
 }
 
+# Computes Jaccard distance on gene presence/absence data.
+# Optionally restricts the analysis to a partition category.
 gene_jaccard <- function(matrix, partition, cat) {
   if (cat == "All") {
     part_clean <- partition
@@ -811,38 +845,8 @@ gene_jaccard <- function(matrix, partition, cat) {
   gene_dist <- vegdist(gene_matrix, method = "jaccard", binary = TRUE)
 }
 
-# adonis_gene_phylogeny <- function(jaccard, tree, meta, cat) {
-#   genome_ids <- rownames(jaccard)
-#
-#   phylo_dist <- cophenetic.phylo(tree@phylo)
-#   phylo_dist <- as.dist(phylo_dist[genome_ids, genome_ids])
-#
-#   phylo_pcoa <- cmdscale(phylo_dist, k = 10, eig = TRUE)
-#
-#   phylo_axes <- as.data.frame(phylo_pcoa$points[, 1:5])
-#   colnames(phylo_axes) <- paste0("PCoA", 1:5)
-#
-#   env_df <- meta |>
-#   select(Genome, env_label_good) |>
-#     as.data.frame() |>
-#     arrange(match(Genome, genome_ids)) |>
-#     column_to_rownames("Genome")
-#
-#   covariates <- cbind(phylo_axes, env_df)
-#
-#   permanova_partial <- vegan::adonis2(
-#     jaccard ~ env_label_good + PCoA1 + PCoA2 + PCoA3 + PCoA4 + PCoA5,
-#     data = covariates,
-#     permutations = 999,
-#     by = "margin" # tests each term after all others — use for partial tests
-#   ) |>
-#     rownames_to_column("variable") |>
-#     as.data.frame() |>
-#     mutate(type = cat)
-#
-#   permanova_partial
-# }
-
+# Partitions gene-distance variance into environment and phylogeny fractions.
+# Adds partial dbRDA p-values for environment and phylogeny effects.
 varpart_gene_phylogeny <- function(jaccard, tree, meta, cat) {
   genome_ids <- rownames(jaccard)
 
@@ -868,13 +872,13 @@ varpart_gene_phylogeny <- function(jaccard, tree, meta, cat) {
 
   df <- vp$part$indfract |>
     as.data.frame() |>
-    rownames_to_column("variables") |>
+    rownames_to_column("variable") |>
     mutate(
-      variables = case_when(
-        variables == "[a] = X1|X2" ~ "Environment",
-        variables == "[b] = X2|X1" ~ "Phylogeny",
-        variables == "[c]" ~ "Shared fraction",
-        variables == "[d] = Residuals" ~ "Residuals"
+      variable = case_when(
+        variable == "[a] = X1|X2" ~ "Environment",
+        variable == "[b] = X2|X1" ~ "Phylogeny",
+        variable == "[c]" ~ "Shared fraction",
+        variable == "[d] = Residuals" ~ "Residuals"
       )
     ) |>
     select(-c("R.squared", "Testable")) |>
@@ -901,21 +905,23 @@ varpart_gene_phylogeny <- function(jaccard, tree, meta, cat) {
   anova_rda_phy <- as.data.frame(anova(rda_phy)$`Pr(>F)`[1])
 
   anova_rda_env_df <- anova_rda_env |>
-    mutate(variables = "Environment") |>
+    mutate(variable = "Environment") |>
     rename(p_value = "anova(rda_env)$`Pr(>F)`[1]")
 
   anova_rda_phy_df <- anova_rda_phy |>
-    mutate(variables = "Phylogeny") |>
+    mutate(variable = "Phylogeny") |>
     rename(p_value = "anova(rda_phy)$`Pr(>F)`[1]")
 
   anova_rda_df <- rbind(anova_rda_env_df, anova_rda_phy_df)
 
   df_varpart <- df |>
-    left_join(anova_rda_df, join_by(variables))
+    left_join(anova_rda_df, join_by(variable))
 
   df_varpart
 }
 
+# Runs PERMANOVA on gene distance with environment and completeness.
+# Returns model terms with statistics for a given partition type.
 adonis_gene_completeness <- function(jaccard, quality, meta, cat) {
   genome_ids <- rownames(jaccard)
 
@@ -939,6 +945,8 @@ adonis_gene_completeness <- function(jaccard, quality, meta, cat) {
   permanova
 }
 
+# Randomly perturbs a proportion of discrete tip states.
+# Used for sensitivity analyses of ancestral reconstruction.
 perturb_states <- function(states, p = 0.1) {
   new_states <- states
   idx <- sample(seq_along(states), size = round(p * length(states)))
@@ -948,11 +956,15 @@ perturb_states <- function(states, p = 0.1) {
   return(new_states)
 }
 
+# Runs ancestral state reconstruction (ACE) under an ER model.
+# Returns the most likely state index for each internal node.
 run_ASR_tip <- function(tree, states) {
   fit <- ace(states, tree, type = "discrete", model = "ER")
   apply(fit$lik.anc, 1, which.max)
 }
 
+# Runs ACE on the study tree using observed habitat tip states.
+# Returns the full ACE fit object.
 run_ace_tree <- function(tree, meta) {
   tree_real <- tree@phylo
 
@@ -965,6 +977,8 @@ run_ace_tree <- function(tree, meta) {
   ace
 }
 
+# Quantifies robustness of ancestral states to tip-state perturbation.
+# Summarizes average agreement across repeated perturbation runs.
 sensitivity_tips <- function(ace, tree, meta, rate) {
   tree_real <- tree@phylo
 
@@ -991,6 +1005,8 @@ sensitivity_tips <- function(ace, tree, meta, rate) {
   df
 }
 
+# Extracts per-node uncertainty metrics from ACE probabilities.
+# Adds dominant state, max probability, entropy, and node annotations.
 get_ace_node_prob <- function(ace, meta, nodes, nodes_imp) {
   node_probs <- ace[["lik.anc"]]
   colnames(node_probs) <- colnames(ace[["lik.anc"]])
@@ -1016,6 +1032,8 @@ get_ace_node_prob <- function(ace, meta, nodes, nodes_imp) {
   conf_summary
 }
 
+# Selects the maximum-probability state per node from a probability table.
+# Joins tree labels and importance annotations.
 get_max_prob <- function(prob, node_tree, nodes_imp) {
   df <- prob |>
     pivot_longer(cols = !node) |>
@@ -1029,6 +1047,8 @@ get_max_prob <- function(prob, node_tree, nodes_imp) {
   df
 }
 
+# Performs stochastic mapping (SIMMAP) for habitat states.
+# Compares SIMMAP dominant states against ML ancestral states.
 stochastic_mapping_acr <- function(tree, meta, past) {
   tree_real <- tree@phylo
 
@@ -1067,31 +1087,34 @@ stochastic_mapping_acr <- function(tree, meta, past) {
 
   past_node <- past |>
     ungroup() |>
-    select(node, name) |>
+    select(node, name, label) |>
     arrange(node)
 
   agree <- mean(past_node$name == simmap_dominant)
-  # cat(sprintf("ML vs SIMMAP state agreement: %.1f%%\n", 100 * agree))
 
   simmap_df <- data.frame(
     ML_state = past_node$name,
+    ML_label = past_node$label,
     SIMMAP_state = simmap_dominant,
     SIMMAP_pp = round(simmap_max_prob, 3)
   )
 }
 
+# Returns the unique set of microtrait category names.
 get_micro_cat <- function(micro) {
   list <- unique(micro$name)
 }
 
+# Builds comparative data input (caper) from traits, metadata, and tree.
+# Adds scaled covariates and sets factor contrasts.
 run_caper_comp <- function(micro, meta, tree) {
   tree_clean <- tree@phylo
 
   meta_sel <- meta |>
-    select(Genome, Completeness, Size)
+    dplyr::select(Genome, Completeness, Size)
 
   dat <- micro |>
-    select(Genome, env_label_good, name, value) |>
+    dplyr::select(Genome, env_label_good, name, value) |>
     left_join(meta_sel, join_by(Genome)) |>
     mutate(log_genome_size = log(Size)) |>
     mutate(compl_z = as.numeric(scale(Completeness)))
@@ -1119,6 +1142,8 @@ run_caper_comp <- function(micro, meta, tree) {
   comp_dat
 }
 
+# Fits full and null PGLS models for one trait/pathway.
+# Returns LRT statistics, lambda estimate, and p-value.
 fit_one_caper <- function(comp_dat, pw) {
   contrasts(comp_dat$data$env_label_good) <- contr.sum(nlevels(
     comp_dat$data$env_label_good
@@ -1169,6 +1194,8 @@ fit_one_caper <- function(comp_dat, pw) {
   )
 }
 
+# Classifies PGLS results by habitat/phylogeny signal pattern.
+# Sorts output by ascending p-value.
 clean_caper <- function(caper) {
   caper$signal_class <- with(
     caper,
@@ -1188,6 +1215,8 @@ clean_caper <- function(caper) {
   caper
 }
 
+# Runs transition-vs-background enrichment for one numeric count variable.
+# Reports Wilcoxon p-value, effect size, and bootstrap confidence interval.
 run_enrichment <- function(dat, count_col, label, n_boot = 5000) {
   dat$is_transition <- as.logical(dat$is_transition)
 
@@ -1228,6 +1257,8 @@ run_enrichment <- function(dat, count_col, label, n_boot = 5000) {
   )
 }
 
+# Compares transfer/MGE enrichment between transition and background nodes.
+# Returns a compact summary table across tested data subsets.
 compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
   events_count <- dtl |>
     select(species_label, duplications, losses, transfers, origination) |>
@@ -1235,7 +1266,7 @@ compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
     mutate(
       is_transition = node %in% nodes$node
     ) |>
-    filter(!(node == 283))
+    filter(node != 283)
 
   mge_type <- genomad |>
     filter(!is.na(species_label), !is.na(transfers), transfers > 0) |>
@@ -1252,7 +1283,7 @@ compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
   results_list[["HGT"]] <- run_enrichment(
     events_count,
     "transfers",
-    "HGT - Alerax"
+    paste0("HGT - Alerax")
   )
 
   for (elem in c("plasmid", "virus", "all")) {
@@ -1272,18 +1303,17 @@ compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
         filter(type == elem)
     }
 
-    label <- paste0("MGE — ", elem)
+    label <- paste0("MGE - ", elem)
     results_list[[label]] <- run_enrichment(dat_mge, "mge_count", label)
   }
 
   summary_table <- map_dfr(results_list, function(res) {
     tibble(
-      Test = res$label,
-      `Permutation p` = signif(res$perm_p, 3),
-      `Effect size (r)` = round(res$effect, 3),
-      `CI low` = round(res$ci_low, 3),
-      `CI high` = round(res$ci_high, 3),
-      `Nodes trans/bg` = paste0(res$n_trans, " / ", res$n_back)
+      label = res$label,
+      perm = signif(res$perm_p, 3),
+      eff_size = round(res$effect, 3),
+      ci_low = round(res$ci_low, 3),
+      ci_high = round(res$ci_high, 3)
     )
   })
 }

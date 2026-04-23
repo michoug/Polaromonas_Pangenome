@@ -1,24 +1,25 @@
-theme_all <- theme(
-  text = element_text(size = 12, colour = "black"),
-  strip.text = element_text(size = 14, colour = "black"),
-  strip.text.x.top = element_text(angle = 90),
-  axis.text = element_text(size = 12, colour = "black"),
-  strip.text.y.left = element_text(angle = 0),
+theme_all <- ggplot2::theme(
+  text = ggplot2::element_text(size = 12, colour = "black"),
+  strip.text = ggplot2::element_text(size = 14, colour = "black"),
+  strip.text.x.top = ggplot2::element_text(angle = 90),
+  axis.text = ggplot2::element_text(size = 12, colour = "black"),
+  strip.text.y.left = ggplot2::element_text(angle = 0),
   strip.placement = "outside",
-  panel.background = element_blank(),
-  legend.title = element_text(
+  panel.background = ggplot2::element_blank(),
+  legend.title = ggplot2::element_text(
     size = 12,
     face = "bold",
     colour = "black"
   ),
-  legend.text = element_text(size = 12, colour = "black"),
+  legend.text = ggplot2::element_text(size = 12, colour = "black"),
   legend.position = 'top',
   legend.box = 'vertical',
-  legend.key = element_blank(),
-  legend.margin = margin(b = -5),
+  legend.key = ggplot2::element_blank(),
+  legend.margin = ggplot2::margin(b = -5),
 )
 
-
+# Creates a small pie chart image saved to disk.
+# Used to overlay environment composition on map figures.
 create_pie_image <- function(data, filename, colors_samples) {
   pie <- ggplot(data, aes(x = "", y = value, fill = env_label_good)) +
     geom_bar(stat = "identity", width = 1, show.legend = FALSE) +
@@ -37,6 +38,8 @@ create_pie_image <- function(data, filename, colors_samples) {
   )
 }
 
+# Plots a world map of Polaromonas relative abundances from MicrobeAtlas.
+# Splits Europe into an inset panel for readability.
 plot_map_atlas <- function(atlas_map) {
   world <- ne_countries(scale = "medium", returnclass = "sf")
 
@@ -94,18 +97,12 @@ plot_map_atlas <- function(atlas_map) {
       y = NULL,
       size = "Relative\nAbundance\n(%)"
     ) +
-    # guides(shape=guide_legend(override.aes=list(size=8)))+
     theme_light() +
     theme(
       axis.text = element_text(color = "black"),
       text = element_text(size = 12, colour = "black"),
       legend.text = element_text(size = 12, colour = "black")
     )
-
-  # legend.position = 'top',
-  # legend.box = 'vertical',
-  # legend.key = element_blank(),
-  # legend.margin = margin(b = -5),
 
   p2 <- ggplot() +
     geom_sf(data = world, fill = "white") +
@@ -118,9 +115,8 @@ plot_map_atlas <- function(atlas_map) {
         size = percAbund
       )
     ) +
-    scale_color_manual(values = colors_atlas) + #, guide = "none") +
+    scale_color_manual(values = colors_atlas) +
     scale_size(limits = c(0, 12), breaks = c(0.5, 1, 2, 5, 10)) +
-    # scale_size_area(max_size =  10, breaks=c(0.5,1,2,3,5, 10)) +
     coord_sf(
       xlim = c(-10.3, 26.5),
       ylim = c(35.6, 71.4),
@@ -143,6 +139,8 @@ plot_map_atlas <- function(atlas_map) {
   p3
 }
 
+# Prepares spatial data (centroids, pie images, genome counts) for map plotting.
+# Generates per-country pie chart PNGs and merges with shapefile centroids.
 prepare_map_data <- function(
   genome_metadata_clean,
   colors_samples,
@@ -228,8 +226,8 @@ prepare_map_data <- function(
   )
 }
 
-
-# Main plotting function
+# Renders the genome distribution map with pie overlays and country labels.
+# Adjusts coordinate extent based on the requested region (world or Europe).
 plot_map <- function(map_data, colors_samples, region = c("world", "europe")) {
   region <- match.arg(region)
 
@@ -300,9 +298,11 @@ plot_map <- function(map_data, colors_samples, region = c("world", "europe")) {
   p
 }
 
+# Builds a gt summary table of genome statistics per environment.
+# Reports mean ± SD for length, GC, completeness, and contamination.
 draw_table <- function(genome_statToPlot) {
   tab_all <- genome_statToPlot |>
-    dplyr::select(
+    select(
       env_label_good,
       n,
       relative_length,
@@ -328,7 +328,7 @@ draw_table <- function(genome_statToPlot) {
     group_by(env_label_good) |>
     mutate(n = n()) |>
     ungroup() |>
-    dplyr::select(
+    select(
       env_label_good,
       n,
       relative_length,
@@ -339,7 +339,7 @@ draw_table <- function(genome_statToPlot) {
     mutate(relative_length = relative_length / 1e6) |>
     group_by(env_label_good, n) |>
     summarise(across(
-      dplyr::where(is.numeric),
+      where(is.numeric),
       .fns = list(
         mean = function(x) mean(x, na.rm = TRUE),
         sd = function(x) sd(x, na.rm = TRUE)
@@ -383,16 +383,16 @@ draw_table <- function(genome_statToPlot) {
   tab
 }
 
-
+# Plots violin + boxplot distributions of genome parameters per environment.
+# Currently displays normalized genome length and GC content.
 comparing_genomes_params <- function(genome_statToPlot, colors_samples) {
   plot_labels <- c(
     relative_length = "Normalized\nlength (Mbp)",
     GC = "GC content (%)"
-    # optimumT = "Estimated optimum\n temperature (°C)"
   )
 
   p <- genome_statToPlot |>
-    dplyr::select("relative_length", "GC", env_label_good) |> #"optimumT",
+    select("relative_length", "GC", env_label_good) |>
     mutate(relative_length = relative_length / 1e6) |>
     pivot_longer(cols = !env_label_good) |>
     mutate(
@@ -401,7 +401,6 @@ comparing_genomes_params <- function(genome_statToPlot, colors_samples) {
         levels = (c(
           "relative_length",
           "GC"
-          # "optimumT"
         ))
       )
     ) |>
@@ -426,6 +425,8 @@ comparing_genomes_params <- function(genome_statToPlot, colors_samples) {
   p
 }
 
+# Plots a 2D NMDS ordination with spider segments to environment centroids.
+# Annotates the stress value on the figure.
 plot_nmds <- function(nmds, map, colors_samples) {
   datfort <- as.data.frame(scores(nmds)$sites)
 
@@ -473,10 +474,7 @@ plot_nmds <- function(nmds, map, colors_samples) {
     sort = FALSE
   )
 
-  # title_labs <- paste(as.character(type), "gene presence absence", sep = " ")
-
   p <- ggplot() +
-    # ggtitle(title_labs) +
     geom_point(
       data = NMDS_data,
       mapping = aes(x = NMDS1, y = NMDS2, colour = env_label_good),
@@ -518,6 +516,8 @@ plot_nmds <- function(nmds, map, colors_samples) {
   p
 }
 
+# Draws a heatmap of enriched microtrait percentages across environments.
+# Clusters traits by Euclidean distance and facets by trait category.
 plot_heatmap_microtrait <- function(
   microtrait_to_plot,
   microtrait_enrich_sign
@@ -618,7 +618,7 @@ plot_heatmap_microtrait <- function(
     mutate(cat_facet = str_to_sentence(cat_facet))
 
   data_clust <- plot_data |>
-    dplyr::select(env_label_good, trait_category3, per_genomes) |>
+    select(env_label_good, trait_category3, per_genomes) |>
     pivot_wider(values_from = per_genomes, names_from = trait_category3) |>
     column_to_rownames("env_label_good")
 
@@ -660,7 +660,8 @@ plot_heatmap_microtrait <- function(
   heatmap_enriched_traits_full
 }
 
-
+# Joins a color palette to a node dataframe by environment label.
+# Used to prepare collapse colors for the phylogenetic tree plot.
 collapse_node_color <- function(df, color) {
   colors_df <- as.data.frame(color) |>
     rownames_to_column(var = "env_label_good")
@@ -671,7 +672,8 @@ collapse_node_color <- function(df, color) {
   df_out
 }
 
-
+# Draws the annotated phylogenetic tree with ancestral state colors.
+# Collapses selected clades and overlays posterior probability sizes.
 phylogenetic_tree <- function(
   rooted_tree,
   nodes_interest,
@@ -700,7 +702,7 @@ phylogenetic_tree <- function(
         .default = "70-90%"
       )
     ) |>
-    dplyr::select(node, cat)
+    select(node, cat)
 
   rooted_tree@data <- rooted_tree@data |>
     mutate(
@@ -772,7 +774,8 @@ phylogenetic_tree <- function(
   p3
 }
 
-
+# Creates a grouped bar chart of DTL event counts at key nodes.
+# Compares selected nodes against the average background.
 plot_info_dtl <- function(DTL_nodes_int, colors_DTL) {
   p1 <- DTL_nodes_int |>
     pivot_longer(cols = !c(reason, node)) |>
@@ -788,9 +791,6 @@ plot_info_dtl <- function(DTL_nodes_int, colors_DTL) {
         reason == "Root" ~ "LCA",
         reason == "Soil" ~ "Soil",
         reason == "Wetland" ~ "Lake water -> Wetland"
-        # reason == "GFS" ~ reason,
-        # reason == "LakeWater" ~ "Lake water",
-        # .default = str_to_title(reason)
       )
     ) |>
     mutate(
@@ -833,6 +833,8 @@ plot_info_dtl <- function(DTL_nodes_int, colors_DTL) {
   p1
 }
 
+# Plots gene prevalence distributions per pangenome partition category.
+# Shows the percentage of genomes carrying each gene family.
 plot_prevalence_ppan <- function(
   gene_pres_abs,
   partitions
@@ -856,18 +858,19 @@ plot_prevalence_ppan <- function(
     theme_all
 }
 
-
+# Draws a faceted heatmap of DTL events linked to microtrait functions.
+# Rows are trait types, columns are event types, faceted by category and node.
 heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
   dat <- ev_micro_ancester_sel |>
     filter(presenceRemovingLosses > 0) |>
-    dplyr::select(
+    select(
       microtrait_rule_name,
       "microtrait_trait_name3",
       duplications:losses,
       presenceRemovingLosses:reason
     ) |>
     distinct() |>
-    dplyr::select(-c(microtrait_rule_name)) |>
+    select(-c(microtrait_rule_name)) |>
     pivot_longer(cols = c(duplications:presenceRemovingLosses)) |>
     group_by(across(-value)) |>
     summarise(sum = sum(value)) |>
@@ -885,7 +888,6 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
     ) |>
     mutate(
       type = case_when(
-        # !is.na(microtrait_rule_substrate) ~ paste(c3, microtrait_rule_substrate, sep = " - "),
         is.na(c4) ~ c3,
         is.na(c5) ~ c4,
         is.na(c6) ~ paste(c3, c5, sep = " - "),
@@ -920,7 +922,6 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
     ungroup() |>
     filter(nb > 0) |>
     mutate(sum = if_else(sum > 0, sum, NA)) |>
-    # filter(reason != "Root") |>
     mutate(
       name = if_else(name == "presenceRemovingLosses", "Genes number", name)
     ) |>
@@ -948,75 +949,35 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
         reason == "Wetland" ~ "Lake water -> Wetland"
       )
     ) |>
+    mutate(reason_numb = paste(reason, "\n(", allnumb, ")", sep = "")) |>
     mutate(
-      reason = factor(
-        reason,
+      reason_numb = factor(
+        reason_numb,
         levels = c(
-          # "LUCA",
-          "LCA",
-          "GFS",
-          "Groundwater",
-          "Lake water",
-          "Lake water -> Wetland",
-          "Soil",
-          "Soil -> Glacier"
+          "LCA\n(23)",
+          "LCA\n(820)",
+          "GFS\n(2013)",
+          "GFS\n(59)",
+          "Groundwater\n(1891)",
+          "Groundwater\n(50)",
+          "Lake water\n(1842)",
+          "Lake water\n(52)",
+          "Lake water -> Wetland\n(1845)",
+          "Lake water -> Wetland\n(54)",
+          "Soil\n(2220)",
+          "Soil\n(63)",
+          "Soil -> Glacier\n(2334)",
+          "Soil -> Glacier\n(70)"
         )
       )
-    ) |>
-    mutate(
-      type = case_when(
-        str_detect(type, "high temperature") ~
-          str_replace(type, "high", "High"),
-        str_detect(type, "low temperature") ~ str_replace(type, "low", "Low"),
-        str_detect(type, "Osmotic") ~ type,
-        str_detect(type, "pH") ~ type,
-        str_detect(type, "photosytem") ~ str_replace(type, "photo", "Photo"),
-        str_detect(type, "^oxidative") ~ str_replace(type, "oxi", "Oxi"),
-        str_detect(type, "vitam") ~ str_replace(type, "vita", "Vita"),
-        type %in%
-          c(
-            "ATP-dependent proteases",
-            "ED pathway",
-            "EPS biosynthesis/export",
-            "PHB cycle",
-            "ROS scavenging enzymes",
-            "S compound transport"
-          ) ~
-          type,
-        .default = str_to_sentence(type)
-      )
-    ) |>
-    mutate(category = str_to_sentence(category)) |>
-    mutate(sum = if_else(is.na(sum), 0, sum)) |>
-    group_by(reason, category, type, name) |>
-    summarise(temp = sum(sum)) |>
-    ungroup() |>
-    complete(reason, nesting(category, type), name, fill = list(temp = 0)) |>
-    mutate(sum = if_else(temp == 0, NA, temp)) |>
-    dplyr::select(-temp) |>
-    ungroup()
-
-  p1 <- ggplot(
-    dat,
-    aes(
-      x = reason,
-      y = fct_rev(type),
-      fill = sum
     )
-  ) +
-    geom_tile(color = "black") +
-    facet_grid(
-      category ~ name,
-      scales = "free",
-      space = "free",
-      switch = "y"
-    ) +
-    scale_fill_gradient(
-      low = "#fed976",
-      high = "#7f0000",
-      na.value = "white",
-      name = "Number of Genes"
-    ) +
+
+  p1 <- ggplot(dat, aes(x = reason_numb, y = perc, fill = name)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = colors) +
+    facet_wrap(~type, scales = "free_x") +
+    labs(y = "Frequence (%)", x = "", fill = "Type of Events") +
+    theme_classic() +
     theme_all +
     theme(
       strip.text.x.top = element_text(angle = 0),
@@ -1025,12 +986,13 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
         vjust = 1,
         hjust = 1
       ),
-      axis.title = element_blank()
     )
 
   p1
 }
 
+# Plots the percentage of genomes carrying virus or plasmid signals per environment.
+# Uses a dodged bar chart ordered by environment type.
 plot_genomad_perc <- function(genomad_numb) {
   genomad_numb <- genomad_numb |>
     mutate(
@@ -1057,6 +1019,8 @@ plot_genomad_perc <- function(genomad_numb) {
     theme(axis.title.x = element_blank())
 }
 
+# Plots DTL event frequencies linked to genomad elements at transition nodes.
+# Facets by element type (virus/plasmid) with stacked bars per event type.
 plot_genomad_dtl <- function(dat, colors) {
   dat_plot <- dat |>
     mutate(perc = perc * 100) |>
@@ -1131,9 +1095,11 @@ plot_genomad_dtl <- function(dat, colors) {
   p1
 }
 
+# Plots a rarefaction curve of pangenome gene categories vs. genome count.
+# Uses log10 y-axis with median and SD error bars.
 rarefaction_curve <- function(dat) {
   rare_plot <- dat |>
-    dplyr::select(genomes_count:cloud) |>
+    select(genomes_count:cloud) |>
     na.omit() |>
     pivot_longer(cols = !genomes_count) |>
     mutate(name = str_to_title(name)) |>
@@ -1161,6 +1127,8 @@ rarefaction_curve <- function(dat) {
   rare_plot
 }
 
+# Draws a circular phylogenetic tree colored by neighboring taxon groups.
+# Adds outer rings for taxon identity and monophyly status.
 plot_neigh_monophy <- function(tree, mono) {
   getPaletteBact = colorRampPalette(brewer.pal(12, "Paired"))
   treeColor <- getPaletteBact(length(unique(mono$Taxon)) + 1)
@@ -1201,48 +1169,66 @@ plot_neigh_monophy <- function(tree, mono) {
   p1
 }
 
+# Formats the variance partitioning results into a gt table.
+# Displays adjusted R² and p-values for environment and phylogeny fractions.
 format_gene_phylo <- function(df) {
   df_gt <- df |>
     group_by(type) |>
-    gt(rowname_col = "variables") |>
+    gt(rowname_col = "variable") |>
     fmt_percent(Adj.R.squared, decimals = 1) |>
+    sub_missing(missing_text = "") |>
+    sub_zero(columns = Df, zero_text = "") |>
     cols_label(
       "Df" = "Degree of\nFreedom",
       "Adj.R.squared" = "Adjusted {{R^2}}",
       "p_value" = "p-value"
-    )
+    ) |>
+    cols_align(align = "center", columns = !"variable")
 
   df_gt
 }
 
+# Formats PERMANOVA results into a gt table grouped by partition type.
+# Shows Df, R², F-statistic, and p-value per model term.
 format_gene_complete <- function(df) {
   df_gt <- df |>
-    dplyr::select(-SumOfSqs) |>
+    select(-SumOfSqs) |>
+    filter(variable != "Total") |>
     group_by(type) |>
     gt(rowname_col = "variable") |>
     fmt_percent(R2, decimals = 1) |>
     fmt_number("F", decimals = 1) |>
+    sub_missing(missing_text = "") |>
+    sub_zero(columns = Df, zero_text = "") |>
     cols_label(
       "Df" = "Degree of\nFreedom",
       "R2" = "{{R^2}}",
       "Pr(>F)" = "p-value"
-    )
+    ) |>
+    cols_align(align = "center", columns = !"variable")
 
   df_gt
 }
 
-plot_node_confidence <- function(ace, pastml) {
+# Compares node-level confidence across ACE, pastML, and stochastic mapping.
+# Plots histograms of max marginal probabilities with count annotations.
+plot_node_confidence <- function(ace, pastml, stoch) {
   df_ace <- ace |>
-    dplyr::select(label, Max_prob, Top_state) |>
+    select(label, Max_prob, Top_state) |>
     rename(value = Max_prob) |>
-    mutate(type = "ace")
+    mutate(type = "Ancestral Character Estimation")
 
   df_past <- pastml |>
-    dplyr::select(label, name, value) |>
+    select(label, name, value) |>
     rename(Top_state = name) |>
     mutate(type = "pastML")
 
-  df <- rbind(df_ace, df_past) |>
+  df_stoch <- stoch |>
+    select(ML_label, SIMMAP_state, SIMMAP_pp) |>
+    rename(c(Top_state = SIMMAP_state, value = SIMMAP_pp, label = ML_label)) |>
+    mutate(type = "Stochastic mapping")
+
+  df <- rbind(df_ace, df_past, df_stoch) |>
     mutate(value = value * 100)
 
   df_summary <- df |>
@@ -1289,6 +1275,124 @@ plot_node_confidence <- function(ace, pastml) {
     theme(
       strip.text.x.top = element_text(angle = 0)
     )
-
   p
+}
+
+# Formats enrichment test results for MGE transfers into a gt table.
+# Reports permutation p-value, effect size, and bootstrap confidence interval.
+format_table_nodes_transfers <- function(dat) {
+  dat_fmt <- dat |>
+    arrange(label) |>
+    mutate(
+      label = case_when(
+        str_detect(label, "plasmid") ~ "MGE - Plasmid",
+        str_detect(label, "all") ~ "MGE - All",
+        str_detect(label, "virus") ~ "MGE - Virus",
+        .default = label
+      )
+    ) |>
+    gt() |>
+    fmt_scientific(perm) |>
+    fmt_number(columns = c(eff_size, ci_low, ci_high), decimals = 2) |>
+    tab_spanner(
+      label = "CI",
+      columns = c(ci_low, ci_high)
+    ) |>
+    cols_align(align = "center", columns = !label) |>
+    cols_label(
+      perm = "Permutation p",
+      eff_size = "Effect size (r)",
+      ci_low = "Low",
+      ci_high = "High",
+      label = ""
+    )
+
+  dat_fmt
+}
+
+# Formats significant PGLS (caper) results into a styled gt table.
+# Cleans trait names and displays lambda, LRT, and p-value per trait.
+table_caper <- function(dat) {
+  dat_fmt <- dat |>
+    na.omit() |>
+    filter(p_value <= 0.05) |>
+    separate_wider_delim(
+      pathway,
+      delim = "__",
+      names = c("c1", "c2", "c3", "c4", "c5", "c6", "c7"),
+      too_few = "align_start",
+      cols_remove = TRUE
+    ) |>
+    mutate(
+      type = case_when(
+        is.na(c4) ~ c3,
+        is.na(c5) ~ c4,
+        is.na(c6) ~ paste(c3, c5, sep = " - "),
+        c3 == "temperature" ~ paste(c4, " temperature - ", c6, sep = ""),
+        c3 == "pigments" ~ paste(c3, c6, sep = " - "),
+        .default = c4
+      )
+    ) |>
+    mutate(type = str_remove(type, "simple_compound_degradation - ")) |>
+    mutate(type = str_remove(type, "C1_compounds - ")) |>
+    mutate(type = str_remove(type, "pigments - ")) |>
+    mutate(type = str_remove(type, ".*transport - ")) |>
+    mutate(type = str_remove(type, "chemo.*trophy - +")) |>
+    mutate(
+      category = case_when(
+        c1 == "Resource_Acquisition" ~ c2,
+        c1 == "Resource_Use" ~ c2,
+        c1 == "Stress_Tolerance" ~ "Stress_Tolerance"
+      )
+    ) |>
+    select(c(category, type, lambda, LRT_stat, p_value, signal_class)) |>
+    arrange(category, type) |>
+    gt() |>
+    text_transform(
+      fn = function(x) {
+        gsub("_", " ", x)
+      },
+      locations = cells_body()
+    ) |>
+    text_transform(
+      fn = function(x) {
+        stringr::str_to_sentence(x)
+      },
+      locations = cells_body()
+    ) |>
+    fmt_scientific(p_value) |>
+    fmt_number(columns = c(lambda, LRT_stat), decimals = 2) |>
+    cols_label(
+      category = "Category",
+      type = "Type",
+      lambda = paste("Pagel's", "\U03BB"),
+      LRT_stat = "Likelihood ratio test",
+      p_value = "p value",
+      signal_class = "Meaning"
+    ) |>
+    cols_align(align = "center", columns = !c("category", "type"))
+
+  dat_fmt
+}
+
+# Formats the sensitivity analysis results of ACE into a gt table.
+# Reports mean and SD agreement across perturbation rates.
+table_sensitivity <- function(dat) {
+  dat_fmt <- dat |>
+    select(-Min_agreement) |>
+    gt() |>
+    fmt_percent(columns = !Rate, decimals = 1) |>
+    fmt_percent(columns = Rate, decimals = 0) |>
+    tab_spanner(
+      label = "Agreement",
+      columns = c(Mean_agreement, SD_agreement)
+    ) |>
+    cols_label(
+      Rate = "Misclassification\nrate",
+      Mean_agreement = "Average",
+      SD_agreement = "Std"
+    ) |>
+    cols_align(align = "center")
+
+  dat_fmt
 }

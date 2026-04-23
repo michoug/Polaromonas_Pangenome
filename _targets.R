@@ -13,16 +13,7 @@ tar_option_set(
   memory = "transient",
   garbage_collection = TRUE,
   # error = "continue",
-  # cue = tar_cue(mode = "never")
-)
-
-# source("R/packages.R")
-source("R/functions.R")
-source("R/plots.R")
-
-# source("R/diverse.R")
-
-tar_option_set(
+  # cue = tar_cue(mode = "never"),
   packages = c(
     "ape",
     "effectsize",
@@ -33,8 +24,6 @@ tar_option_set(
     "ggtree",
     "ggtreeExtra",
     "glue",
-    "gt",
-    "gtExtras",
     "janitor",
     "patchwork",
     "RColorBrewer",
@@ -51,8 +40,11 @@ tar_option_set(
   )
 )
 
-set.seed(123)
+source("R/functions.R")
+source("R/plots.R")
+# source("R/diverse.R")
 
+set.seed(123)
 
 tar_plan(
   tar_file_read(
@@ -286,11 +278,6 @@ tar_plan(
     prepare_microtrait_data(microtrait_data, data_env_stats)
   ),
 
-  tar_target(
-    microtrait_enrich_sign,
-    stats_microtrait_enrich(microtrait_to_plot)
-  ),
-
   tar_target(eggnog_ko, clean_egg(eggnog_dat)),
 
   tar_target(families_kos, get_families_Kos(gene_families, eggnog_ko)),
@@ -386,7 +373,11 @@ tar_plan(
     plot_map(map_data_eur, colors_samples, "europe")
   ),
 
-  tar_target(table_stats, draw_table(genome_statToPlot)),
+  tar_target(
+    table_stats,
+    draw_table(genome_statToPlot),
+    packages = c("gt", "gtExtras")
+  ),
 
   tar_target(
     table_meta_tsv,
@@ -396,13 +387,15 @@ tar_plan(
   tar_target(
     table_stats_docx,
     gtsave(table_stats, "Figures/Table_S2_stats.docx"),
-    format = "file"
+    format = "file",
+    packages = "gt"
   ),
 
   tar_target(
     table_stats_pdf,
     gtsave(table_stats, "Figures/Table_S2_stats.pdf"),
     format = "file",
+    packages = "gt"
   ),
 
   tar_target(
@@ -597,22 +590,6 @@ tar_plan(
   ),
 
   tar_target(
-    figure_heatmap_microtrait,
-    plot_heatmap_microtrait(microtrait_to_plot, microtrait_enrich_sign)
-  ),
-
-  # tar_target(
-  #   figure_heatmap_microtrait_pdf,
-  #   ggsave(
-  #     "Figures/Figure_X_heatmap_microtrait.pdf",
-  #     figure_heatmap_microtrait,
-  #     width = 12,
-  #     height = 8,
-  #     create.dir = TRUE
-  #   )
-  # ),
-
-  tar_target(
     collapse_color,
     collapse_node_color(collapse_info, colors_samples)
   ),
@@ -720,7 +697,8 @@ tar_plan(
       events_clean,
       genomad_virus,
       genomad_plasmid
-    )
+    ),
+    packages = "dplyr"
   ),
 
   tar_target(
@@ -732,29 +710,6 @@ tar_plan(
     figure_genomad_numb,
     plot_genomad_perc(genomad_numb)
   ),
-
-  # tar_target(
-  #   figure_genomad_numb_pdf,
-  #   ggsave(
-  #     "Figures/Figure_S6a_Virus_Plasmid.pdf",
-  #     figure_genomad_numb,
-  #     width = 12,
-  #     height = 8,
-  #     create.dir = TRUE
-  #   )
-  # ),
-  #
-  # tar_target(
-  #   figure_genomad_numb_png,
-  #   ggsave(
-  #     "Figures/Figure_S6a_Virus_Plasmid.png",
-  #     figure_genomad_numb,
-  #     width = 12,
-  #     height = 8,
-  #     dpi = 300,
-  #     create.dir = TRUE
-  #   )
-  # ),
 
   tar_target(
     genomad_dtl_reason,
@@ -859,19 +814,22 @@ tar_plan(
 
   tar_target(
     stats_gene_phylo_table,
-    format_gene_phylo(stats_gene_phylo)
+    format_gene_phylo(stats_gene_phylo),
+    packages = c("gt", "gtExtras")
   ),
 
   tar_target(
     stats_gene_phylo_docx,
     gtsave(stats_gene_phylo_table, "Figures/Table_SX_stats_gene_phylo.docx"),
-    format = "file"
+    format = "file",
+    packages = "gt"
   ),
 
   tar_target(
     stats_gene_phylo_pdf,
     gtsave(stats_gene_phylo_table, "Figures/Table_SX_stats_gene_phylo.pdf"),
     format = "file",
+    packages = "gt"
   ),
 
   tar_target(
@@ -887,7 +845,8 @@ tar_plan(
 
   tar_target(
     stats_gene_complete_table,
-    format_gene_complete(stats_gene_complete)
+    format_gene_complete(stats_gene_complete),
+    packages = c("gt", "gtExtras")
   ),
 
   tar_target(
@@ -896,7 +855,8 @@ tar_plan(
       stats_gene_complete_table,
       "Figures/Table_SX_stats_gene_complete.docx"
     ),
-    format = "file"
+    format = "file",
+    packages = "gt"
   ),
 
   tar_target(
@@ -906,6 +866,7 @@ tar_plan(
       "Figures/Table_SX_stats_gene_complete.pdf"
     ),
     format = "file",
+    packages = "gt"
   ),
 
   tar_target(
@@ -925,6 +886,32 @@ tar_plan(
   ),
 
   tar_target(
+    tips_sensitivity_table,
+    table_sensitivity(tips_sensitivity),
+    packages = c("gt", "gtExtras")
+  ),
+
+  tar_target(
+    tips_sensitivity_table_pdf,
+    gtsave(
+      tips_sensitivity_table,
+      "Figures/Table_SX_tips_sensitivity.pdf"
+    ),
+    format = "file",
+    packages = "gt"
+  ),
+
+  tar_target(
+    tips_sensitivity_table_docx,
+    gtsave(
+      tips_sensitivity_table,
+      "Figures/Table_SX_tips_sensitivity.docx"
+    ),
+    format = "file",
+    packages = "gt"
+  ),
+
+  tar_target(
     ace_prob,
     get_ace_node_prob(
       ace_tre,
@@ -935,8 +922,23 @@ tar_plan(
   ),
 
   tar_target(
+    df_stochastic_mapping,
+    stochastic_mapping_acr(
+      rooted_tree,
+      genome_metadata_clean,
+      pastML_prob_max
+    ),
+    packages = c("phytools")
+  ),
+
+  tar_target(
+    ace_past_stoch_table,
+    table_ace_past_stoch(ace_prob, pastML_prob_max, df_stochastic_mapping)
+  ),
+
+  tar_target(
     figure_node_confidence,
-    plot_node_confidence(ace_prob, pastML_prob_max)
+    plot_node_confidence(ace_prob, pastML_prob_max, df_stochastic_mapping)
   ),
 
   tar_target(
@@ -963,12 +965,6 @@ tar_plan(
   ),
 
   tar_target(
-    df_stochastic_mapping,
-    stochastic_mapping_acr(rooted_tree, genome_metadata_clean, pastML_prob_max),
-    packages = c("phytools")
-  ),
-
-  tar_target(
     list_cat,
     get_micro_cat(microtrait_to_plot)
   ),
@@ -992,8 +988,60 @@ tar_plan(
   ),
 
   tar_target(
+    caper_table,
+    table_caper(caper_run_clean),
+    packages = c("gt", "gtExtras")
+  ),
+
+  tar_target(
+    caper_table_pdf,
+    gtsave(
+      caper_table,
+      "Figures/Table_SX_caper_pathway.pdf"
+    ),
+    format = "file",
+    packages = "gt"
+  ),
+
+  tar_target(
+    caper_table_docx,
+    gtsave(
+      caper_table,
+      "Figures/Table_SX_caper_pathway.docx"
+    ),
+    format = "file",
+    packages = "gt"
+  ),
+
+  tar_target(
     stats_nodes_transfers,
     compare_nodes_transfers(dtl_all, nodes_interest, nodes_tree, genomad_dtl)
+  ),
+
+  tar_target(
+    table_stats_nodes_transfers,
+    format_table_nodes_transfers(stats_nodes_transfers),
+    packages = c("gt", "gtExtras")
+  ),
+
+  tar_target(
+    table_stats_nodes_transfers_pdf,
+    gtsave(
+      table_stats_nodes_transfers,
+      "Figures/Table_SX_stats_nodes_transfers.pdf"
+    ),
+    format = "file",
+    packages = "gt"
+  ),
+
+  tar_target(
+    table_stats_nodes_transfers_docx,
+    gtsave(
+      table_stats_nodes_transfers,
+      "Figures/Table_SX_stats_nodes_transfers.docx"
+    ),
+    format = "file",
+    packages = "gt"
   )
 )
 

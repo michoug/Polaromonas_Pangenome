@@ -12,6 +12,8 @@ tar_option_set(
   ),
   memory = "transient",
   garbage_collection = TRUE,
+  storage = "worker",
+  retrieval = "worker",
   # error = "continue",
   # cue = tar_cue(mode = "never"),
   packages = c(
@@ -931,10 +933,10 @@ tar_plan(
     packages = c("phytools")
   ),
 
-  tar_target(
-    ace_past_stoch_table,
-    table_ace_past_stoch(ace_prob, pastML_prob_max, df_stochastic_mapping)
-  ),
+  # tar_target(
+  #   ace_past_stoch_table,
+  #   table_ace_past_stoch(ace_prob, pastML_prob_max, df_stochastic_mapping)
+  # ),
 
   tar_target(
     figure_node_confidence,

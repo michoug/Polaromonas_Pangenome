@@ -888,6 +888,7 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
     ) |>
     mutate(
       type = case_when(
+        # !is.na(microtrait_rule_substrate) ~ paste(c3, microtrait_rule_substrate, sep = " - "),
         is.na(c4) ~ c3,
         is.na(c5) ~ c4,
         is.na(c6) ~ paste(c3, c5, sep = " - "),
@@ -922,6 +923,7 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
     ungroup() |>
     filter(nb > 0) |>
     mutate(sum = if_else(sum > 0, sum, NA)) |>
+    # filter(reason != "Root") |>
     mutate(
       name = if_else(name == "presenceRemovingLosses", "Genes number", name)
     ) |>
@@ -949,35 +951,75 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
         reason == "Wetland" ~ "Lake water -> Wetland"
       )
     ) |>
-    mutate(reason_numb = paste(reason, "\n(", allnumb, ")", sep = "")) |>
     mutate(
-      reason_numb = factor(
-        reason_numb,
+      reason = factor(
+        reason,
         levels = c(
-          "LCA\n(23)",
-          "LCA\n(820)",
-          "GFS\n(2013)",
-          "GFS\n(59)",
-          "Groundwater\n(1891)",
-          "Groundwater\n(50)",
-          "Lake water\n(1842)",
-          "Lake water\n(52)",
-          "Lake water -> Wetland\n(1845)",
-          "Lake water -> Wetland\n(54)",
-          "Soil\n(2220)",
-          "Soil\n(63)",
-          "Soil -> Glacier\n(2334)",
-          "Soil -> Glacier\n(70)"
+          # "LUCA",
+          "LCA",
+          "GFS",
+          "Groundwater",
+          "Lake water",
+          "Lake water -> Wetland",
+          "Soil",
+          "Soil -> Glacier"
         )
       )
-    )
+    ) |>
+    mutate(
+      type = case_when(
+        str_detect(type, "high temperature") ~
+          str_replace(type, "high", "High"),
+        str_detect(type, "low temperature") ~ str_replace(type, "low", "Low"),
+        str_detect(type, "Osmotic") ~ type,
+        str_detect(type, "pH") ~ type,
+        str_detect(type, "photosytem") ~ str_replace(type, "photo", "Photo"),
+        str_detect(type, "^oxidative") ~ str_replace(type, "oxi", "Oxi"),
+        str_detect(type, "vitam") ~ str_replace(type, "vita", "Vita"),
+        type %in%
+          c(
+            "ATP-dependent proteases",
+            "ED pathway",
+            "EPS biosynthesis/export",
+            "PHB cycle",
+            "ROS scavenging enzymes",
+            "S compound transport"
+          ) ~
+          type,
+        .default = str_to_sentence(type)
+      )
+    ) |>
+    mutate(category = str_to_sentence(category)) |>
+    mutate(sum = if_else(is.na(sum), 0, sum)) |>
+    group_by(reason, category, type, name) |>
+    summarise(temp = sum(sum)) |>
+    ungroup() |>
+    complete(reason, nesting(category, type), name, fill = list(temp = 0)) |>
+    mutate(sum = if_else(temp == 0, NA, temp)) |>
+    select(-temp) |>
+    ungroup()
 
-  p1 <- ggplot(dat, aes(x = reason_numb, y = perc, fill = name)) +
-    geom_bar(stat = "identity") +
-    scale_fill_manual(values = colors) +
-    facet_wrap(~type, scales = "free_x") +
-    labs(y = "Frequence (%)", x = "", fill = "Type of Events") +
-    theme_classic() +
+  p1 <- ggplot(
+    dat,
+    aes(
+      x = reason,
+      y = fct_rev(type),
+      fill = sum
+    )
+  ) +
+    geom_tile(color = "black") +
+    facet_grid(
+      category ~ name,
+      scales = "free",
+      space = "free",
+      switch = "y"
+    ) +
+    scale_fill_gradient(
+      low = "#fed976",
+      high = "#7f0000",
+      na.value = "white",
+      name = "Number of Genes"
+    ) +
     theme_all +
     theme(
       strip.text.x.top = element_text(angle = 0),
@@ -986,6 +1028,7 @@ heatmap_micro_dtl <- function(ev_micro_ancester_sel) {
         vjust = 1,
         hjust = 1
       ),
+      axis.title = element_blank()
     )
 
   p1

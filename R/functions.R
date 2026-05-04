@@ -959,7 +959,7 @@ perturb_states <- function(states, p = 0.1) {
 # Runs ancestral state reconstruction (ACE) under an ER model.
 # Returns the most likely state index for each internal node.
 run_ASR_tip <- function(tree, states) {
-  fit <- ace(states, tree, type = "discrete", model = "ER")
+  fit <- ace(states, tree, type = "discrete")
   apply(fit$lik.anc, 1, which.max)
 }
 
@@ -972,7 +972,11 @@ run_ace_tree <- function(tree, meta) {
     select(Genome, env_label_good) |>
     arrange(match(Genome, tree_real$tip.label))
 
-  ace <- ace(habitat$env_label_good, tree_real, type = "discrete", model = "ER")
+  ace <- ace(
+    habitat$env_label_good,
+    tree_real,
+    type = "discrete"
+  )
 
   ace
 }
@@ -1063,7 +1067,6 @@ stochastic_mapping_acr <- function(tree, meta, past) {
   smap <- make.simmap(
     tree_real,
     tips,
-    model = "ER",
     nsim = nsim,
     message = FALSE
   )
@@ -1229,7 +1232,7 @@ run_enrichment <- function(dat, count_col, label, n_boot = 5000) {
   ranks <- rank(dat[[count_col]], ties.method = "average")
   obs_stat <- mean(ranks[dat$is_transition])
 
-  perm_p <- wilcox.test(
+  wilcox_t <- wilcox.test(
     x1,
     x0,
     alternative = "greater"
@@ -1247,7 +1250,7 @@ run_enrichment <- function(dat, count_col, label, n_boot = 5000) {
 
   list(
     label = label,
-    perm_p = perm_p,
+    wilcox = wilcox_t,
     effect = effect,
     ci_low = ci[1],
     ci_high = ci[2],
@@ -1310,7 +1313,7 @@ compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
   summary_table <- map_dfr(results_list, function(res) {
     tibble(
       label = res$label,
-      perm = signif(res$perm_p, 3),
+      wilcox = signif(res$wilcox, 3),
       eff_size = round(res$effect, 3),
       ci_low = round(res$ci_low, 3),
       ci_high = round(res$ci_high, 3)

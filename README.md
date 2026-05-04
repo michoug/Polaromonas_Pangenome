@@ -59,7 +59,7 @@ R -e "renv::restore()"
 
 - **Workflow**: [targets](https://docs.ropensci.org/targets/), [tarchetypes](https://docs.ropensci.org/tarchetypes/), [crew](https://docs.ropensci.org/crew/)
 - **Data manipulation**: [tidyverse](https://www.tidyverse.org/), [vroom](https://vroom.r-lib.org/), [janitor](https://sfirke.github.io/janitor/)
-- **Phylogenetics**: [ape](https://cran.r-project.org/web/packages/ape/index.html), [ggtree](https://bioconductor.org/packages/release/bioc/html/ggtree.html), [treeio](https://bioconductor.org/packages/release/bioc/html/treeio.html), [tidytree](https://bioconductor.org/packages/release/bioc/html/tidytree.html)
+- **Phylogenetics**: [ape](https://cran.r-project.org/web/packages/ape/index.html), [ggtree](https://bioconductor.org/packages/release/bioc/html/ggtree.html), [treeio](https://bioconductor.org/packages/release/bioc/html/treeio.html), [tidytree](https://bioconductor.org/packages/release/bioc/html/tidytree.html), [phytools](https://cran.r-project.org/web/packages/phytools/index.html), [caper](https://cran.r-project.org/web/packages/caper/index.html)
 - **Visualization**: [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html), [patchwork](https://cran.r-project.org/web/packages/patchwork/index.html), [gt](https://cran.r-project.org/web/packages/gt/index.html), [gtExtras](https://cran.r-project.org/web/packages/gtExtras/index.html)
 - **Statistics**: [vegan](https://cran.r-project.org/web/packages/vegan/index.html) (for NMDS and ANOSIM)
 - **Geospatial**: [sf](https://cran.r-project.org/web/packages/sf/index.html), [rnaturalearth](https://cran.r-project.org/web/packages/rnaturalearth/index.html)
@@ -113,8 +113,8 @@ The pipeline generates outputs in the `Figures/` directory:
 - **Figure 2**: NMDS ordination of persistent genes
 - **Figure 3**: Phylogenetic tree with ancestral state reconstruction
 - **Figure 4**: Heatmap of DTL events and functional traits
-- **Figure S1-S6**: Supplementary figures (rarefaction curves, prevalence plots, etc.)
-- **Table S1-S2**: Metadata and genome statistics tables
+- **Figure S1-S7**: Supplementary figures (rarefaction curves, prevalence plots, etc.)
+- **Table S1-S6**: Supplementary tables (metadata, statistics, phylogenetic analyses)
 
 ## Data Requirements
 

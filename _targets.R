@@ -7,7 +7,7 @@ set.seed(123)
 
 tar_option_set(
   controller = crew_controller_local(
-    workers = 4,
+    workers = 6,
     seconds_idle = 5
   ),
   memory = "transient",
@@ -431,6 +431,7 @@ tar_plan(
 
   tar_target(
     figure_1_map_comp,
+    # jarl-ignore implicit_assignment: <reason>
     p <- (figure_map_world | figure_map_eur) /
       figure_genome_comparison +
       plot_layout(guides = "collect", heights = c(1, 0.5)) +
@@ -489,7 +490,7 @@ tar_plan(
   ),
 
   tar_target(
-    figure_S3_prevalence_ppan,
+    figure_prevalence_ppan,
     plot_prevalence_ppan(
       gene_pres_abs,
       partition_ppangolin
@@ -497,10 +498,10 @@ tar_plan(
   ),
 
   tar_target(
-    figure_S3_prevalence_ppan_pdf,
+    figure_prevalence_ppan_pdf,
     ggsave(
       "Figures/Figure_S3_prevalence_ppan.pdf",
-      figure_S3_prevalence_ppan,
+      figure_prevalence_ppan,
       width = 8,
       height = 6,
       create.dir = TRUE
@@ -508,10 +509,10 @@ tar_plan(
   ),
 
   tar_target(
-    figure_S3_prevalence_ppan_png,
+    figure_prevalence_ppan_png,
     ggsave(
       "Figures/Figure_S3_prevalence_ppan.png",
-      figure_S3_prevalence_ppan,
+      figure_prevalence_ppan,
       width = 8,
       height = 6,
       create.dir = TRUE
@@ -771,7 +772,7 @@ tar_plan(
   tar_target(
     figure_mono_fig_pdf,
     ggsave(
-      "Figures/Figure_SX_tree_monos.pdf",
+      "Figures/Figure_S7_tree_monos.pdf",
       figure_monophy,
       width = 12,
       height = 8,
@@ -782,7 +783,7 @@ tar_plan(
   tar_target(
     figure_mono_fig_png,
     ggsave(
-      "Figures/Figure_SX_tree_mono.png",
+      "Figures/Figure_S7_tree_monos.png",
       figure_monophy,
       width = 12,
       height = 8,
@@ -815,21 +816,21 @@ tar_plan(
   ),
 
   tar_target(
-    stats_gene_phylo_table,
+    table_stats_gene_phylo,
     format_gene_phylo(stats_gene_phylo),
     packages = c("gt", "gtExtras")
   ),
 
   tar_target(
     stats_gene_phylo_docx,
-    gtsave(stats_gene_phylo_table, "Figures/Table_SX_stats_gene_phylo.docx"),
+    gtsave(table_stats_gene_phylo, "Figures/Table_S3_stats_gene_phylo.docx"),
     format = "file",
     packages = "gt"
   ),
 
   tar_target(
     stats_gene_phylo_pdf,
-    gtsave(stats_gene_phylo_table, "Figures/Table_SX_stats_gene_phylo.pdf"),
+    gtsave(table_stats_gene_phylo, "Figures/Table_S3_stats_gene_phylo.pdf"),
     format = "file",
     packages = "gt"
   ),
@@ -846,7 +847,7 @@ tar_plan(
   ),
 
   tar_target(
-    stats_gene_complete_table,
+    table_stats_gene_complete,
     format_gene_complete(stats_gene_complete),
     packages = c("gt", "gtExtras")
   ),
@@ -854,8 +855,8 @@ tar_plan(
   tar_target(
     stats_gene_complete_docx,
     gtsave(
-      stats_gene_complete_table,
-      "Figures/Table_SX_stats_gene_complete.docx"
+      table_stats_gene_complete,
+      "Figures/Reviewer_Table_stats_gene_complete.docx"
     ),
     format = "file",
     packages = "gt"
@@ -864,8 +865,8 @@ tar_plan(
   tar_target(
     stats_gene_complete_pdf,
     gtsave(
-      stats_gene_complete_table,
-      "Figures/Table_SX_stats_gene_complete.pdf"
+      table_stats_gene_complete,
+      "Figures/Reviewer_Table_stats_gene_complete.pdf"
     ),
     format = "file",
     packages = "gt"
@@ -888,26 +889,26 @@ tar_plan(
   ),
 
   tar_target(
-    tips_sensitivity_table,
+    table_tips_sensitivity,
     table_sensitivity(tips_sensitivity),
     packages = c("gt", "gtExtras")
   ),
 
   tar_target(
-    tips_sensitivity_table_pdf,
+    table_tips_sensitivity_pdf,
     gtsave(
-      tips_sensitivity_table,
-      "Figures/Table_SX_tips_sensitivity.pdf"
+      table_tips_sensitivity,
+      "Figures/Table_S5_tips_sensitivity.pdf"
     ),
     format = "file",
     packages = "gt"
   ),
 
   tar_target(
-    tips_sensitivity_table_docx,
+    table_tips_sensitivity_docx,
     gtsave(
-      tips_sensitivity_table,
-      "Figures/Table_SX_tips_sensitivity.docx"
+      table_tips_sensitivity,
+      "Figures/Table_S5_tips_sensitivity.docx"
     ),
     format = "file",
     packages = "gt"
@@ -946,7 +947,7 @@ tar_plan(
   tar_target(
     figure_node_confidence_pdf,
     ggsave(
-      "Figures/Figure_SX_nodes_confidence.pdf",
+      "Figures/Reviewer_Figure_nodes_confidence.pdf",
       figure_node_confidence,
       width = 12,
       height = 8,
@@ -957,7 +958,7 @@ tar_plan(
   tar_target(
     figure_node_confidence_png,
     ggsave(
-      "Figures/Figure_SX_nodes_confidence.png",
+      "Figures/Reviewer_Figure_nodes_confidence.png",
       figure_node_confidence,
       width = 12,
       height = 8,
@@ -990,26 +991,26 @@ tar_plan(
   ),
 
   tar_target(
-    caper_table,
-    table_caper(caper_run_clean),
+    table_caper,
+    table_caper_run(caper_run_clean),
     packages = c("gt", "gtExtras")
   ),
 
   tar_target(
-    caper_table_pdf,
+    table_caper_pdf,
     gtsave(
-      caper_table,
-      "Figures/Table_SX_caper_pathway.pdf"
+      table_caper,
+      "Figures/Table_S4_caper_pathway.pdf"
     ),
     format = "file",
     packages = "gt"
   ),
 
   tar_target(
-    caper_table_docx,
+    table_caper_docx,
     gtsave(
-      caper_table,
-      "Figures/Table_SX_caper_pathway.docx"
+      table_caper,
+      "Figures/Table_S4_caper_pathway.docx"
     ),
     format = "file",
     packages = "gt"
@@ -1030,7 +1031,7 @@ tar_plan(
     table_stats_nodes_transfers_pdf,
     gtsave(
       table_stats_nodes_transfers,
-      "Figures/Table_SX_stats_nodes_transfers.pdf"
+      "Figures/Table_S6_stats_nodes_transfers.pdf"
     ),
     format = "file",
     packages = "gt"
@@ -1040,7 +1041,7 @@ tar_plan(
     table_stats_nodes_transfers_docx,
     gtsave(
       table_stats_nodes_transfers,
-      "Figures/Table_SX_stats_nodes_transfers.docx"
+      "Figures/Table_S6_stats_nodes_transfers.docx"
     ),
     format = "file",
     packages = "gt"

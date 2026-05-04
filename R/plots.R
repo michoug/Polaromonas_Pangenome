@@ -1216,6 +1216,7 @@ plot_neigh_monophy <- function(tree, mono) {
 # Displays adjusted R² and p-values for environment and phylogeny fractions.
 format_gene_phylo <- function(df) {
   df_gt <- df |>
+    filter(type != "All") |>
     group_by(type) |>
     gt(rowname_col = "variable") |>
     fmt_percent(Adj.R.squared, decimals = 1) |>
@@ -1237,6 +1238,7 @@ format_gene_complete <- function(df) {
   df_gt <- df |>
     select(-SumOfSqs) |>
     filter(variable != "Total") |>
+    filter(type != "All") |>
     group_by(type) |>
     gt(rowname_col = "variable") |>
     fmt_percent(R2, decimals = 1) |>
@@ -1335,7 +1337,7 @@ format_table_nodes_transfers <- function(dat) {
       )
     ) |>
     gt() |>
-    fmt_scientific(perm) |>
+    fmt_scientific(wilcox) |>
     fmt_number(columns = c(eff_size, ci_low, ci_high), decimals = 2) |>
     tab_spanner(
       label = "CI",
@@ -1343,7 +1345,7 @@ format_table_nodes_transfers <- function(dat) {
     ) |>
     cols_align(align = "center", columns = !label) |>
     cols_label(
-      perm = "Permutation p",
+      wilcox = "Wilcoxon p-value",
       eff_size = "Effect size (r)",
       ci_low = "Low",
       ci_high = "High",
@@ -1355,7 +1357,7 @@ format_table_nodes_transfers <- function(dat) {
 
 # Formats significant PGLS (caper) results into a styled gt table.
 # Cleans trait names and displays lambda, LRT, and p-value per trait.
-table_caper <- function(dat) {
+table_caper_run <- function(dat) {
   dat_fmt <- dat |>
     na.omit() |>
     filter(p_value <= 0.05) |>

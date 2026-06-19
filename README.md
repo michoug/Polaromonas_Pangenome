@@ -7,6 +7,7 @@ This repository contains a comprehensive pangenome analysis pipeline for *Polaro
 ## Overview
 
 This project performs statistical analysis and visualization of *Polaromonas* pangenome data, including:
+
 - Genome metadata analysis and quality assessment
 - Pangenome structure analysis (core, shell, and cloud genes)
 - Phylogenetic tree visualization and ancestral state reconstruction
@@ -113,7 +114,7 @@ The pipeline generates outputs in the `Figures/` directory:
 - **Figure 2**: NMDS ordination of persistent genes
 - **Figure 3**: Phylogenetic tree with ancestral state reconstruction
 - **Figure 4**: Heatmap of DTL events and functional traits
-- **Figure S1-S7**: Supplementary figures (rarefaction curves, prevalence plots, etc.)
+- **Figure S1-S5**: Supplementary figures (rarefaction curves, prevalence plots, etc.)
 - **Table S1-S6**: Supplementary tables (metadata, statistics, phylogenetic analyses)
 
 ## Data Requirements
@@ -134,7 +135,9 @@ For genome preprocessing and pangenome construction, see the **`SnakemakePolarom
 
 ## Citation
 
-If you use this pipeline or data, please cite the associated publication (details to be added).
+If you use this pipeline or data, please cite the associated publication.
+
+Michoud G, Geers A, Peter H, Thorpe AC, Zhong ZP, Rich V, Battin TJ. Evolutionary radiation of Polaromonas from mountain glaciers downstream. Current Biology. 2026. In press.
 
 ## License
 

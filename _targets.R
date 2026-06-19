@@ -6,10 +6,10 @@ library(here)
 set.seed(123)
 
 tar_option_set(
-  controller = crew_controller_local(
-    workers = 6,
-    seconds_idle = 5
-  ),
+  # controller = crew_controller_local(
+  #   workers = 6,
+  #   seconds_idle = 5
+  # ),
   memory = "transient",
   garbage_collection = TRUE,
   storage = "worker",
@@ -406,36 +406,13 @@ tar_plan(
   ),
 
   tar_target(
-    figure_genome_comparison_pdf,
-    ggsave(
-      "Figures/Figure_1b_comparison.pdf",
-      figure_genome_comparison,
-      width = 12,
-      height = 8,
-      create.dir = TRUE
-    ),
-  ),
-
-  tar_target(
-    figure_genome_comparison_png,
-    ggsave(
-      "Figures/Figure_1b_comparison.png",
-      figure_genome_comparison,
-      width = 12,
-      height = 8,
-      dpi = 300,
-      create.dir = TRUE
-    ),
-    format = "file"
-  ),
-
-  tar_target(
     figure_1_map_comp,
     # jarl-ignore implicit_assignment: <reason>
     p <- (figure_map_world | figure_map_eur) /
       figure_genome_comparison +
       plot_layout(guides = "collect", heights = c(1, 0.5)) +
-      plot_annotation(tag_levels = c("A", "", "B"))
+      plot_annotation(tag_levels = c("A", "", "B")) &
+      theme(plot.tag = element_text(face = "bold"))
   ),
 
   tar_target(
@@ -467,55 +444,10 @@ tar_plan(
   ),
 
   tar_target(
-    figure_rarefaction_pdf,
-    ggsave(
-      "Figures/Figure_S2_rarefaction_curve.pdf",
-      figure_rarefaction,
-      width = 10,
-      height = 6,
-      create.dir = TRUE
-    )
-  ),
-
-  tar_target(
-    figure_rarefaction_png,
-    ggsave(
-      "Figures/Figure_S2_rarefaction_curve.png",
-      figure_rarefaction,
-      width = 10,
-      height = 6,
-      dpi = 300,
-      create.dir = TRUE
-    )
-  ),
-
-  tar_target(
     figure_prevalence_ppan,
     plot_prevalence_ppan(
       gene_pres_abs,
       partition_ppangolin
-    )
-  ),
-
-  tar_target(
-    figure_prevalence_ppan_pdf,
-    ggsave(
-      "Figures/Figure_S3_prevalence_ppan.pdf",
-      figure_prevalence_ppan,
-      width = 8,
-      height = 6,
-      create.dir = TRUE
-    )
-  ),
-
-  tar_target(
-    figure_prevalence_ppan_png,
-    ggsave(
-      "Figures/Figure_S3_prevalence_ppan.png",
-      figure_prevalence_ppan,
-      width = 8,
-      height = 6,
-      create.dir = TRUE
     )
   ),
 
@@ -558,34 +490,32 @@ tar_plan(
   ),
 
   tar_target(
-    figure_nmds_cloud_shell,
-    wrap_plots(
-      figure_nmds_shell,
-      figure_nmds_cloud,
-      guides = "collect",
-      nrow = 1
-    ) +
-      plot_annotation(tag_levels = 'A') &
-      theme(legend.position = 'bottom')
+    figure_rar_prev_nmds,
+    p <- (figure_rarefaction + theme(legend.position = "none")) +
+      (figure_prevalence_ppan + theme(legend.position = "right")) +
+      (figure_nmds_shell + theme(legend.position = "none")) +
+      (figure_nmds_cloud + theme(legend.position = "right")) +
+      plot_annotation(tag_levels = "A") &
+      theme(plot.tag = element_text(face = "bold"))
   ),
 
   tar_target(
-    figure_nmds_cloud_shell_pdf,
+    figure_rar_prev_nmds_pdf,
     ggsave(
-      "Figures/Figure_S4_NMDS_shell_cloud.pdf",
-      figure_nmds_cloud_shell,
-      width = 15,
+      "Figures/Figure_S2_rar_prev_NMDS.pdf",
+      figure_rar_prev_nmds,
+      width = 14,
       height = 10,
       create.dir = TRUE
     )
   ),
 
   tar_target(
-    figure_nmds_cloud_shell_png,
+    figure_rar_prev_nmds_png,
     ggsave(
-      "Figures/Figure_S4_NMDS_shell_cloud.png",
-      figure_nmds_cloud_shell,
-      width = 15,
+      "Figures/Figure_S2_rar_prev_NMDS.png",
+      figure_rar_prev_nmds,
+      width = 14,
       height = 10,
       dpi = 300,
       create.dir = TRUE
@@ -644,7 +574,7 @@ tar_plan(
   tar_target(
     figure_DTL_nodes_pdf,
     ggsave(
-      "Figures/Figure_S5_DTL_nodes.pdf",
+      "Figures/Figure_S3_DTL_nodes.pdf",
       figure_DTL_nodes,
       width = 12,
       height = 8,
@@ -655,7 +585,7 @@ tar_plan(
   tar_target(
     figure_DTL_nodes_png,
     ggsave(
-      "Figures/Figure_S5_DTL_nodes.png",
+      "Figures/Figure_S3_DTL_nodes.png",
       figure_DTL_nodes,
       width = 12,
       height = 8,
@@ -732,13 +662,13 @@ tar_plan(
       ncol = 1
     ) +
       plot_annotation(tag_levels = 'A') &
-      theme(legend.position = 'bottom')
+      theme(legend.position = 'bottom', plot.tag = element_text(face = "bold"))
   ),
 
   tar_target(
     figure_genomad_pdf,
     ggsave(
-      "Figures/Figure_S6_Virus_Plasmid.pdf",
+      "Figures/Figure_S4_Virus_Plasmid.pdf",
       figure_genomad,
       width = 15,
       height = 11,
@@ -749,7 +679,7 @@ tar_plan(
   tar_target(
     figure_genomad_png,
     ggsave(
-      "Figures/Figure_S6_Virus_Plasmid.png",
+      "Figures/Figure_S4_Virus_Plasmid.png",
       figure_genomad,
       width = 15,
       height = 11,
@@ -772,7 +702,7 @@ tar_plan(
   tar_target(
     figure_mono_fig_pdf,
     ggsave(
-      "Figures/Figure_S7_tree_monos.pdf",
+      "Figures/Figure_S5_tree_monos.pdf",
       figure_monophy,
       width = 12,
       height = 8,
@@ -783,7 +713,7 @@ tar_plan(
   tar_target(
     figure_mono_fig_png,
     ggsave(
-      "Figures/Figure_S7_tree_monos.png",
+      "Figures/Figure_S5_tree_monos.png",
       figure_monophy,
       width = 12,
       height = 8,
@@ -933,11 +863,6 @@ tar_plan(
     ),
     packages = c("phytools")
   ),
-
-  # tar_target(
-  #   ace_past_stoch_table,
-  #   table_ace_past_stoch(ace_prob, pastML_prob_max, df_stochastic_mapping)
-  # ),
 
   tar_target(
     figure_node_confidence,

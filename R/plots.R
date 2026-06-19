@@ -850,9 +850,9 @@ plot_prevalence_ppan <- function(
   ggplot(dat, aes(x = Category, y = perc, fill = Category)) +
     geom_boxplot() +
     labs(
-      y = "Prevalence in\nPolaromonas genones (%)",
-      x = "Type",
-      fill = "Type"
+      y = "Prevalence in\nPolaromonas genomes (%)",
+      x = "Genes Category",
+      fill = "Genes Category"
     ) +
     theme_classic() +
     theme_all

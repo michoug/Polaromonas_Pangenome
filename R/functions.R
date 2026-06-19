@@ -1296,7 +1296,7 @@ compare_nodes_transfers <- function(dtl, nodes, node_t, genomad) {
         select(-type) |>
         group_by(species_label) |>
         summarise(
-          across(where(is.numeric), sum, na.rm = TRUE),
+          across(where(is.numeric), \(x) sum(x, na.rm = TRUE)),
           is_transition = any(is_transition),
           .groups = "drop"
         )

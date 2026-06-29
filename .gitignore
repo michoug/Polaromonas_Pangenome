@@ -77,3 +77,6 @@ metadata/
 Presentations/
 rawData/Other
 .positai
+# pixi environments
+.pixi/*
+!.pixi/config.toml

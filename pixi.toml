@@ -1,0 +1,25 @@
+[workspace]
+authors = ["michoug <gregoire.michoud@kaust.edu.sa>"]
+channels = ["conda-forge", "bioconda"]
+name = "Polaromonas_Pangenome"
+platforms = ["win-64", "linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+r_format = "air format R"
+snake_format = "snakefmt SnakemakePolaromonas/workflow/"
+lint = "jarl check R"
+
+check = { depends-on = ["lint", "r_format", "snake_format"] }
+
+[dependencies]
+
+R = "4.5.*"
+air = "0.10.*"
+python = "3.12.*"
+ruff = "0.15.*"
+snakefmt = "2.0.*"
+
+[pypi-dependencies]
+jarl-linter = ">=0.5"

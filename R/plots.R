@@ -441,10 +441,10 @@ plot_nmds <- function(nmds, map, colors_samples) {
 
   stress_value <- paste("Stress = ", nmds$stress, sep = "")
 
-  yvalue = max(datfort_sites$NMDS2) -
+  yvalue <- max(datfort_sites$NMDS2) -
     0.05 *
       (max(datfort_sites$NMDS2) - min(datfort_sites$NMDS2))
-  xvalue = min(datfort_sites$NMDS1) +
+  xvalue <- min(datfort_sites$NMDS1) +
     0.1 *
       (max(datfort_sites$NMDS1) - min(datfort_sites$NMDS1))
 
@@ -452,8 +452,8 @@ plot_nmds <- function(nmds, map, colors_samples) {
   NMDS_species2 <- nmds$species[, 2]
   NMDS_species <- data.frame(NMDS_species1, NMDS_species2) |>
     rownames_to_column("Modules")
-  NMDS1 = nmds$points[, 1]
-  NMDS2 = nmds$points[, 2]
+  NMDS1 <- nmds$points[, 1]
+  NMDS2 <- nmds$points[, 2]
 
   NMDS_data <- data.frame(NMDS1, NMDS2) |>
     rownames_to_column("Genome") |>
@@ -727,7 +727,7 @@ phylogenetic_tree <- function(
       join_by(node)
     )
 
-  size_value = c(3, 4, 5)
+  size_value <- c(3, 4, 5)
   names(size_value) <- c("< 70%", "70-90%", "> 90%")
 
   p1 <- ggtree(rooted_tree, size = 0.3, alpha = 0.7) +
@@ -1173,7 +1173,7 @@ rarefaction_curve <- function(dat) {
 # Draws a circular phylogenetic tree colored by neighboring taxon groups.
 # Adds outer rings for taxon identity and monophyly status.
 plot_neigh_monophy <- function(tree, mono) {
-  getPaletteBact = colorRampPalette(brewer.pal(12, "Paired"))
+  getPaletteBact <- colorRampPalette(brewer.pal(12, "Paired"))
   treeColor <- getPaletteBact(length(unique(mono$Taxon)) + 1)
   treeColor[1] <- "black"
 

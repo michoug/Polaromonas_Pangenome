@@ -226,7 +226,7 @@ tar_plan(
 
   tar_target(colors_samples, getColors()),
 
-  tar_target(colors_countries, getColorsCountry(genome_metadata_clean)),
+  # tar_target(colors_countries, getColorsCountry(genome_metadata_clean)),
 
   tar_target(colors_DTL, getcolorsDTL()),
 

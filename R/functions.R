@@ -86,32 +86,32 @@ getColors <- function() {
   colors
 }
 
-# Builds a country color palette from available country labels.
-# Sorts country names and forces "Other" to be placed last.
-getColorsCountry <- function(dat) {
-  colors_country <- c(
-    rgb(235, 172, 35, maxColorValue = 255),
-    rgb(184, 0, 88, maxColorValue = 255),
-    rgb(0, 140, 249, maxColorValue = 255),
-    rgb(0, 110, 0, maxColorValue = 255),
-    rgb(0, 187, 173, maxColorValue = 255),
-    rgb(209, 99, 230, maxColorValue = 255),
-    rgb(178, 69, 2, maxColorValue = 255),
-    rgb(255, 146, 135, maxColorValue = 255),
-    rgb(89, 84, 214, maxColorValue = 255),
-    rgb(0, 198, 248, maxColorValue = 255),
-    "black"
-  )
+# # Builds a country color palette from available country labels.
+# # Sorts country names and forces "Other" to be placed last.
+# getColorsCountry <- function(dat) {
+#   colors_country <- c(
+#     rgb(235, 172, 35, maxColorValue = 255),
+#     rgb(184, 0, 88, maxColorValue = 255),
+#     rgb(0, 140, 249, maxColorValue = 255),
+#     rgb(0, 110, 0, maxColorValue = 255),
+#     rgb(0, 187, 173, maxColorValue = 255),
+#     rgb(209, 99, 230, maxColorValue = 255),
+#     rgb(178, 69, 2, maxColorValue = 255),
+#     rgb(255, 146, 135, maxColorValue = 255),
+#     rgb(89, 84, 214, maxColorValue = 255),
+#     rgb(0, 198, 248, maxColorValue = 255),
+#     "black"
+#   )
 
-  country_name <- unique(dat$country_good) |>
-    sort()
+#   country_name <- unique(dat$country_good) |>
+#     sort()
 
-  country_name <- c(setdiff(country_name, "Other"), "Other")
+#   country_name <- c(setdiff(country_name, "Other"), "Other")
 
-  names(colors_country) <- country_name
+#   names(colors_country) <- country_name
 
-  colors_country
-}
+#   colors_country
+# }
 
 # Returns the color mapping used for DTL event types.
 # Keeps DTL plot styling consistent across analyses.
@@ -589,13 +589,13 @@ clean_rules <- function(rule2, rule) {
     clean_names()
 }
 
-# Restricts event data to a selected set of nodes.
-# Joins node labels and keeps only nodes of interest.
-subset_nodes <- function(ev, node, node_int) {
-  dat <- ev |>
-    left_join(node, join_by(species_label == label)) |>
-    right_join(node_int, join_by(node))
-}
+# # Restricts event data to a selected set of nodes.
+# # Joins node labels and keeps only nodes of interest.
+# subset_nodes <- function(ev, node, node_int) {
+#   dat <- ev |>
+#     left_join(node, join_by(species_label == label)) |>
+#     right_join(node_int, join_by(node))
+# }
 
 # Links events to microtrait rules and aggregates by trait context.
 # Computes per-node DTL summaries for each trait/rule combination.

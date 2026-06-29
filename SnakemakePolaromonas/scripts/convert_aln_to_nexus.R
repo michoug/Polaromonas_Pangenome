@@ -1,6 +1,6 @@
 library(seqinr)
 library(ape)
-data = read.fasta(snakemake@input[['aln']])
+data <- read.fasta(snakemake@input[['aln']])
 names(data) <- gsub("-", "_", names(data))
 write.nexus.data(
   data,

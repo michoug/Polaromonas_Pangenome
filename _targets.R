@@ -491,7 +491,7 @@ tar_plan(
 
   tar_target(
     figure_rar_prev_nmds,
-    p <- (figure_rarefaction + theme(legend.position = "none")) +
+    (figure_rarefaction + theme(legend.position = "none")) +
       (figure_prevalence_ppan + theme(legend.position = "right")) +
       (figure_nmds_shell + theme(legend.position = "none")) +
       (figure_nmds_cloud + theme(legend.position = "right")) +
